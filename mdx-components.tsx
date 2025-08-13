@@ -1,6 +1,6 @@
 // MDX Components 类型定义
 type MDXComponents = {
-  [key: string]: React.ComponentType<Record<string, unknown>>;
+  [key: string]: React.ComponentType<any>;
 };
 import { CodeBlock } from './src/components/CodeBlock';
 import { DemoBlock } from './src/components/DemoBlock';

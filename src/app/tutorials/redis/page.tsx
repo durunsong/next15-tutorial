@@ -230,10 +230,16 @@ function RedisDemo() {
 }
 
 // 缓存策略演示
+interface CacheStrategyData {
+  strategy: string;
+  description: string;
+  data: Record<string, unknown>;
+}
+
 function CacheStrategyDemo() {
   const [strategy, setStrategy] = useState<'cache-first' | 'cache-aside' | 'write-through' | 'write-behind'>('cache-first');
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState<unknown>(null);
+  const [data, setData] = useState<CacheStrategyData | null>(null);
   const [cacheHit, setCacheHit] = useState<boolean | null>(null);
   const [responseTime, setResponseTime] = useState<number>(0);
 
@@ -337,7 +343,7 @@ function CacheStrategyDemo() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded">
                 <div className="text-sm font-medium text-gray-700 dark:text-gray-300">策略</div>
-                <div className="text-lg font-semibold text-gray-900 dark:text-white">{data.strategy}</div>
+                <div className="text-lg font-semibold text-gray-900 dark:text-white">{data?.strategy || strategy}</div>
               </div>
               <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded">
                 <div className="text-sm font-medium text-gray-700 dark:text-gray-300">响应时间</div>
@@ -355,12 +361,12 @@ function CacheStrategyDemo() {
             
             <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded">
               <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">策略说明</div>
-              <p className="text-gray-600 dark:text-gray-300">{data.description}</p>
+              <p className="text-gray-600 dark:text-gray-300">{data?.description || ''}</p>
             </div>
             
             <div className="p-3 bg-gray-900 rounded">
               <div className="text-sm font-medium text-gray-300 mb-2">返回数据</div>
-              <pre className="text-green-400 text-sm">{JSON.stringify(data.data, null, 2)}</pre>
+              <pre className="text-green-400 text-sm">{JSON.stringify(data?.data || {}, null, 2)}</pre>
             </div>
           </div>
         )}

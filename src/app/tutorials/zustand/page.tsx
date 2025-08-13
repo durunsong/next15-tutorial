@@ -214,7 +214,7 @@ function ComplexStateDemo() {
         </h4>
         <div className="flex items-center space-x-4">
           <NextImage
-            src={user.avatar}
+            src={user.avatar || '/placeholder-avatar.png'}
             alt={user.name}
             width={40}
             height={40}

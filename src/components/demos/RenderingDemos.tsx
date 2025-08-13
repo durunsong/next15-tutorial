@@ -849,7 +849,7 @@ function MyApp({ Component, pageProps }: { Component: React.ComponentType; pageP
           </div>
           
           {/* 响应结果 */}
-          {response && (
+          {!!response && (
             <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
               <h5 className="font-semibold mb-2">响应结果:</h5>
               <div className="bg-gray-900 text-gray-100 p-3 rounded font-mono text-sm overflow-x-auto">

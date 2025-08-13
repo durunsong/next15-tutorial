@@ -50,8 +50,9 @@ export function Navigation() {
   };
 
   // 处理登录成功
-  const handleLoginSuccess = (user: { username: string }) => {
-    message.success(`欢迎回来，${user.username}!`);
+  const handleLoginSuccess = (user: Record<string, unknown>) => {
+    const username = (user as { username?: string })?.username || '用户';
+    message.success(`欢迎回来，${username}!`);
     // AuthModal内部已经处理了状态更新
   };
 

@@ -55,7 +55,12 @@ export function DynamicRouteDemo() {
             }`}
             onClick={() => {
               setCurrentPath(example.path);
-              setParams(example.params);
+              // 过滤掉 undefined 值
+              const filteredParams = Object.fromEntries(
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                Object.entries(example.params).filter(([_, value]) => value !== undefined)
+              ) as Record<string, string>;
+              setParams(filteredParams);
             }}
           >
             <div className="font-mono text-sm text-blue-600 dark:text-blue-400 mb-1">
@@ -238,10 +243,10 @@ export function DataFetchingDemo() {
           缓存策略: {cacheStrategies.find(s => s.value === cacheStrategy)?.description}
         </div>
         
-        {data && (
+        {!!data && (
           <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-3">
             <pre className="text-sm overflow-x-auto">
-              {JSON.stringify(data, null, 2)}
+              {JSON.stringify(data as Record<string, unknown>, null, 2)}
             </pre>
           </div>
         )}
