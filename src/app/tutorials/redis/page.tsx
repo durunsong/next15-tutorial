@@ -10,7 +10,7 @@ import { ArrowRight, Zap, Clock, Database, Trash2, RefreshCw, Plus } from 'lucid
 
 // 模拟 Redis 缓存演示组件
 function RedisDemo() {
-  const [cache, setCache] = useState<Record<string, { value: any; expiry?: number }>>({
+  const [cache, setCache] = useState<Record<string, { value: unknown; expiry?: number }>>({
     'user:1': { value: { id: 1, name: '张三', email: 'zhangsan@example.com' } },
     'posts:latest': { value: [
       { id: 1, title: 'Next.js 15 新特性' },
@@ -84,7 +84,7 @@ function RedisDemo() {
     return () => clearInterval(interval);
   }, []);
 
-  const formatValue = (value: any) => {
+  const formatValue = (value: unknown) => {
     if (typeof value === 'object') {
       return JSON.stringify(value, null, 2);
     }
@@ -233,7 +233,7 @@ function RedisDemo() {
 function CacheStrategyDemo() {
   const [strategy, setStrategy] = useState<'cache-first' | 'cache-aside' | 'write-through' | 'write-behind'>('cache-first');
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<unknown>(null);
   const [cacheHit, setCacheHit] = useState<boolean | null>(null);
   const [responseTime, setResponseTime] = useState<number>(0);
 
@@ -294,7 +294,7 @@ function CacheStrategyDemo() {
           {strategies.map((s) => (
             <button
               key={s.key}
-              onClick={() => setStrategy(s.key as any)}
+              onClick={() => setStrategy(s.key as typeof strategy)}
               className={`p-3 rounded-lg text-sm font-medium transition-colors ${
                 strategy === s.key
                   ? `bg-${s.color}-600 text-white`
@@ -605,7 +605,7 @@ export async function GET() {
   const performanceCode = `// 性能优化技巧
 
 // 1. 批量操作使用 Pipeline
-export async function batchUpdateCache(updates: Array<{key: string, value: any}>) {
+export async function batchUpdateCache(updates: Array<{key: string, value: unknown}>) {
   const pipeline = redis.pipeline();
   
   updates.forEach(({ key, value }) => {
@@ -682,7 +682,7 @@ export async function invalidateRelatedCache(pattern: string) {
 }
 
 // 使用示例
-export async function updatePost(id: number, data: any) {
+export async function updatePost(id: number, data: Record<string, unknown>) {
   const updatedPost = await prisma.post.update({
     where: { id },
     data

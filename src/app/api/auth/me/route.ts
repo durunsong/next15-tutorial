@@ -11,13 +11,13 @@ function verifyToken(token: string): { userId: string; email: string; username: 
       throw new Error('JWT_SECRET is not configured');
     }
 
-    const decoded = jwt.verify(token, secret) as any;
+    const decoded = jwt.verify(token, secret) as { userId: string; email: string; username: string };
     return {
       userId: decoded.userId,
       email: decoded.email,
       username: decoded.username,
     };
-  } catch (error) {
+  } catch {
     return null;
   }
 }

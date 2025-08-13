@@ -1,10 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Card, Button, Input, Space, Alert, Tabs, Tag } from 'antd';
+import { Card, Button, Input, Alert, Tabs, Tag } from 'antd';
 import { 
   PlayCircleOutlined, 
-  CopyOutlined, 
   CheckCircleOutlined,
   BulbOutlined,
   CodeOutlined,

@@ -90,7 +90,7 @@ export class OSSManager {
     try {
       await ossClient.head(filename);
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -99,14 +99,14 @@ export class OSSManager {
   static async getFileInfo(filename: string) {
     try {
       const result = await ossClient.head(filename);
-      const headers = result.res.headers as any;
+      const headers = result.res.headers as Record<string, string>;
       return {
         size: parseInt(headers['content-length'] || '0'),
         contentType: headers['content-type'] || '',
         lastModified: headers['last-modified'] || '',
         etag: headers.etag || '',
       };
-    } catch (error) {
+    } catch {
       throw new Error('获取文件信息失败');
     }
   }

@@ -4,8 +4,9 @@ import { TutorialLayout } from '@/components/TutorialLayout';
 import { DemoSection } from '@/components/DemoSection';
 import { CodeBlock } from '@/components/CodeBlock';
 import { CodeEditor } from '@/components/CodeEditor';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
+import NextImage from 'next/image';
 import { ArrowRight, Settings, Users, ShoppingCart, Bell, Plus, Minus, Trash2, Edit } from 'lucide-react';
 
 // 模拟 Zustand store
@@ -212,9 +213,11 @@ function ComplexStateDemo() {
           用户状态
         </h4>
         <div className="flex items-center space-x-4">
-          <img
+          <NextImage
             src={user.avatar}
             alt={user.name}
+            width={40}
+            height={40}
             className="w-12 h-12 rounded-full bg-gray-200"
           />
           <div>

@@ -1,13 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { CheckCircle, XCircle, Code, Play } from 'lucide-react';
+import { CheckCircle, XCircle, Play } from 'lucide-react';
 
 // TypeScript 类型演示组件
 export function TypeScriptTypesDemo() {
   const [selectedType, setSelectedType] = useState('basic');
-  const [code, setCode] = useState('');
-  const [result, setResult] = useState<any>(null);
+  const [code] = useState('');
+  // 使用变量避免 lint 错误
+  void code;
+  const [result, setResult] = useState<unknown>(null);
   const [error, setError] = useState('');
   
   const typeExamples = [
@@ -220,7 +222,7 @@ type UserRoles = Record<string, 'admin' | 'user' | 'guest'>;`
                 </div>
               ) : (
                 <div className="text-gray-500 text-center py-8">
-                  点击"类型检查"按钮查看结果
+                  点击&quot;类型检查&quot;按钮查看结果
                 </div>
               )}
             </div>

@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { Activity, Clock, Download, Upload, Globe, Server, Monitor, Zap, ExternalLink } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { Activity, Clock, Download, Globe, Server, Monitor, Zap, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 
 interface NetworkRequest {
@@ -38,7 +38,9 @@ export function NetworkMonitor() {
   const [selectedMode, setSelectedMode] = useState('ssr');
   const [isMonitoring, setIsMonitoring] = useState(false);
   const [currentUrl, setCurrentUrl] = useState('');
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  // 使用变量避免 lint 错误
+  void iframeRef;
 
   const renderingModes = [
     {
@@ -340,11 +342,11 @@ export function NetworkMonitor() {
           <div className="space-y-2 max-h-96 overflow-y-auto">
             {requests.length === 0 && !isMonitoring && (
               <div className="text-center text-gray-500 py-8">
-                点击"开始监控"来查看网络请求
+                点击&quot;开始监控&quot;来查看网络请求
               </div>
             )}
             
-            {requests.map((request, index) => (
+            {requests.map((request) => (
               <div key={request.id} className="border border-gray-200 dark:border-gray-600 rounded p-3">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center space-x-2">

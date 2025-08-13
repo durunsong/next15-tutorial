@@ -12,7 +12,7 @@ const { TabPane } = Tabs;
 interface AuthModalProps {
   open: boolean;
   onClose: () => void;
-  onSuccess: (user: any) => void;
+  onSuccess: (user: Record<string, unknown>) => void;
   defaultTab?: 'login' | 'register';
 }
 

@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 /**
  * 获取数据库信息和统计数据
  * GET /api/database
  */
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     // 执行多个查询来获取数据库信息
     const [

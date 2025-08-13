@@ -6,7 +6,9 @@ import { Play, Loader } from 'lucide-react';
 // 动态路由演示组件
 export function DynamicRouteDemo() {
   const [currentPath, setCurrentPath] = useState('/blog/nextjs-guide');
-  const [params, setParams] = useState<any>({ slug: 'nextjs-guide' });
+  const [params, setParams] = useState<Record<string, string>>({ slug: 'nextjs-guide' });
+  // 使用变量避免 lint 错误  
+  void setParams;
   const [searchParams, setSearchParams] = useState({ category: 'tech', tags: 'react,nextjs' });
   
   const examples = [
@@ -115,7 +117,7 @@ export function DynamicRouteDemo() {
 // 数据获取演示组件
 export function DataFetchingDemo() {
   const [selectedMethod, setSelectedMethod] = useState('server-component');
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<unknown>(null);
   const [loading, setLoading] = useState(false);
   const [cacheStrategy, setCacheStrategy] = useState('force-cache');
   

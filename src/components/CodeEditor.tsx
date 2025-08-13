@@ -38,9 +38,9 @@ export function CodeEditor({
   const [code, setCode] = useState(defaultCode);
   const [output, setOutput] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
-  const editorRef = useRef<any>(null);
+  const editorRef = useRef<unknown>(null);
 
-  const handleEditorDidMount = (editor: any) => {
+  const handleEditorDidMount = (editor: unknown) => {
     editorRef.current = editor;
   };
 
@@ -76,12 +76,12 @@ export function CodeEditor({
           }
           
           setOutput(logs);
-        } catch (error: any) {
-          setOutput([`错误: ${error.message}`]);
+        } catch (error) {
+          setOutput([`错误: ${error instanceof Error ? error.message : String(error)}`]);
         }
       }
-    } catch (error: any) {
-      setOutput([`执行失败: ${error.message}`]);
+    } catch (error) {
+      setOutput([`执行失败: ${error instanceof Error ? error.message : String(error)}`]);
     } finally {
       setIsRunning(false);
     }

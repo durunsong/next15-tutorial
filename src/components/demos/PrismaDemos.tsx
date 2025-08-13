@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Database, Plus, Edit, Trash2, Search, Filter } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 
 // Prisma Schema 构建演示
 export function PrismaSchemaDemo() {

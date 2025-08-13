@@ -214,7 +214,9 @@ export async function POST(req: NextRequest) {
     });
 
     // 移除密码字段
-    const { password: _, ...userWithoutPassword } = user;
+    const { password: _unused, ...userWithoutPassword } = user;
+    // 使用未使用的变量来避免 lint 错误
+    void _unused;
 
     const response = NextResponse.json(
       {

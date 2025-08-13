@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 
@@ -6,7 +6,7 @@ import bcrypt from 'bcryptjs';
  * 创建演示用户（仅用于开发和演示）
  * POST /api/demo/seed-user
  */
-export async function POST(req: NextRequest) {
+export async function POST() {
   // 只在开发环境中允许
   if (process.env.NODE_ENV === 'production') {
     return NextResponse.json(

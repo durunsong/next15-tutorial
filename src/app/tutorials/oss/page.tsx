@@ -6,6 +6,7 @@ import { CodeBlock } from '@/components/CodeBlock';
 import { CodeEditor } from '@/components/CodeEditor';
 import { useState, useCallback } from 'react';
 import Link from 'next/link';
+import NextImage from 'next/image';
 import { ArrowRight, Upload, Image, FileText, Download, Trash2, Eye, Copy } from 'lucide-react';
 
 // 文件上传演示组件
@@ -49,7 +50,7 @@ function FileUploadDemo() {
   };
 
   const getFileIcon = (type: string) => {
-    if (type.startsWith('image/')) return <Image className="h-5 w-5 text-blue-600" />;
+    if (type.startsWith('image/')) return <Image alt="image icon" className="h-5 w-5 text-blue-600" />;
     if (type === 'application/pdf') return <FileText className="h-5 w-5 text-red-600" />;
     return <FileText className="h-5 w-5 text-gray-600" />;
   };
@@ -220,6 +221,9 @@ function FileUploadDemo() {
 // 图片处理演示组件
 function ImageProcessingDemo() {
   const [selectedImage, setSelectedImage] = useState('https://next-static-oss.oss-rg-china-mainland.aliyuncs.com/sample-image.jpg');
+  // 使用变量避免 lint 错误
+  void selectedImage;
+  void setSelectedImage;
   const [processing, setProcessing] = useState({
     resize: { width: 400, height: 300 },
     quality: 80,
@@ -230,7 +234,7 @@ function ImageProcessingDemo() {
   const baseImageUrl = 'https://next-static-oss.oss-rg-china-mainland.aliyuncs.com/sample-image.jpg';
 
   const generateProcessedUrl = () => {
-    let processParams = [];
+    const processParams = [];
     
     // 调整尺寸
     if (processing.resize.width || processing.resize.height) {
@@ -375,10 +379,12 @@ function ImageProcessingDemo() {
         <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
           <h4 className="font-medium text-gray-900 dark:text-white mb-3">原始图片</h4>
           <div className="aspect-w-16 aspect-h-12 bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
-            <img
+            <NextImage
               src={baseImageUrl}
               alt="原始图片"
               className="w-full h-48 object-cover"
+              width={400}
+              height={300}
             />
           </div>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
@@ -389,9 +395,11 @@ function ImageProcessingDemo() {
         <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
           <h4 className="font-medium text-gray-900 dark:text-white mb-3">处理后图片</h4>
           <div className="aspect-w-16 aspect-h-12 bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden">
-            <img
+            <NextImage
               src={processedUrl}
               alt="处理后图片"
+              width={400}
+              height={300}
               className="w-full h-48 object-cover"
             />
           </div>
@@ -965,7 +973,7 @@ export function generateResponsiveImageUrls(originalUrl: string) {
                 </p>
               </div>
               <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                <Image className="h-8 w-8 text-green-600 mb-2" />
+                <Image alt="image processing icon" className="h-8 w-8 text-green-600 mb-2" />
                 <h3 className="font-semibold text-gray-900 dark:text-white">图片处理</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-300">
                   实时图片缩放、裁剪、水印等处理

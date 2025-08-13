@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Card, Form, Input, Button, Alert, Checkbox, Divider, message } from 'antd';
-import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
+import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 

@@ -10,9 +10,9 @@ function verifyToken(token: string): { userId: string } | null {
       throw new Error('JWT_SECRET is not configured');
     }
 
-    const decoded = jwt.verify(token, secret) as any;
+    const decoded = jwt.verify(token, secret) as { userId: string };
     return { userId: decoded.userId };
-  } catch (error) {
+  } catch {
     return null;
   }
 }

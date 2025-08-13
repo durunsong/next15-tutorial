@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Card, Form, Input, Button, Alert, Divider, message, Progress } from 'antd';
+import { Card, Form, Input, Button, Alert, Divider, message } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined, LinkOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';

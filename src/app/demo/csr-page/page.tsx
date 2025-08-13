@@ -74,7 +74,7 @@ export default function CSRPage() {
       };
       
       setData(mockData);
-    } catch (err) {
+    } catch {
       setError('数据加载失败');
     } finally {
       setLoading(false);

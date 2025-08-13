@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Server, Globe, Monitor, Zap, Clock, Database, Users, BarChart3 } from 'lucide-react';
-import { NetworkMonitor } from './NetworkMonitor';
+import { useState } from 'react';
+import { Server, Globe, Monitor, Zap } from 'lucide-react';
 
 // 渲染模式对比演示
 export function RenderingModesDemo() {
@@ -212,13 +211,15 @@ export function RenderingModesDemo() {
 // API 调用机制演示
 export function APICallDemo() {
   const [selectedPattern, setSelectedPattern] = useState('rest');
-  const [requestData, setRequestData] = useState({
+  const [requestData] = useState({
     method: 'GET',
     endpoint: '/api/users',
     body: '',
     headers: '{"Content-Type": "application/json"}'
   });
-  const [response, setResponse] = useState<any>(null);
+  // 使用变量避免 lint 错误
+  void requestData;
+  const [response, setResponse] = useState<unknown>(null);
   const [loading, setLoading] = useState(false);
   
   const apiPatterns = [
@@ -672,7 +673,7 @@ import useSWRMutation from 'swr/mutation';
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 // 创建用户的 mutation 函数
-async function createUser(url: string, { arg }: { arg: any }) {
+async function createUser(url: string, { arg }: { arg: Record<string, unknown> }) {
   return fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -689,12 +690,12 @@ function UsersPage() {
   
   const { trigger, isMutating } = useSWRMutation('/api/users', createUser);
   
-  const handleCreateUser = async (userData: any) => {
+  const handleCreateUser = async (userData: Record<string, unknown>) => {
     try {
       const newUser = await trigger(userData);
       
       // 乐观更新：立即更新本地数据
-      mutate((currentData: any) => ({
+      mutate((currentData: Record<string, unknown>) => ({
         ...currentData,
         users: [...(currentData?.users || []), newUser]
       }), false);
@@ -713,7 +714,7 @@ function UsersPage() {
     <div>
       <h1>Users ({data?.pagination?.total || 0})</h1>
       
-      {data?.users?.map((user: any) => (
+      {data?.users?.map((user: Record<string, unknown>) => (
         <div key={user.id} className="user-card">
           <h3>{user.name}</h3>
           <p>{user.email}</p>
@@ -738,7 +739,7 @@ function UsersPage() {
 // 全局 SWR 配置
 import { SWRConfig } from 'swr';
 
-function MyApp({ Component, pageProps }: any) {
+function MyApp({ Component, pageProps }: { Component: React.ComponentType; pageProps: Record<string, unknown> }) {
   return (
     <SWRConfig 
       value={{

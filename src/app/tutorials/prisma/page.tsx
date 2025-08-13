@@ -11,7 +11,7 @@ import { ArrowRight, Database, Users, FileText, Settings, Plus, Edit, Trash2 } f
 
 // 模拟数据库操作的演示组件
 function PrismaDemo() {
-  const [users, setUsers] = useState([
+  const [users] = useState([
     { id: 1, name: '张三', email: 'zhangsan@example.com', posts: 3 },
     { id: 2, name: '李四', email: 'lisi@example.com', posts: 1 },
     { id: 3, name: '王五', email: 'wangwu@example.com', posts: 5 },
@@ -262,7 +262,7 @@ function QueryDemo() {
         {Object.keys(queryExamples).map((type) => (
           <button
             key={type}
-            onClick={() => setQueryType(type as any)}
+            onClick={() => setQueryType(type as keyof typeof queryExamples)}
             className={`px-3 py-1 rounded text-sm transition-colors ${
               queryType === type
                 ? 'bg-blue-600 text-white'

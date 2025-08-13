@@ -83,7 +83,7 @@ function ComponentTypesDemo() {
             <p>• 在浏览器中渲染</p>
             <p>• 可以使用 React 状态和生命周期</p>
             <p>• 支持交互和事件处理</p>
-            <p>• 使用 'use client' 指令</p>
+            <p>• 使用 &apos;use client&apos; 指令</p>
             <div className="mt-2 p-2 bg-gray-50 dark:bg-gray-800 rounded">
               <button 
                 onClick={() => setCount(count + 1)}
