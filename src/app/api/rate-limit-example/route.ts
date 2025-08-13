@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { redis } from '@/lib/redis';
+import { CacheManager } from '@/lib/redis';
 
 /**
  * 限流测试API
@@ -14,13 +14,13 @@ export async function GET(request: NextRequest) {
     const requestKey = `ratelimit:${ip}`;
     try {
       // 检查键是否存在以及剩余过期时间
-      const ttl = await redis.ttl(requestKey);
+      const ttl = await CacheManager.ttl(requestKey);
       // 如果键不存在(ttl = -2)或已过期(ttl = -1)，则删除并重置
       if (ttl < 0) {
-        await redis.del(requestKey);
+        await CacheManager.del(requestKey);
 
         // 设置初始计数为1并设置过期时间
-        await redis.set(requestKey, '1', { ex: 60 });
+        await CacheManager.set(requestKey, '1', { ex: 60 });
         // 返回成功响应
         return NextResponse.json({
           success: true,
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
       }
 
       // 获取当前计数
-      const currentCount = (await redis.get(requestKey)) as string | null;
+      const currentCount = await CacheManager.get<string>(requestKey);
       const count = parseInt(currentCount || '0', 10);
       // 如果已经超过限制
       if (count >= 5) {
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
       }
 
       // 增加计数
-      const newCount = await redis.incr(requestKey);
+      const newCount = await CacheManager.increment(requestKey);
       // 返回成功响应
       return NextResponse.json({
         success: true,

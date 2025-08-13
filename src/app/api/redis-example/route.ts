@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { redis } from '@/lib/redis';
+import { CacheManager } from '@/lib/redis';
 
 /**
  * Redis连接测试API
@@ -21,7 +21,7 @@ export async function GET() {
 
     try {
       // 测试设置值
-      await redis.set(testKey, testValue, { ex: 60 }); // 60秒过期
+      await CacheManager.set(testKey, testValue, { ex: 60 }); // 60秒过期
       console.log('设置值成功');
     } catch (setError) {
       console.error('设置值失败:', setError);
@@ -39,7 +39,7 @@ export async function GET() {
     let retrievedValue;
     try {
       // 测试获取值
-      retrievedValue = await redis.get(testKey);
+      retrievedValue = await CacheManager.get(testKey);
       console.log(`获取值成功: ${retrievedValue}`);
     } catch (getError) {
       console.error('获取值失败:', getError);
@@ -57,11 +57,11 @@ export async function GET() {
     let afterDelete;
     try {
       // 测试删除值
-      await redis.del(testKey);
+      await CacheManager.del(testKey);
       console.log('删除值成功');
 
       // 验证删除是否成功
-      afterDelete = await redis.get(testKey);
+      afterDelete = await CacheManager.get(testKey);
       console.log(`删除后获取值: ${afterDelete}`);
     } catch (deleteError) {
       console.error('删除值失败:', deleteError);
