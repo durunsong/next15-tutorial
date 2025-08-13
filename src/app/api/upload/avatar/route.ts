@@ -22,10 +22,10 @@ function verifyToken(token: string): { userId: string } | null {
 
 // 初始化OSS客户端
 function createOSSClient() {
-  const region = process.env.OSS_REGION;
-  const accessKeyId = process.env.OSS_ACCESS_KEY_ID;
-  const accessKeySecret = process.env.OSS_ACCESS_KEY_SECRET;
-  const bucket = process.env.OSS_BUCKET;
+  const region = process.env.ALIBABA_CLOUD_OSS_REGION;
+  const accessKeyId = process.env.ALIBABA_CLOUD_ACCESS_KEY_ID;
+  const accessKeySecret = process.env.ALIBABA_CLOUD_ACCESS_KEY_SECRET;
+  const bucket = process.env.ALIBABA_CLOUD_OSS_BUCKET;
 
   if (!region || !accessKeyId || !accessKeySecret || !bucket) {
     throw new Error('OSS配置不完整，请检查环境变量');

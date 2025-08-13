@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import { authService } from '@/services';
+
 interface User {
   id: string;
   email: string;
@@ -49,19 +51,13 @@ export const useAuthStore = create<AuthState>()(
 
       logout: async () => {
         try {
-          // 调用API退出登录
-          const response = await fetch('/api/auth/logout', {
-            method: 'POST',
-            credentials: 'include',
-          });
-
-          if (!response.ok) {
-            console.error('Logout API failed:', response.status);
-          }
+          // 使用 authService 退出登录
+          await authService.logout();
         } catch (error) {
           console.error('Logout error:', error);
         } finally {
-          // 无论API是否成功，都清除本地状态
+          // 清除本地存储和状态
+          authService.clearAuthData();
           set({
             user: null,
             token: null,
@@ -97,29 +93,18 @@ export const useAuthStore = create<AuthState>()(
         }
 
         try {
-          const headers: HeadersInit = {
-            'Content-Type': 'application/json',
-          };
+          // 使用 authService 验证用户信息
+          const result = await authService.getCurrentUser();
 
-          if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
-          }
-
-          const response = await fetch('/api/auth/me', {
-            method: 'GET',
-            headers,
-            credentials: 'include',
-          });
-
-          if (response.ok) {
-            const data = await response.json();
+          if (result.success && result.data) {
             set({
-              user: data.user,
+              user: result.data.user,
               isAuthenticated: true,
               isLoading: false,
             });
           } else {
             // Token无效，清除状态
+            authService.clearAuthData();
             set({
               user: null,
               token: null,
@@ -129,6 +114,7 @@ export const useAuthStore = create<AuthState>()(
           }
         } catch (error) {
           console.error('Auth check failed:', error);
+          authService.clearAuthData();
           set({
             user: null,
             token: null,

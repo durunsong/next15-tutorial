@@ -1,10 +1,36 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  // experimental: {
-  //   // 启用 React 18 的并发特性
-  //   reactCompiler: true,
-  // },
+  // 性能优化
+  experimental: {
+    // 启用 React 编译器（React 19+）
+    // reactCompiler: true,
+
+    // 启用 Turbopack（开发模式）
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
+
+    // 优化字体加载
+    optimizePackageImports: ['antd', 'lucide-react'],
+  },
+
+  // 编译优化
+  compiler: {
+    // 移除 console.log（生产环境）
+    removeConsole:
+      process.env.NODE_ENV === 'production'
+        ? {
+            exclude: ['error', 'warn'],
+          }
+        : false,
+  },
+
   // 图片优化配置
   images: {
     domains: [
@@ -13,12 +39,23 @@ const nextConfig: NextConfig = {
       'gw.alipayobjects.com', // 支付宝CDN域名
     ],
     formats: ['image/webp', 'image/avif'],
+    minimumCacheTTL: 86400, // 24 小时缓存
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
+
+  // 压缩配置
+  compress: true,
+
+  // PWA 配置
+  poweredByHeader: false, // 移除 X-Powered-By 头
+
   // 环境变量配置
   env: {
     APP_TITLE: process.env.APP_TITLE || 'Next.js 15 教程项目',
     APP_DESCRIPTION: process.env.APP_DESCRIPTION || '一个完整的Next.js 15全栈教程项目',
   },
+
   // 重定向配置
   async redirects() {
     return [
@@ -28,6 +65,80 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
     ];
+  },
+
+  // 头部配置
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          // 安全头部
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+        ],
+      },
+      {
+        source: '/api/(.*)',
+        headers: [
+          // API 缓存控制
+          {
+            key: 'Cache-Control',
+            value: 'no-store, must-revalidate',
+          },
+        ],
+      },
+      {
+        source: '/_next/static/(.*)',
+        headers: [
+          // 静态资源长期缓存
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
+  },
+
+  // Webpack 配置优化
+  webpack: (config, { dev, isServer }) => {
+    // 生产环境优化
+    if (!dev && !isServer) {
+      // 代码分割优化
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all',
+          },
+          common: {
+            name: 'common',
+            minChunks: 2,
+            chunks: 'all',
+            enforce: true,
+          },
+        },
+      };
+    }
+
+    return config;
   },
 };
 

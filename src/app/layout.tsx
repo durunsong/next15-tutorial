@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import Script from 'next/script';
 
 import { AuthProvider } from '@/components/AuthProvider';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import { Navigation } from '@/components/Navigation';
 import TawkToWidget from '@/components/TawkToWidget';
 import { ThemeProvider } from '@/components/ThemeProvider';
@@ -60,24 +61,26 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AuthProvider>
-            {/* 固定在顶部的导航栏 */}
-            <div className="fixed top-0 left-0 right-0 z-50">
-              <Navigation />
-            </div>
-            {/* 主内容区域，添加上边距避免被导航栏遮挡 */}
-            <main className="mt-16">{children}</main>
+          <ErrorBoundary>
+            <AuthProvider>
+              {/* 固定在顶部的导航栏 */}
+              <div className="fixed top-0 left-0 right-0 z-50">
+                <Navigation />
+              </div>
+              {/* 主内容区域，添加上边距避免被导航栏遮挡 */}
+              <main className="mt-16">{children}</main>
 
-            {/* Tawk.to 客服组件 - 全局加载 */}
-            <TawkToWidget
-              enableInDev={true}
-              customSettings={{
-                position: 'bottom-right',
-                showPreChatForm: true,
-                showOfflineForm: true,
-              }}
-            />
-          </AuthProvider>
+              {/* Tawk.to 客服组件 */}
+              <TawkToWidget
+                enableInDev
+                customSettings={{
+                  position: 'bottom-right',
+                  showPreChatForm: true,
+                  showOfflineForm: true,
+                }}
+              />
+            </AuthProvider>
+          </ErrorBoundary>
         </ThemeProvider>
       </body>
     </html>

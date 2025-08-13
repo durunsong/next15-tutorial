@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import { Alert, Button, Checkbox, Form, Input, Modal, Tabs, message } from 'antd';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import PasswordStrengthIndicator from '@/components/PasswordStrengthIndicator';
 import { useAuthStore } from '@/store/authStore';
@@ -192,7 +192,7 @@ export default function AuthModal({
       width={400}
       className="auth-modal"
       centered
-      destroyOnClose
+      destroyOnHidden
     >
       <div className="p-6">
         <div className="text-center mb-6">
