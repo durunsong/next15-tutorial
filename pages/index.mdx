@@ -1,0 +1,186 @@
+# Next.js 15 全栈教程项目
+
+欢迎来到 Next.js 15 全栈开发教程！这是一个完整的实战项目，涵盖了现代 Web 开发的核心技术栈。
+
+## 🚀 项目特色
+
+- **最新技术栈**: 基于 Next.js 15、React 19、TypeScript
+- **全栈开发**: 包含前端、后端、数据库的完整解决方案
+- **真实演示**: 所有功能都连接真实的数据库、Redis、OSS 服务
+- **生产就绪**: 包含认证、缓存、文件上传等生产级功能
+- **最佳实践**: 遵循现代 Web 开发的最佳实践
+
+## 📚 技术栈
+
+### 前端技术
+- **Next.js 15**: React 全栈框架
+- **React 19**: 最新的 React 版本
+- **TypeScript**: 类型安全的 JavaScript
+- **Tailwind CSS**: 实用优先的 CSS 框架
+- **Framer Motion**: 动画库
+- **Zustand**: 轻量级状态管理
+
+### 后端技术
+- **Next.js API Routes**: 服务端 API
+- **Prisma**: 现代数据库 ORM
+- **PostgreSQL**: 关系型数据库
+- **Redis**: 内存数据库（缓存、会话）
+- **JWT**: 用户认证
+- **bcryptjs**: 密码加密
+
+### 云服务
+- **阿里云 OSS**: 对象存储服务
+- **Upstash Redis**: 无服务器 Redis
+- **Vercel/Netlify**: 部署平台
+
+## 🛠️ 快速开始
+
+### 1. 环境准备
+
+确保你的开发环境满足以下要求：
+
+```bash
+Node.js >= 18.0.0
+pnpm >= 8.0.0 (推荐) 或 npm >= 9.0.0
+PostgreSQL >= 13.0
+```
+
+### 2. 克隆项目
+
+```bash
+git clone https://github.com/your-username/next15-tutorial.git
+cd next15-tutorial
+```
+
+### 3. 安装依赖
+
+```bash
+pnpm install
+```
+
+### 4. 环境配置
+
+复制环境变量模板：
+
+```bash
+cp env.example .env.local
+```
+
+编辑 `.env.local` 文件，填入你的配置信息：
+
+```bash
+# 数据库配置
+DATABASE_URL="postgresql://username:password@localhost:5432/next15_tutorial"
+
+# Redis 配置
+UPSTASH_REDIS_REST_URL="your-redis-url"
+UPSTASH_REDIS_REST_TOKEN="your-redis-token"
+
+# OSS 配置
+OSS_ACCESS_KEY_ID="your-access-key"
+OSS_ACCESS_KEY_SECRET="your-secret-key"
+OSS_REGION="oss-cn-hangzhou"
+OSS_BUCKET="your-bucket-name"
+
+# JWT 密钥
+JWT_SECRET="your-super-secret-jwt-key"
+```
+
+### 5. 数据库初始化
+
+```bash
+# 生成 Prisma 客户端
+pnpm db:generate
+
+# 推送数据库架构
+pnpm db:push
+
+# 可选：运行数据库迁移
+pnpm db:migrate
+```
+
+### 6. 启动开发服务器
+
+```bash
+pnpm dev
+```
+
+访问 [http://localhost:3000](http://localhost:3000) 查看项目。
+
+## 📖 教程内容
+
+### 基础教程
+
+1. **[Next.js 基础](/tutorials/nextjs-basics)** - Next.js 15 新特性和基本概念
+2. **[TypeScript 实战](/tutorials/typescript)** - TypeScript 在 Next.js 中的应用
+3. **[Prisma 数据库](/tutorials/prisma)** - 数据库设计和 ORM 使用
+4. **[Redis 缓存](/tutorials/redis)** - Redis 缓存策略和实现
+5. **[OSS 文件存储](/tutorials/oss)** - 阿里云 OSS 文件上传和管理
+6. **[Zustand 状态管理](/tutorials/zustand)** - 轻量级状态管理解决方案
+
+### 实战功能
+
+- **用户认证系统** - 注册、登录、JWT 验证
+- **文件上传功能** - 头像上传、图片处理
+- **缓存策略** - Redis 缓存实现
+- **数据库操作** - CRUD 操作和关系查询
+- **API 设计** - RESTful API 和错误处理
+- **性能优化** - 代码分割、图片优化等
+
+## 🎯 学习路径
+
+### 初学者路径
+1. 了解项目结构和技术栈
+2. 学习 Next.js 基础概念
+3. 掌握 TypeScript 基本语法
+4. 实践数据库操作
+5. 完成用户认证功能
+
+### 进阶路径
+1. 深入 Next.js 15 新特性
+2. 优化性能和用户体验
+3. 实现复杂的业务逻辑
+4. 部署到生产环境
+5. 监控和维护应用
+
+## 🔧 可用脚本
+
+```bash
+# 开发
+pnpm dev              # 启动开发服务器
+pnpm build            # 构建生产版本
+pnpm start            # 启动生产服务器
+
+# 代码质量
+pnpm lint             # 代码检查
+pnpm type-check       # 类型检查
+pnpm format           # 代码格式化
+
+# 数据库
+pnpm db:generate      # 生成 Prisma 客户端
+pnpm db:push          # 推送数据库架构
+pnpm db:migrate       # 运行数据库迁移
+pnpm db:studio        # 打开 Prisma Studio
+
+# 部署
+pnpm pre-deploy       # 部署前检查
+```
+
+## 🤝 贡献指南
+
+我们欢迎任何形式的贡献！请阅读 [贡献指南](CONTRIBUTING.md) 了解详情。
+
+## 📄 许可证
+
+本项目采用 [MIT 许可证](LICENSE)。
+
+## 📞 联系我们
+
+- GitHub: [项目地址](https://github.com/your-username/next15-tutorial)
+- 问题反馈: [Issues](https://github.com/your-username/next15-tutorial/issues)
+- 讨论交流: [Discussions](https://github.com/your-username/next15-tutorial/discussions)
+
+---
+
+开始你的 Next.js 15 全栈开发之旅吧！🚀
+

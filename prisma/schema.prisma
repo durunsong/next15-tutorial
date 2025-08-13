@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String    @id @default(cuid())
+  email       String    @unique
+  username    String    @unique
+  phone       String?   @unique
+  password    String
+  avatar      String?
+  lastLoginAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  comments    Comment[]
+  posts       Post[]
+
+  @@map("users")
+}
+
+model Post {
+  id         String    @id @default(cuid())
+  title      String
+  content    String
+  published  Boolean   @default(false)
+  category   String
+  difficulty String
+  tags       String[]
+  coverImage String?
+  views      Int       @default(0)
+  likes      Int       @default(0)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  authorId   String
+  comments   Comment[]
+  author     User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@map("posts")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  postId    String
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@map("comments")
+}
+
+model file_uploads {
+  id           String   @id
+  filename     String
+  originalName String
+  mimeType     String
+  size         Int
+  url          String
+  bucket       String
+  key          String
+  uploadedBy   String?
+  createdAt    DateTime @default(now())
+}
+
+model system_configs {
+  id          String   @id
+  key         String   @unique
+  value       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+}
+
+model verification_codes {
+  id        String   @id
+  email     String
+  code      String
+  type      String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
