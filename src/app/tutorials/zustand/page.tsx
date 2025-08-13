@@ -1,13 +1,26 @@
 'use client';
 
-import { TutorialLayout } from '@/components/TutorialLayout';
-import { DemoSection } from '@/components/DemoSection';
+import {
+  ArrowRight,
+  Bell,
+  Edit,
+  Minus,
+  Plus,
+  Settings,
+  ShoppingCart,
+  Trash2,
+  Users,
+} from 'lucide-react';
+
+import { useState } from 'react';
+
+import NextImage from 'next/image';
+import Link from 'next/link';
+
 import { CodeBlock } from '@/components/CodeBlock';
 import { CodeEditor } from '@/components/CodeEditor';
-import { useState } from 'react';
-import Link from 'next/link';
-import NextImage from 'next/image';
-import { ArrowRight, Settings, Users, ShoppingCart, Bell, Plus, Minus, Trash2, Edit } from 'lucide-react';
+import { DemoSection } from '@/components/DemoSection';
+import { TutorialLayout } from '@/components/TutorialLayout';
 
 // 模拟 Zustand store
 interface TodoItem {
@@ -46,7 +59,7 @@ function SimpleStateDemo() {
         id: Date.now(),
         text: newTodo,
         completed: false,
-        createdAt: new Date()
+        createdAt: new Date(),
       };
       setTodos([...todos, todo]);
       setNewTodo('');
@@ -54,9 +67,7 @@ function SimpleStateDemo() {
   };
 
   const toggleTodo = (id: number) => {
-    setTodos(todos.map(todo => 
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    ));
+    setTodos(todos.map(todo => (todo.id === id ? { ...todo, completed: !todo.completed } : todo)));
   };
 
   const deleteTodo = (id: number) => {
@@ -102,14 +113,14 @@ function SimpleStateDemo() {
           <Edit className="h-4 w-4 mr-2 text-green-600" />
           待办事项列表状态
         </h4>
-        
+
         {/* 添加待办 */}
         <div className="flex gap-2 mb-4">
           <input
             type="text"
             value={newTodo}
-            onChange={(e) => setNewTodo(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && addTodo()}
+            onChange={e => setNewTodo(e.target.value)}
+            onKeyPress={e => e.key === 'Enter' && addTodo()}
             placeholder="添加新的待办事项..."
             className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
           />
@@ -123,8 +134,11 @@ function SimpleStateDemo() {
 
         {/* 待办列表 */}
         <div className="space-y-2">
-          {todos.map((todo) => (
-            <div key={todo.id} className="flex items-center justify-between p-2 border border-gray-200 dark:border-gray-700 rounded">
+          {todos.map(todo => (
+            <div
+              key={todo.id}
+              className="flex items-center justify-between p-2 border border-gray-200 dark:border-gray-700 rounded"
+            >
               <div className="flex items-center space-x-3">
                 <input
                   type="checkbox"
@@ -132,7 +146,9 @@ function SimpleStateDemo() {
                   onChange={() => toggleTodo(todo.id)}
                   className="rounded"
                 />
-                <span className={`${todo.completed ? 'line-through text-gray-500' : 'text-gray-900 dark:text-white'}`}>
+                <span
+                  className={`${todo.completed ? 'line-through text-gray-500' : 'text-gray-900 dark:text-white'}`}
+                >
                   {todo.text}
                 </span>
               </div>
@@ -160,7 +176,7 @@ function ComplexStateDemo() {
     id: 1,
     name: '张三',
     email: 'zhangsan@example.com',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=zhangsan'
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=zhangsan',
   });
 
   const [cart, setCart] = useState<CartItem[]>([
@@ -174,13 +190,17 @@ function ComplexStateDemo() {
   ]);
 
   const updateQuantity = (id: number, delta: number) => {
-    setCart(cart.map(item => {
-      if (item.id === id) {
-        const newQuantity = Math.max(0, item.quantity + delta);
-        return { ...item, quantity: newQuantity };
-      }
-      return item;
-    }).filter(item => item.quantity > 0));
+    setCart(
+      cart
+        .map(item => {
+          if (item.id === id) {
+            const newQuantity = Math.max(0, item.quantity + delta);
+            return { ...item, quantity: newQuantity };
+          }
+          return item;
+        })
+        .filter(item => item.quantity > 0)
+    );
   };
 
   const removeFromCart = (id: number) => {
@@ -192,7 +212,7 @@ function ComplexStateDemo() {
       id: Date.now(),
       message,
       type,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
     setNotifications([notification, ...notifications]);
   };
@@ -201,7 +221,7 @@ function ComplexStateDemo() {
     setNotifications([]);
   };
 
-  const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
@@ -239,13 +259,18 @@ function ComplexStateDemo() {
           <ShoppingCart className="h-4 w-4 mr-2 text-green-600" />
           购物车状态 ({totalItems} 件商品)
         </h4>
-        
+
         <div className="space-y-3">
-          {cart.map((item) => (
-            <div key={item.id} className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-700 rounded">
+          {cart.map(item => (
+            <div
+              key={item.id}
+              className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-700 rounded"
+            >
               <div>
                 <p className="font-medium text-gray-900 dark:text-white">{item.name}</p>
-                <p className="text-sm text-gray-600 dark:text-gray-300">¥{item.price.toLocaleString()}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                  ¥{item.price.toLocaleString()}
+                </p>
               </div>
               <div className="flex items-center space-x-2">
                 <button
@@ -270,16 +295,18 @@ function ComplexStateDemo() {
               </div>
             </div>
           ))}
-          
+
           {cart.length === 0 && (
             <p className="text-center text-gray-500 dark:text-gray-400 py-4">购物车为空</p>
           )}
-          
+
           {cart.length > 0 && (
             <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
               <div className="flex justify-between items-center">
                 <span className="font-semibold text-gray-900 dark:text-white">总计:</span>
-                <span className="font-bold text-lg text-green-600">¥{totalAmount.toLocaleString()}</span>
+                <span className="font-bold text-lg text-green-600">
+                  ¥{totalAmount.toLocaleString()}
+                </span>
               </div>
             </div>
           )}
@@ -308,22 +335,28 @@ function ComplexStateDemo() {
             </button>
           </div>
         </div>
-        
+
         <div className="space-y-2 max-h-40 overflow-y-auto">
-          {notifications.map((notification) => (
-            <div key={notification.id} className={`p-2 rounded text-sm border-l-4 ${
-              notification.type === 'success' ? 'bg-green-50 dark:bg-green-900/20 border-green-500' :
-              notification.type === 'error' ? 'bg-red-50 dark:bg-red-900/20 border-red-500' :
-              notification.type === 'warning' ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-500' :
-              'bg-blue-50 dark:bg-blue-900/20 border-blue-500'
-            }`}>
+          {notifications.map(notification => (
+            <div
+              key={notification.id}
+              className={`p-2 rounded text-sm border-l-4 ${
+                notification.type === 'success'
+                  ? 'bg-green-50 dark:bg-green-900/20 border-green-500'
+                  : notification.type === 'error'
+                    ? 'bg-red-50 dark:bg-red-900/20 border-red-500'
+                    : notification.type === 'warning'
+                      ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-500'
+                      : 'bg-blue-50 dark:bg-blue-900/20 border-blue-500'
+              }`}
+            >
               <p className="text-gray-900 dark:text-white">{notification.message}</p>
               <p className="text-xs text-gray-500 dark:text-gray-400">
                 {notification.timestamp.toLocaleTimeString()}
               </p>
             </div>
           ))}
-          
+
           {notifications.length === 0 && (
             <p className="text-center text-gray-500 dark:text-gray-400 py-4">暂无通知</p>
           )}
@@ -785,8 +818,8 @@ async function externalFunction() {
       title="Zustand 状态管理教程"
       description="学习使用 Zustand 进行简洁高效的 React 状态管理，掌握现代状态管理的最佳实践"
       prevTutorial={{
-        title: "阿里云 OSS",
-        href: "/tutorials/oss"
+        title: '阿里云 OSS',
+        href: '/tutorials/oss',
       }}
     >
       <div className="space-y-12">
@@ -797,17 +830,15 @@ async function externalFunction() {
           </h2>
           <div className="prose prose-lg max-w-none dark:prose-invert">
             <p>
-              Zustand 是一个轻量级的 React 状态管理库，提供了简洁的 API 和强大的功能。
-              相比 Redux，它有更少的样板代码；相比 Context API，它有更好的性能。
+              Zustand 是一个轻量级的 React 状态管理库，提供了简洁的 API 和强大的功能。 相比
+              Redux，它有更少的样板代码；相比 Context API，它有更好的性能。
             </p>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-6">
               <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <Settings className="h-8 w-8 text-blue-600 mb-2" />
                 <h3 className="font-semibold text-gray-900 dark:text-white">简洁 API</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  最少的样板代码，直观易用
-                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-300">最少的样板代码，直观易用</p>
               </div>
               <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <ArrowRight className="h-8 w-8 text-green-600 mb-2" />
@@ -819,9 +850,7 @@ async function externalFunction() {
               <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <Plus className="h-8 w-8 text-purple-600 mb-2" />
                 <h3 className="font-semibold text-gray-900 dark:text-white">灵活扩展</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  丰富的中间件生态系统
-                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-300">丰富的中间件生态系统</p>
               </div>
             </div>
           </div>
@@ -829,21 +858,15 @@ async function externalFunction() {
 
         {/* 基础用法 */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            基础 Store 创建
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">基础 Store 创建</h2>
           <div className="prose prose-lg max-w-none dark:prose-invert mb-6">
             <p>
-              Zustand 的核心是 create 函数，它接受一个函数并返回一个 hook。
-              这个函数接收 set 和 get 参数来管理状态。
+              Zustand 的核心是 create 函数，它接受一个函数并返回一个 hook。 这个函数接收 set 和 get
+              参数来管理状态。
             </p>
           </div>
-          
-          <CodeBlock
-            code={basicStoreCode}
-            language="typescript"
-            filename="基础 Store 示例"
-          />
+
+          <CodeBlock code={basicStoreCode} language="typescript" filename="基础 Store 示例" />
         </section>
 
         {/* 简单状态演示 */}
@@ -892,21 +915,15 @@ const useTodoStore = create((set) => ({
 
         {/* 高级 Store */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            高级 Store 设计
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">高级 Store 设计</h2>
           <div className="prose prose-lg max-w-none dark:prose-invert mb-6">
             <p>
               高级 Store 可以包含复杂的状态结构、计算属性、中间件支持等。
               通过合理的设计，可以构建出功能强大且易于维护的状态管理系统。
             </p>
           </div>
-          
-          <CodeBlock
-            code={advancedStoreCode}
-            language="typescript"
-            filename="高级 Store 设计"
-          />
+
+          <CodeBlock code={advancedStoreCode} language="typescript" filename="高级 Store 设计" />
         </section>
 
         {/* 复杂状态演示 */}
@@ -1013,69 +1030,44 @@ export const useAppStore = create<AppState>()(
 
         {/* 中间件 */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            中间件使用
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">中间件使用</h2>
           <div className="prose prose-lg max-w-none dark:prose-invert mb-6">
             <p>
-              Zustand 提供了丰富的中间件来扩展功能，包括持久化、订阅、
-              日志记录、Redux DevTools 集成等。
+              Zustand 提供了丰富的中间件来扩展功能，包括持久化、订阅、 日志记录、Redux DevTools
+              集成等。
             </p>
           </div>
-          
-          <CodeBlock
-            code={middlewareCode}
-            language="typescript"
-            filename="中间件使用示例"
-          />
+
+          <CodeBlock code={middlewareCode} language="typescript" filename="中间件使用示例" />
         </section>
 
         {/* 组件集成 */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            在组件中使用
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">在组件中使用</h2>
           <div className="prose prose-lg max-w-none dark:prose-invert mb-6">
-            <p>
-              在 React 组件中使用 Zustand Store 非常简单，支持选择性订阅、
-              异步操作等高级用法。
-            </p>
+            <p>在 React 组件中使用 Zustand Store 非常简单，支持选择性订阅、 异步操作等高级用法。</p>
           </div>
-          
-          <CodeBlock
-            code={componentsCode}
-            language="tsx"
-            filename="组件中使用 Zustand"
-          />
+
+          <CodeBlock code={componentsCode} language="tsx" filename="组件中使用 Zustand" />
         </section>
 
         {/* 最佳实践 */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            最佳实践
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">最佳实践</h2>
           <div className="prose prose-lg max-w-none dark:prose-invert mb-6">
-            <p>
-              遵循最佳实践可以让你的 Zustand 应用更加健壮、可维护和高性能。
-            </p>
+            <p>遵循最佳实践可以让你的 Zustand 应用更加健壮、可维护和高性能。</p>
           </div>
-          
-          <CodeBlock
-            code={bestPracticesCode}
-            language="typescript"
-            filename="Zustand 最佳实践"
-          />
+
+          <CodeBlock code={bestPracticesCode} language="typescript" filename="Zustand 最佳实践" />
         </section>
 
         {/* 互动编辑器 */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Zustand 练习场
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Zustand 练习场</h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6">
             尝试创建自己的 Zustand Store，体验状态管理的强大功能：
           </p>
-          
+
           <CodeEditor
             title="Zustand 状态管理练习"
             defaultCode={`// Zustand 状态管理练习
@@ -1276,7 +1268,7 @@ blogApp.actions.addPost();
 console.log('添加文章后的统计:', useBlogStore.getState().stats);`}
             language="typescript"
             height="700px"
-            onRun={(code) => console.log('执行 Zustand 代码:', code)}
+            onRun={code => console.log('执行 Zustand 代码:', code)}
             showConsole={true}
           />
         </section>
@@ -1326,9 +1318,9 @@ console.log('添加文章后的统计:', useBlogStore.getState().stats);`}
             恭喜你完成了所有教程！
           </h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-3xl mx-auto">
-            通过这个完整的 Next.js 15 教程系列，你已经掌握了现代前端开发的核心技能。
-            从 Next.js 基础到 TypeScript、数据库操作、缓存、文件存储和状态管理，
-            你现在可以构建功能完整的现代 Web 应用了。
+            通过这个完整的 Next.js 15 教程系列，你已经掌握了现代前端开发的核心技能。 从 Next.js
+            基础到 TypeScript、数据库操作、缓存、文件存储和状态管理， 你现在可以构建功能完整的现代
+            Web 应用了。
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

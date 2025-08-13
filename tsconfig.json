@@ -1,27 +1,77 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    // 目标和库配置
+    "target": "ES2022",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
+
+    // 严格模式配置 (逐步启用)
     "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
+    // "noUncheckedIndexedAccess": true,  // 将来启用
+    // "exactOptionalPropertyTypes": true,  // 将来启用
+    // "noImplicitReturns": true,  // useEffect 组件中可能有复杂返回逻辑，暂时禁用
+    "noFallthroughCasesInSwitch": true,
+    // "noUncheckedSideEffectImports": true,  // 将来启用
+
+    // 模块配置
     "module": "esnext",
     "moduleResolution": "bundler",
+    // "allowImportingTsExtensions": true,  // 与 Next.js 不兼容
+    "moduleDetection": "force",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    // "verbatimModuleSyntax": true,  // 可能导致导入问题，暂时禁用
+
+    // 编译配置
+    "noEmit": true,
     "incremental": true,
+    "tsBuildInfoFile": ".next/cache/tsbuildinfo.json",
+
+    // 互操作性
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // JSX 配置
+    "jsx": "preserve",
+
+    // Next.js 插件
     "plugins": [
       {
         "name": "next"
       }
     ],
+
+    // 路径映射
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/utils/*": ["./src/utils/*"],
+      "@/types/*": ["./src/types/*"],
+      "@/store/*": ["./src/store/*"],
+      "@/app/*": ["./src/app/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/**/*",
+    "pages/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "out",
+    "dist",
+    "build",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ]
 }

@@ -1,6 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { CacheManager } from '@/lib/redis';
 import jwt from 'jsonwebtoken';
+
+import { NextRequest, NextResponse } from 'next/server';
+
+import { CacheManager } from '@/lib/redis';
 
 // 验证JWT Token
 function verifyToken(token: string): { userId: string } | null {
@@ -21,7 +23,7 @@ export async function POST(req: NextRequest) {
   try {
     // 从请求头或Cookie中获取token
     let token = req.headers.get('authorization')?.replace('Bearer ', '');
-    
+
     if (!token) {
       // 尝试从Cookie中获取
       const cookies = req.headers.get('cookie');
@@ -34,29 +36,20 @@ export async function POST(req: NextRequest) {
     }
 
     if (!token) {
-      return NextResponse.json(
-        { error: '未找到认证令牌' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: '未找到认证令牌' }, { status: 401 });
     }
 
     // 验证token
     const decoded = verifyToken(token);
     if (!decoded) {
-      return NextResponse.json(
-        { error: '无效的认证令牌' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: '无效的认证令牌' }, { status: 401 });
     }
 
     // 从缓存中删除会话信息
     await CacheManager.del(`session:${decoded.userId}`);
 
     // 创建响应，清除Cookie
-    const response = NextResponse.json(
-      { message: '退出成功' },
-      { status: 200 }
-    );
+    const response = NextResponse.json({ message: '退出成功' }, { status: 200 });
 
     // 清除HttpOnly Cookie
     const cookieOptions = [
@@ -65,7 +58,7 @@ export async function POST(req: NextRequest) {
       'Secure',
       'SameSite=Strict',
       'Max-Age=0',
-      'Path=/'
+      'Path=/',
     ].join('; ');
 
     response.headers.set('Set-Cookie', cookieOptions);
@@ -74,9 +67,9 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error('退出失败:', error);
     return NextResponse.json(
-      { 
+      {
         error: '退出失败',
-        message: '服务器内部错误'
+        message: '服务器内部错误',
       },
       { status: 500 }
     );
@@ -88,7 +81,7 @@ export async function DELETE(req: NextRequest) {
   try {
     // 从请求头或Cookie中获取token
     let token = req.headers.get('authorization')?.replace('Bearer ', '');
-    
+
     if (!token) {
       const cookies = req.headers.get('cookie');
       if (cookies) {
@@ -100,25 +93,19 @@ export async function DELETE(req: NextRequest) {
     }
 
     if (!token) {
-      return NextResponse.json(
-        { error: '未找到认证令牌' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: '未找到认证令牌' }, { status: 401 });
     }
 
     // 验证token
     const decoded = verifyToken(token);
     if (!decoded) {
-      return NextResponse.json(
-        { error: '无效的认证令牌' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: '无效的认证令牌' }, { status: 401 });
     }
 
     // 删除用户的所有会话
     // 注意：这里简化处理，实际项目中可能需要维护用户的所有会话ID列表
     await CacheManager.del(`session:${decoded.userId}`);
-    
+
     // 可以扩展为删除用户的所有会话
     // const sessionKeys = await redis.keys(`session:${decoded.userId}:*`);
     // if (sessionKeys.length > 0) {
@@ -126,9 +113,9 @@ export async function DELETE(req: NextRequest) {
     // }
 
     const response = NextResponse.json(
-      { 
+      {
         message: '已退出所有设备',
-        loggedOutDevices: 1 // 简化处理，实际应该返回真实数量
+        loggedOutDevices: 1, // 简化处理，实际应该返回真实数量
       },
       { status: 200 }
     );
@@ -140,7 +127,7 @@ export async function DELETE(req: NextRequest) {
       'Secure',
       'SameSite=Strict',
       'Max-Age=0',
-      'Path=/'
+      'Path=/',
     ].join('; ');
 
     response.headers.set('Set-Cookie', cookieOptions);
@@ -149,12 +136,11 @@ export async function DELETE(req: NextRequest) {
   } catch (error) {
     console.error('批量退出失败:', error);
     return NextResponse.json(
-      { 
+      {
         error: '退出失败',
-        message: '服务器内部错误'
+        message: '服务器内部错误',
       },
       { status: 500 }
     );
   }
 }
-

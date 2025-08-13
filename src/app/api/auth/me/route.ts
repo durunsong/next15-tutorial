@@ -1,7 +1,9 @@
+import jwt from 'jsonwebtoken';
+
 import { NextRequest, NextResponse } from 'next/server';
+
 import { prisma } from '@/lib/prisma';
 import { CacheManager } from '@/lib/redis';
-import jwt from 'jsonwebtoken';
 
 // 验证JWT Token
 function verifyToken(token: string): { userId: string; email: string; username: string } | null {
@@ -11,7 +13,11 @@ function verifyToken(token: string): { userId: string; email: string; username: 
       throw new Error('JWT_SECRET is not configured');
     }
 
-    const decoded = jwt.verify(token, secret) as { userId: string; email: string; username: string };
+    const decoded = jwt.verify(token, secret) as {
+      userId: string;
+      email: string;
+      username: string;
+    };
     return {
       userId: decoded.userId,
       email: decoded.email,
@@ -26,7 +32,7 @@ export async function GET(req: NextRequest) {
   try {
     // 从请求头或Cookie中获取token
     let token = req.headers.get('authorization')?.replace('Bearer ', '');
-    
+
     if (!token) {
       // 尝试从Cookie中获取
       const cookies = req.headers.get('cookie');
@@ -39,28 +45,19 @@ export async function GET(req: NextRequest) {
     }
 
     if (!token) {
-      return NextResponse.json(
-        { error: '未找到认证令牌' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: '未找到认证令牌' }, { status: 401 });
     }
 
     // 验证token
     const decoded = verifyToken(token);
     if (!decoded) {
-      return NextResponse.json(
-        { error: '无效的认证令牌' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: '无效的认证令牌' }, { status: 401 });
     }
 
     // 检查会话是否存在于缓存中
     const sessionExists = await CacheManager.exists(`session:${decoded.userId}`);
     if (!sessionExists) {
-      return NextResponse.json(
-        { error: '会话已过期，请重新登录' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: '会话已过期，请重新登录' }, { status: 401 });
     }
 
     // 从数据库获取最新的用户信息
@@ -87,10 +84,7 @@ export async function GET(req: NextRequest) {
     if (!user) {
       // 用户不存在，清除会话
       await CacheManager.del(`session:${decoded.userId}`);
-      return NextResponse.json(
-        { error: '用户不存在' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: '用户不存在' }, { status: 404 });
     }
 
     // 更新会话活跃时间
@@ -110,14 +104,14 @@ export async function GET(req: NextRequest) {
         isAuthenticated: true,
         loginTime: new Date().toISOString(),
         lastActivity: new Date().toISOString(),
-      }
+      },
     });
   } catch (error) {
     console.error('获取用户信息失败:', error);
     return NextResponse.json(
-      { 
+      {
         error: '获取用户信息失败',
-        message: '服务器内部错误'
+        message: '服务器内部错误',
       },
       { status: 500 }
     );
@@ -129,7 +123,7 @@ export async function PUT(req: NextRequest) {
   try {
     // 验证token
     let token = req.headers.get('authorization')?.replace('Bearer ', '');
-    
+
     if (!token) {
       const cookies = req.headers.get('cookie');
       if (cookies) {
@@ -141,79 +135,55 @@ export async function PUT(req: NextRequest) {
     }
 
     if (!token) {
-      return NextResponse.json(
-        { error: '未找到认证令牌' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: '未找到认证令牌' }, { status: 401 });
     }
 
     const decoded = verifyToken(token);
     if (!decoded) {
-      return NextResponse.json(
-        { error: '无效的认证令牌' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: '无效的认证令牌' }, { status: 401 });
     }
 
     const body = await req.json();
     const { username, avatar, phone } = body;
 
     // 验证输入
-    if (username && (username.length < 3 || username.length > 20 || !/^[a-zA-Z0-9_]+$/.test(username))) {
-      return NextResponse.json(
-        { error: '用户名格式不正确' },
-        { status: 400 }
-      );
+    if (
+      username &&
+      (username.length < 3 || username.length > 20 || !/^[a-zA-Z0-9_]+$/.test(username))
+    ) {
+      return NextResponse.json({ error: '用户名格式不正确' }, { status: 400 });
     }
 
     if (phone && !/^1[3-9]\d{9}$/.test(phone)) {
-      return NextResponse.json(
-        { error: '手机号格式不正确' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '手机号格式不正确' }, { status: 400 });
     }
 
     if (avatar && avatar.length > 500) {
-      return NextResponse.json(
-        { error: '头像URL过长' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '头像URL过长' }, { status: 400 });
     }
 
     // 检查用户名和手机号是否已被使用
     if (username) {
       const existingUser = await prisma.user.findFirst({
         where: {
-          AND: [
-            { username },
-            { id: { not: decoded.userId } }
-          ]
-        }
+          AND: [{ username }, { id: { not: decoded.userId } }],
+        },
       });
 
       if (existingUser) {
-        return NextResponse.json(
-          { error: '用户名已被使用' },
-          { status: 409 }
-        );
+        return NextResponse.json({ error: '用户名已被使用' }, { status: 409 });
       }
     }
 
     if (phone) {
       const existingUser = await prisma.user.findFirst({
         where: {
-          AND: [
-            { phone },
-            { id: { not: decoded.userId } }
-          ]
-        }
+          AND: [{ phone }, { id: { not: decoded.userId } }],
+        },
       });
 
       if (existingUser) {
-        return NextResponse.json(
-          { error: '手机号已被使用' },
-          { status: 409 }
-        );
+        return NextResponse.json({ error: '手机号已被使用' }, { status: 409 });
       }
     }
 
@@ -246,17 +216,16 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json({
       message: '用户信息更新成功',
-      user: updatedUser
+      user: updatedUser,
     });
   } catch (error) {
     console.error('更新用户信息失败:', error);
     return NextResponse.json(
-      { 
+      {
         error: '更新失败',
-        message: '服务器内部错误'
+        message: '服务器内部错误',
       },
       { status: 500 }
     );
   }
 }
-

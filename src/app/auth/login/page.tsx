@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Card, Form, Input, Button, Alert, Checkbox, Divider, message } from 'antd';
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
+import { Alert, Button, Card, Checkbox, Divider, Form, Input, message } from 'antd';
+
+import React, { useState } from 'react';
+
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -35,7 +37,7 @@ export default function LoginPage() {
 
       if (response.ok) {
         message.success('登录成功！');
-        
+
         // 存储token到localStorage（可选，因为已经设置了HttpOnly Cookie）
         if (data.token) {
           localStorage.setItem('token', data.token);
@@ -73,12 +75,8 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="text-4xl mb-4">🔐</div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            用户登录
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            登录您的账户以继续使用
-          </p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">用户登录</h1>
+          <p className="text-gray-600 dark:text-gray-400">登录您的账户以继续使用</p>
         </div>
 
         <Card className="shadow-xl border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
@@ -109,19 +107,13 @@ export default function LoginPage() {
                 { type: 'email', message: '请输入有效的邮箱地址' },
               ]}
             >
-              <Input
-                prefix={<MailOutlined />}
-                placeholder="请输入邮箱地址"
-                autoComplete="email"
-              />
+              <Input prefix={<MailOutlined />} placeholder="请输入邮箱地址" autoComplete="email" />
             </Form.Item>
 
             <Form.Item
               name="password"
               label="密码"
-              rules={[
-                { required: true, message: '请输入密码' },
-              ]}
+              rules={[{ required: true, message: '请输入密码' }]}
             >
               <Input.Password
                 prefix={<LockOutlined />}
@@ -135,8 +127,8 @@ export default function LoginPage() {
                 <Form.Item name="rememberMe" valuePropName="checked" noStyle>
                   <Checkbox>记住我</Checkbox>
                 </Form.Item>
-                <Link 
-                  href="/auth/forgot-password" 
+                <Link
+                  href="/auth/forgot-password"
                   className="text-blue-600 hover:text-blue-700 text-sm"
                 >
                   忘记密码？
@@ -197,4 +189,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

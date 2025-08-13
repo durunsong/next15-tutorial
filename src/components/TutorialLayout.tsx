@@ -1,7 +1,9 @@
 'use client';
 
-import { ReactNode } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+
+import { ReactNode } from 'react';
+
 import Link from 'next/link';
 
 interface TutorialLayoutProps {
@@ -43,15 +45,11 @@ export function TutorialLayout({
         <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-4">
           {title}
         </h1>
-        <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-          {description}
-        </p>
+        <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">{description}</p>
       </div>
 
       {/* 教程内容 */}
-      <div className="prose prose-lg max-w-none dark:prose-invert">
-        {children}
-      </div>
+      <div className="prose prose-lg max-w-none dark:prose-invert">{children}</div>
 
       {/* 导航按钮 */}
       <div className="flex justify-between items-center mt-16 pt-8 border-t border-gray-200 dark:border-gray-700">
@@ -69,7 +67,7 @@ export function TutorialLayout({
             </Link>
           )}
         </div>
-        
+
         <div className="flex-1 text-right">
           {nextTutorial && (
             <Link

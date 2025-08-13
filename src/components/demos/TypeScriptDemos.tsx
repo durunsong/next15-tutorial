@@ -1,7 +1,8 @@
 'use client';
 
+import { CheckCircle, Play, XCircle } from 'lucide-react';
+
 import { useState } from 'react';
-import { CheckCircle, XCircle, Play } from 'lucide-react';
 
 // TypeScript 类型演示组件
 export function TypeScriptTypesDemo() {
@@ -11,30 +12,30 @@ export function TypeScriptTypesDemo() {
   void code;
   const [result, setResult] = useState<unknown>(null);
   const [error, setError] = useState('');
-  
+
   const typeExamples = [
     {
       id: 'basic',
       name: '基础类型',
-      description: '字符串、数字、布尔值等基础类型'
+      description: '字符串、数字、布尔值等基础类型',
     },
     {
       id: 'interfaces',
       name: '接口',
-      description: '定义对象的结构和契约'
+      description: '定义对象的结构和契约',
     },
     {
       id: 'generics',
       name: '泛型',
-      description: '可重用的类型参数'
+      description: '可重用的类型参数',
     },
     {
       id: 'utility',
       name: '工具类型',
-      description: 'TypeScript 内置的实用工具类型'
-    }
+      description: 'TypeScript 内置的实用工具类型',
+    },
   ];
-  
+
   const typeCode = {
     basic: `// 基础类型示例
 let name: string = "张三";
@@ -109,9 +110,9 @@ type UserProfile = Pick<User, 'id' | 'name' | 'email'>;
 type CreateUser = Omit<User, 'id'>;
 
 // Record - 创建映射类型
-type UserRoles = Record<string, 'admin' | 'user' | 'guest'>;`
+type UserRoles = Record<string, 'admin' | 'user' | 'guest'>;`,
   };
-  
+
   const executeTypeScript = () => {
     try {
       setError('');
@@ -123,44 +124,44 @@ type UserRoles = Record<string, 'admin' | 'user' | 'guest'>;`
             age: 'number',
             isStudent: 'boolean',
             hobbies: 'string[]',
-            currentStatus: '"pending" | "success" | "error"'
-          }
+            currentStatus: '"pending" | "success" | "error"',
+          },
         });
       } else if (selectedType === 'interfaces') {
         setResult({
           user: {
             id: 1,
-            name: "张三",
-            email: "zhangsan@example.com",
-            createdAt: new Date().toISOString()
+            name: '张三',
+            email: 'zhangsan@example.com',
+            createdAt: new Date().toISOString(),
           },
-          typeCheck: '✅ 类型检查通过'
+          typeCheck: '✅ 类型检查通过',
         });
       } else if (selectedType === 'generics') {
         setResult({
           userResponse: {
             success: true,
-            data: { id: 1, name: "张三" }
+            data: { id: 1, name: '张三' },
           },
           listResponse: {
             success: true,
-            data: [1, 2, 3, 4, 5]
+            data: [1, 2, 3, 4, 5],
           },
-          inferred: '✅ 类型自动推断'
+          inferred: '✅ 类型自动推断',
         });
       } else if (selectedType === 'utility') {
         setResult({
           PartialUser: '所有属性都是可选的',
           UserProfile: '只包含 id, name, email',
           CreateUser: '排除了 id 属性',
-          UserRoles: '字符串键映射到角色类型'
+          UserRoles: '字符串键映射到角色类型',
         });
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : '执行错误');
     }
   };
-  
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -179,7 +180,7 @@ type UserRoles = Record<string, 'admin' | 'user' | 'guest'>;`
           </button>
         ))}
       </div>
-      
+
       <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
         <div className="flex items-center justify-between mb-4">
           <h4 className="font-semibold text-gray-900 dark:text-white">
@@ -193,7 +194,7 @@ type UserRoles = Record<string, 'admin' | 'user' | 'guest'>;`
             <span>类型检查</span>
           </button>
         </div>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div>
             <h5 className="text-sm font-medium mb-2">TypeScript 代码:</h5>
@@ -201,7 +202,7 @@ type UserRoles = Record<string, 'admin' | 'user' | 'guest'>;`
               <pre>{typeCode[selectedType as keyof typeof typeCode]}</pre>
             </div>
           </div>
-          
+
           <div>
             <h5 className="text-sm font-medium mb-2">类型检查结果:</h5>
             <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-3 min-h-[200px]">
@@ -216,9 +217,7 @@ type UserRoles = Record<string, 'admin' | 'user' | 'guest'>;`
                     <CheckCircle className="h-4 w-4" />
                     <span>类型检查通过</span>
                   </div>
-                  <pre className="text-sm overflow-x-auto">
-                    {JSON.stringify(result, null, 2)}
-                  </pre>
+                  <pre className="text-sm overflow-x-auto">{JSON.stringify(result, null, 2)}</pre>
                 </div>
               ) : (
                 <div className="text-gray-500 text-center py-8">
@@ -241,32 +240,32 @@ export function TSConfigDemo() {
     noImplicitAny: true,
     noImplicitReturns: true,
     noUnusedLocals: false,
-    noUnusedParameters: false
+    noUnusedParameters: false,
   });
-  
+
   const configOptions = [
     {
       id: 'strict',
       name: '严格模式',
-      description: '启用所有严格类型检查选项'
+      description: '启用所有严格类型检查选项',
     },
     {
       id: 'modules',
       name: '模块系统',
-      description: '配置模块解析和导入导出'
+      description: '配置模块解析和导入导出',
     },
     {
       id: 'target',
       name: '编译目标',
-      description: '设置 JavaScript 版本目标'
+      description: '设置 JavaScript 版本目标',
     },
     {
       id: 'paths',
       name: '路径映射',
-      description: '配置模块路径别名'
-    }
+      description: '配置模块路径别名',
+    },
   ];
-  
+
   const generateTSConfig = () => {
     const configs = {
       strict: {
@@ -275,39 +274,39 @@ export function TSConfigDemo() {
           noImplicitAny: compilerOptions.noImplicitAny,
           noImplicitReturns: compilerOptions.noImplicitReturns,
           noUnusedLocals: compilerOptions.noUnusedLocals,
-          noUnusedParameters: compilerOptions.noUnusedParameters
-        }
+          noUnusedParameters: compilerOptions.noUnusedParameters,
+        },
       },
       modules: {
         compilerOptions: {
-          module: "ESNext",
-          moduleResolution: "node",
+          module: 'ESNext',
+          moduleResolution: 'node',
           allowSyntheticDefaultImports: true,
-          esModuleInterop: true
-        }
+          esModuleInterop: true,
+        },
       },
       target: {
         compilerOptions: {
-          target: "ES2020",
-          lib: ["ES2020", "DOM", "DOM.Iterable"],
-          skipLibCheck: true
-        }
+          target: 'ES2020',
+          lib: ['ES2020', 'DOM', 'DOM.Iterable'],
+          skipLibCheck: true,
+        },
       },
       paths: {
         compilerOptions: {
-          baseUrl: ".",
+          baseUrl: '.',
           paths: {
-            "@/*": ["./src/*"],
-            "@/components/*": ["./src/components/*"],
-            "@/utils/*": ["./src/utils/*"]
-          }
-        }
-      }
+            '@/*': ['./src/*'],
+            '@/components/*': ['./src/components/*'],
+            '@/utils/*': ['./src/utils/*'],
+          },
+        },
+      },
     };
-    
+
     return configs[selectedConfig as keyof typeof configs];
   };
-  
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -326,7 +325,7 @@ export function TSConfigDemo() {
           </button>
         ))}
       </div>
-      
+
       {selectedConfig === 'strict' && (
         <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
           <h4 className="font-semibold mb-3">严格模式选项</h4>
@@ -336,10 +335,12 @@ export function TSConfigDemo() {
                 <input
                   type="checkbox"
                   checked={value}
-                  onChange={(e) => setCompilerOptions(prev => ({
-                    ...prev,
-                    [key]: e.target.checked
-                  }))}
+                  onChange={e =>
+                    setCompilerOptions(prev => ({
+                      ...prev,
+                      [key]: e.target.checked,
+                    }))
+                  }
                   className="rounded"
                 />
                 <label className="text-sm">{key}</label>
@@ -355,7 +356,7 @@ export function TSConfigDemo() {
           </div>
         </div>
       )}
-      
+
       <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
         <h4 className="font-semibold mb-3">生成的 tsconfig.json</h4>
         <div className="bg-gray-900 text-gray-100 p-3 rounded">

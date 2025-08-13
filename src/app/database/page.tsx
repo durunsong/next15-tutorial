@@ -1,31 +1,30 @@
 'use client';
 
-import { 
-  CopyOutlined, 
-  DatabaseOutlined, 
-  ReloadOutlined, 
-  UserOutlined,
-  FileTextOutlined,
-
-  PlusOutlined,
+import {
+  CopyOutlined,
+  DatabaseOutlined,
+  DeleteOutlined,
   EditOutlined,
-  DeleteOutlined
+  FileTextOutlined,
+  PlusOutlined,
+  ReloadOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
-import { 
-  Alert, 
-  Button, 
-  Card, 
-  Spin, 
-  Typography, 
-  message,
-  Table,
-  Space,
-  Modal,
+import {
+  Alert,
+  Button,
+  Card,
   Form,
   Input,
+  Modal,
+  Popconfirm,
   Select,
+  Space,
+  Spin,
+  Table,
   Tag,
-  Popconfirm
+  Typography,
+  message,
 } from 'antd';
 
 import { useEffect, useState } from 'react';
@@ -337,8 +336,8 @@ export default function DatabasePage() {
       key: 'action',
       render: (_: unknown, record: User) => (
         <Space>
-          <Button 
-            icon={<EditOutlined />} 
+          <Button
+            icon={<EditOutlined />}
             size="small"
             onClick={() => {
               setEditingUser(record);
@@ -399,9 +398,7 @@ export default function DatabasePage() {
       dataIndex: 'published',
       key: 'published',
       render: (published: boolean) => (
-        <Tag color={published ? 'green' : 'red'}>
-          {published ? '已发布' : '草稿'}
-        </Tag>
+        <Tag color={published ? 'green' : 'red'}>{published ? '已发布' : '草稿'}</Tag>
       ),
     },
     {
@@ -433,11 +430,7 @@ export default function DatabasePage() {
           数据库管理演示
         </h1>
         <Space>
-          <Button
-            icon={<ReloadOutlined />}
-            onClick={fetchDatabaseInfo}
-            loading={loading}
-          >
+          <Button icon={<ReloadOutlined />} onClick={fetchDatabaseInfo} loading={loading}>
             刷新
           </Button>
         </Space>
@@ -446,21 +439,21 @@ export default function DatabasePage() {
       {/* 标签页导航 */}
       <div className="mb-6">
         <Space size="large">
-          <Button 
+          <Button
             type={activeTab === 'info' ? 'primary' : 'default'}
             icon={<DatabaseOutlined />}
             onClick={() => setActiveTab('info')}
           >
             数据库信息
           </Button>
-          <Button 
+          <Button
             type={activeTab === 'users' ? 'primary' : 'default'}
             icon={<UserOutlined />}
             onClick={() => setActiveTab('users')}
           >
             用户管理
           </Button>
-          <Button 
+          <Button
             type={activeTab === 'posts' ? 'primary' : 'default'}
             icon={<FileTextOutlined />}
             onClick={() => setActiveTab('posts')}
@@ -477,19 +470,27 @@ export default function DatabasePage() {
           <Card title="数据统计" className="mb-6">
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
               <div className="text-center p-4 bg-blue-50 rounded-lg">
-                <div className="text-2xl font-bold text-blue-600">{data.statistics.userCount || 0}</div>
+                <div className="text-2xl font-bold text-blue-600">
+                  {data.statistics.userCount || 0}
+                </div>
                 <div className="text-gray-600">用户总数</div>
               </div>
               <div className="text-center p-4 bg-green-50 rounded-lg">
-                <div className="text-2xl font-bold text-green-600">{data.statistics.postCount || 0}</div>
+                <div className="text-2xl font-bold text-green-600">
+                  {data.statistics.postCount || 0}
+                </div>
                 <div className="text-gray-600">文章总数</div>
               </div>
               <div className="text-center p-4 bg-orange-50 rounded-lg">
-                <div className="text-2xl font-bold text-orange-600">{data.statistics.commentCount || 0}</div>
+                <div className="text-2xl font-bold text-orange-600">
+                  {data.statistics.commentCount || 0}
+                </div>
                 <div className="text-gray-600">评论总数</div>
               </div>
               <div className="text-center p-4 bg-purple-50 rounded-lg">
-                <div className="text-2xl font-bold text-purple-600">{data.statistics.userTables}</div>
+                <div className="text-2xl font-bold text-purple-600">
+                  {data.statistics.userTables}
+                </div>
                 <div className="text-gray-600">用户表数量</div>
               </div>
               <div className="text-center p-4 bg-red-50 rounded-lg">
@@ -501,164 +502,168 @@ export default function DatabasePage() {
 
           {/* 基础信息卡片 */}
           <Card title="数据库基础信息" className="mb-6">
-        <div className="space-y-4">
-          {/* 数据库名称 */}
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div>
-              <span className="text-gray-600 text-base font-medium">数据库名称:</span>
-              <Text className="ml-3 text-lg font-semibold text-blue-600">{data.database.name}</Text>
-            </div>
-            <Button
-              icon={<CopyOutlined />}
-              size="small"
-              onClick={() => copyToClipboard(data.database.name, '数据库名称')}
-            />
-          </div>
+            <div className="space-y-4">
+              {/* 数据库名称 */}
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div>
+                  <span className="text-gray-600 text-base font-medium">数据库名称:</span>
+                  <Text className="ml-3 text-lg font-semibold text-blue-600">
+                    {data.database.name}
+                  </Text>
+                </div>
+                <Button
+                  icon={<CopyOutlined />}
+                  size="small"
+                  onClick={() => copyToClipboard(data.database.name, '数据库名称')}
+                />
+              </div>
 
-          {/* PostgreSQL版本 */}
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div>
-              <span className="text-gray-600 text-base font-medium">PostgreSQL版本:</span>
-              <Text className="ml-3 text-lg font-semibold text-green-600">
-                {data.database.version}
-              </Text>
-            </div>
-            <Button
-              icon={<CopyOutlined />}
-              size="small"
-              onClick={() => copyToClipboard(data.database.version, 'PostgreSQL版本')}
-            />
-          </div>
+              {/* PostgreSQL版本 */}
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div>
+                  <span className="text-gray-600 text-base font-medium">PostgreSQL版本:</span>
+                  <Text className="ml-3 text-lg font-semibold text-green-600">
+                    {data.database.version}
+                  </Text>
+                </div>
+                <Button
+                  icon={<CopyOutlined />}
+                  size="small"
+                  onClick={() => copyToClipboard(data.database.version, 'PostgreSQL版本')}
+                />
+              </div>
 
-          {/* 数据库大小 */}
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div>
-              <span className="text-gray-600 text-base font-medium">数据库大小:</span>
-              <Text className="ml-3 text-lg font-semibold text-purple-600">
-                {data.database.size}
-              </Text>
-            </div>
-            <Button
-              icon={<CopyOutlined />}
-              size="small"
-              onClick={() => copyToClipboard(data.database.size, '数据库大小')}
-            />
-          </div>
+              {/* 数据库大小 */}
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div>
+                  <span className="text-gray-600 text-base font-medium">数据库大小:</span>
+                  <Text className="ml-3 text-lg font-semibold text-purple-600">
+                    {data.database.size}
+                  </Text>
+                </div>
+                <Button
+                  icon={<CopyOutlined />}
+                  size="small"
+                  onClick={() => copyToClipboard(data.database.size, '数据库大小')}
+                />
+              </div>
 
-          {/* 当前用户 */}
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div>
-              <span className="text-gray-600 text-base font-medium">当前用户:</span>
-              <Text className="ml-3 text-lg font-semibold text-orange-600">
-                {data.database.currentUser}
-              </Text>
-            </div>
-            <Button
-              icon={<CopyOutlined />}
-              size="small"
-              onClick={() => copyToClipboard(data.database.currentUser, '当前用户')}
-            />
-          </div>
+              {/* 当前用户 */}
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div>
+                  <span className="text-gray-600 text-base font-medium">当前用户:</span>
+                  <Text className="ml-3 text-lg font-semibold text-orange-600">
+                    {data.database.currentUser}
+                  </Text>
+                </div>
+                <Button
+                  icon={<CopyOutlined />}
+                  size="small"
+                  onClick={() => copyToClipboard(data.database.currentUser, '当前用户')}
+                />
+              </div>
 
-          {/* 用户表数量 */}
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div>
-              <span className="text-gray-600 text-base font-medium">用户表数量:</span>
-              <Text className="ml-3 text-lg font-semibold text-red-600">
-                {data.statistics.userTables}
-              </Text>
+              {/* 用户表数量 */}
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div>
+                  <span className="text-gray-600 text-base font-medium">用户表数量:</span>
+                  <Text className="ml-3 text-lg font-semibold text-red-600">
+                    {data.statistics.userTables}
+                  </Text>
+                </div>
+                <Button
+                  icon={<CopyOutlined />}
+                  size="small"
+                  onClick={() =>
+                    copyToClipboard(data.statistics.userTables.toString(), '用户表数量')
+                  }
+                />
+              </div>
             </div>
-            <Button
-              icon={<CopyOutlined />}
-              size="small"
-              onClick={() => copyToClipboard(data.statistics.userTables.toString(), '用户表数量')}
-            />
-          </div>
-        </div>
-      </Card>
+          </Card>
 
-      {/* 系统环境信息 */}
-      <Card title="系统环境信息" className="mb-6">
-        <div className="space-y-4">
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div>
-              <span className="text-gray-600 text-base font-medium">Node.js版本:</span>
-              <Text className="ml-3 text-lg font-semibold">{data.environment.nodeVersion}</Text>
+          {/* 系统环境信息 */}
+          <Card title="系统环境信息" className="mb-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div>
+                  <span className="text-gray-600 text-base font-medium">Node.js版本:</span>
+                  <Text className="ml-3 text-lg font-semibold">{data.environment.nodeVersion}</Text>
+                </div>
+                <Button
+                  icon={<CopyOutlined />}
+                  size="small"
+                  onClick={() => copyToClipboard(data.environment.nodeVersion, 'Node.js版本')}
+                />
+              </div>
+
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div>
+                  <span className="text-gray-600 text-base font-medium">运行平台:</span>
+                  <Text className="ml-3 text-lg font-semibold">{data.environment.platform}</Text>
+                </div>
+                <Button
+                  icon={<CopyOutlined />}
+                  size="small"
+                  onClick={() => copyToClipboard(data.environment.platform, '运行平台')}
+                />
+              </div>
+
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div>
+                  <span className="text-gray-600 text-base font-medium">环境类型:</span>
+                  <Text
+                    className={`ml-3 text-lg font-semibold ${data.environment.isDevelopment ? 'text-red-600' : 'text-green-600'}`}
+                  >
+                    {data.environment.isDevelopment ? '开发环境' : '生产环境'}
+                  </Text>
+                </div>
+                <Button
+                  icon={<CopyOutlined />}
+                  size="small"
+                  onClick={() =>
+                    copyToClipboard(
+                      data.environment.isDevelopment ? '开发环境' : '生产环境',
+                      '环境类型'
+                    )
+                  }
+                />
+              </div>
             </div>
-            <Button
-              icon={<CopyOutlined />}
-              size="small"
-              onClick={() => copyToClipboard(data.environment.nodeVersion, 'Node.js版本')}
-            />
-          </div>
+          </Card>
 
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div>
-              <span className="text-gray-600 text-base font-medium">运行平台:</span>
-              <Text className="ml-3 text-lg font-semibold">{data.environment.platform}</Text>
+          {/* 详细版本信息 */}
+          <Card title="详细版本信息">
+            <div className="space-y-4">
+              <div className="p-4 bg-gray-100 rounded-lg">
+                <div className="flex justify-between items-start mb-2">
+                  <span className="text-gray-600 text-base font-medium">完整版本信息:</span>
+                  <Button
+                    icon={<CopyOutlined />}
+                    size="small"
+                    onClick={() => copyToClipboard(data.database.fullVersion, '完整版本信息')}
+                  />
+                </div>
+                <pre className="text-sm text-gray-800 whitespace-pre-wrap break-all">
+                  {data.database.fullVersion}
+                </pre>
+              </div>
+
+              <div className="text-sm text-gray-500 text-center">
+                查询时间: {new Date(data.queriedAt).toLocaleString('zh-CN')}
+              </div>
             </div>
-            <Button
-              icon={<CopyOutlined />}
-              size="small"
-              onClick={() => copyToClipboard(data.environment.platform, '运行平台')}
-            />
-          </div>
-
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div>
-              <span className="text-gray-600 text-base font-medium">环境类型:</span>
-              <Text
-                className={`ml-3 text-lg font-semibold ${data.environment.isDevelopment ? 'text-red-600' : 'text-green-600'}`}
-              >
-                {data.environment.isDevelopment ? '开发环境' : '生产环境'}
-              </Text>
-            </div>
-            <Button
-              icon={<CopyOutlined />}
-              size="small"
-              onClick={() =>
-                copyToClipboard(
-                  data.environment.isDevelopment ? '开发环境' : '生产环境',
-                  '环境类型'
-                )
-              }
-            />
-          </div>
-        </div>
-      </Card>
-
-      {/* 详细版本信息 */}
-      <Card title="详细版本信息">
-        <div className="space-y-4">
-          <div className="p-4 bg-gray-100 rounded-lg">
-            <div className="flex justify-between items-start mb-2">
-              <span className="text-gray-600 text-base font-medium">完整版本信息:</span>
-              <Button
-                icon={<CopyOutlined />}
-                size="small"
-                onClick={() => copyToClipboard(data.database.fullVersion, '完整版本信息')}
-              />
-            </div>
-            <pre className="text-sm text-gray-800 whitespace-pre-wrap break-all">
-              {data.database.fullVersion}
-            </pre>
-          </div>
-
-          <div className="text-sm text-gray-500 text-center">
-            查询时间: {new Date(data.queriedAt).toLocaleString('zh-CN')}
-          </div>
-        </div>
-      </Card>
+          </Card>
         </>
       )}
 
       {/* 用户管理标签页内容 */}
       {activeTab === 'users' && (
-        <Card 
-          title="用户管理" 
+        <Card
+          title="用户管理"
           extra={
-            <Button 
-              type="primary" 
+            <Button
+              type="primary"
               icon={<PlusOutlined />}
               onClick={() => {
                 setEditingUser(null);
@@ -670,7 +675,7 @@ export default function DatabasePage() {
             </Button>
           }
         >
-          <Table 
+          <Table
             columns={userColumns}
             dataSource={users}
             rowKey="id"
@@ -678,7 +683,7 @@ export default function DatabasePage() {
               pageSize: 10,
               showSizeChanger: true,
               showQuickJumper: true,
-              showTotal: (total) => `共 ${total} 条记录`,
+              showTotal: total => `共 ${total} 条记录`,
             }}
             scroll={{ x: 800 }}
           />
@@ -687,11 +692,11 @@ export default function DatabasePage() {
 
       {/* 文章管理标签页内容 */}
       {activeTab === 'posts' && (
-        <Card 
-          title="文章管理" 
+        <Card
+          title="文章管理"
           extra={
-            <Button 
-              type="primary" 
+            <Button
+              type="primary"
               icon={<PlusOutlined />}
               onClick={() => {
                 setEditingPost(null);
@@ -705,15 +710,15 @@ export default function DatabasePage() {
           }
         >
           {users.length === 0 ? (
-            <Alert 
-              message="请先创建用户" 
+            <Alert
+              message="请先创建用户"
               description="需要先有用户才能创建文章"
-              type="warning" 
-              showIcon 
+              type="warning"
+              showIcon
               className="mb-4"
             />
           ) : null}
-          <Table 
+          <Table
             columns={postColumns}
             dataSource={posts}
             rowKey="id"
@@ -721,7 +726,7 @@ export default function DatabasePage() {
               pageSize: 10,
               showSizeChanger: true,
               showQuickJumper: true,
-              showTotal: (total) => `共 ${total} 条记录`,
+              showTotal: total => `共 ${total} 条记录`,
             }}
             scroll={{ x: 1200 }}
           />
@@ -740,12 +745,7 @@ export default function DatabasePage() {
         footer={null}
         destroyOnClose
       >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleCreateUser}
-          preserve={false}
-        >
+        <Form form={form} layout="vertical" onFinish={handleCreateUser} preserve={false}>
           <Form.Item
             label="用户名"
             name="username"
@@ -753,18 +753,18 @@ export default function DatabasePage() {
               { required: true, message: '请输入用户名' },
               { min: 3, message: '用户名至少3个字符' },
               { max: 20, message: '用户名最多20个字符' },
-              { pattern: /^[a-zA-Z0-9_]+$/, message: '用户名只能包含字母、数字和下划线' }
+              { pattern: /^[a-zA-Z0-9_]+$/, message: '用户名只能包含字母、数字和下划线' },
             ]}
           >
             <Input placeholder="请输入用户名" />
           </Form.Item>
-          
+
           <Form.Item
             label="邮箱"
             name="email"
             rules={[
               { required: true, message: '请输入邮箱' },
-              { type: 'email', message: '请输入有效的邮箱地址' }
+              { type: 'email', message: '请输入有效的邮箱地址' },
             ]}
           >
             <Input placeholder="请输入邮箱" />
@@ -776,23 +776,20 @@ export default function DatabasePage() {
               name="password"
               rules={[
                 { required: true, message: '请输入密码' },
-                { min: 6, message: '密码至少6个字符' }
+                { min: 6, message: '密码至少6个字符' },
               ]}
             >
               <Input.Password placeholder="请输入密码" />
             </Form.Item>
           )}
 
-          <Form.Item
-            label="头像URL"
-            name="avatar"
-          >
+          <Form.Item label="头像URL" name="avatar">
             <Input placeholder="请输入头像URL（可选）" />
           </Form.Item>
 
           <Form.Item className="mb-0">
             <Space className="w-full justify-end">
-              <Button 
+              <Button
                 onClick={() => {
                   setUserModalVisible(false);
                   setEditingUser(null);
@@ -822,37 +819,27 @@ export default function DatabasePage() {
         destroyOnClose
         width={800}
       >
-        <Form
-          form={postForm}
-          layout="vertical"
-          onFinish={handleCreatePost}
-          preserve={false}
-        >
+        <Form form={postForm} layout="vertical" onFinish={handleCreatePost} preserve={false}>
           <Form.Item
             label="标题"
             name="title"
             rules={[
               { required: true, message: '请输入文章标题' },
-              { max: 100, message: '标题最多100个字符' }
+              { max: 100, message: '标题最多100个字符' },
             ]}
           >
             <Input placeholder="请输入文章标题" />
           </Form.Item>
-          
+
           <Form.Item
             label="内容"
             name="content"
             rules={[
               { required: true, message: '请输入文章内容' },
-              { min: 10, message: '内容至少10个字符' }
+              { min: 10, message: '内容至少10个字符' },
             ]}
           >
-            <Input.TextArea 
-              rows={6}
-              placeholder="请输入文章内容"
-              showCount
-              maxLength={2000}
-            />
+            <Input.TextArea rows={6} placeholder="请输入文章内容" showCount maxLength={2000} />
           </Form.Item>
 
           <div className="grid grid-cols-2 gap-4">
@@ -882,26 +869,15 @@ export default function DatabasePage() {
             </Form.Item>
           </div>
 
-          <Form.Item
-            label="标签"
-            name="tags"
-            help="多个标签用逗号分隔"
-          >
+          <Form.Item label="标签" name="tags" help="多个标签用逗号分隔">
             <Input placeholder="例如：React,Next.js,TypeScript" />
           </Form.Item>
 
-          <Form.Item
-            label="封面图片URL"
-            name="coverImage"
-          >
+          <Form.Item label="封面图片URL" name="coverImage">
             <Input placeholder="请输入封面图片URL（可选）" />
           </Form.Item>
 
-          <Form.Item
-            label="发布状态"
-            name="published"
-            initialValue={false}
-          >
+          <Form.Item label="发布状态" name="published" initialValue={false}>
             <Select>
               <Select.Option value={false}>草稿</Select.Option>
               <Select.Option value={true}>发布</Select.Option>
@@ -910,7 +886,7 @@ export default function DatabasePage() {
 
           <Form.Item className="mb-0">
             <Space className="w-full justify-end">
-              <Button 
+              <Button
                 onClick={() => {
                   setPostModalVisible(false);
                   setEditingPost(null);

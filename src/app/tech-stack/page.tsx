@@ -1,19 +1,21 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { 
-  ArrowRight, 
-  Code, 
-  Database, 
-  Zap, 
-  Cloud, 
-  Palette, 
-  Settings,
+import {
+  ArrowRight,
   CheckCircle,
+  Cloud,
+  Code,
+  Database,
   ExternalLink,
-  Star
+  Palette,
+  Settings,
+  Star,
+  Zap,
 } from 'lucide-react';
+
+import { useState } from 'react';
+
+import Link from 'next/link';
 
 interface TechStackItem {
   name: string;
@@ -39,7 +41,7 @@ const techStack: TechStackItem[] = [
     officialLink: 'https://nextjs.org',
     version: '15.4.6',
     difficulty: 'intermediate',
-    color: 'bg-black text-white'
+    color: 'bg-black text-white',
   },
   {
     name: 'TypeScript',
@@ -51,7 +53,7 @@ const techStack: TechStackItem[] = [
     officialLink: 'https://www.typescriptlang.org',
     version: '5.0+',
     difficulty: 'intermediate',
-    color: 'bg-blue-600 text-white'
+    color: 'bg-blue-600 text-white',
   },
   {
     name: 'Tailwind CSS',
@@ -62,7 +64,7 @@ const techStack: TechStackItem[] = [
     officialLink: 'https://tailwindcss.com',
     version: '4.0',
     difficulty: 'beginner',
-    color: 'bg-cyan-600 text-white'
+    color: 'bg-cyan-600 text-white',
   },
   {
     name: 'Ant Design',
@@ -73,7 +75,7 @@ const techStack: TechStackItem[] = [
     officialLink: 'https://ant.design',
     version: '5.13.3',
     difficulty: 'beginner',
-    color: 'bg-blue-500 text-white'
+    color: 'bg-blue-500 text-white',
   },
   {
     name: 'Prisma ORM',
@@ -85,7 +87,7 @@ const techStack: TechStackItem[] = [
     officialLink: 'https://www.prisma.io',
     version: '5.8.1',
     difficulty: 'intermediate',
-    color: 'bg-indigo-600 text-white'
+    color: 'bg-indigo-600 text-white',
   },
   {
     name: 'Neon PostgreSQL',
@@ -96,7 +98,7 @@ const techStack: TechStackItem[] = [
     officialLink: 'https://neon.tech',
     version: 'Latest',
     difficulty: 'beginner',
-    color: 'bg-green-600 text-white'
+    color: 'bg-green-600 text-white',
   },
   {
     name: 'Upstash Redis',
@@ -108,7 +110,7 @@ const techStack: TechStackItem[] = [
     officialLink: 'https://upstash.com',
     version: 'Latest',
     difficulty: 'intermediate',
-    color: 'bg-red-600 text-white'
+    color: 'bg-red-600 text-white',
   },
   {
     name: '阿里云 OSS',
@@ -120,7 +122,7 @@ const techStack: TechStackItem[] = [
     officialLink: 'https://www.aliyun.com/product/oss',
     version: 'Latest',
     difficulty: 'intermediate',
-    color: 'bg-orange-600 text-white'
+    color: 'bg-orange-600 text-white',
   },
   {
     name: 'Zustand',
@@ -132,7 +134,7 @@ const techStack: TechStackItem[] = [
     officialLink: 'https://zustand-demo.pmnd.rs',
     version: '4.4.7',
     difficulty: 'beginner',
-    color: 'bg-purple-600 text-white'
+    color: 'bg-purple-600 text-white',
   },
   {
     name: 'Monaco Editor',
@@ -143,7 +145,7 @@ const techStack: TechStackItem[] = [
     officialLink: 'https://microsoft.github.io/monaco-editor',
     version: '0.45.0',
     difficulty: 'advanced',
-    color: 'bg-blue-700 text-white'
+    color: 'bg-blue-700 text-white',
   },
   {
     name: 'Prism.js',
@@ -154,7 +156,7 @@ const techStack: TechStackItem[] = [
     officialLink: 'https://prismjs.com',
     version: '1.29.0',
     difficulty: 'beginner',
-    color: 'bg-gray-700 text-white'
+    color: 'bg-gray-700 text-white',
   },
 ];
 
@@ -186,18 +188,25 @@ export default function TechStackPage() {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'beginner': return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
-      case 'intermediate': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
-      case 'advanced': return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
+      case 'beginner':
+        return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
+      case 'intermediate':
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
+      case 'advanced':
+        return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
+      default:
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
     }
   };
 
   const getCategoryStats = () => {
-    const stats = techStack.reduce((acc, item) => {
-      acc[item.category] = (acc[item.category] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const stats = techStack.reduce(
+      (acc, item) => {
+        acc[item.category] = (acc[item.category] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
     return stats;
   };
 
@@ -210,11 +219,13 @@ export default function TechStackPage() {
         <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-4">
           技术栈
           <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            {" "}全览
+            {' '}
+            全览
           </span>
         </h1>
         <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-          探索构建现代 Web 应用所需的完整技术栈，包含前端、后端、数据库、云服务等各个方面的技术选型和最佳实践。
+          探索构建现代 Web
+          应用所需的完整技术栈，包含前端、后端、数据库、云服务等各个方面的技术选型和最佳实践。
         </p>
       </div>
 
@@ -237,7 +248,9 @@ export default function TechStackPage() {
           <div className="text-sm text-gray-600 dark:text-gray-300">数据库</div>
         </div>
         <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 text-center">
-          <div className="text-2xl font-bold text-orange-600">{(stats.cloud || 0) + (stats.tools || 0)}</div>
+          <div className="text-2xl font-bold text-orange-600">
+            {(stats.cloud || 0) + (stats.tools || 0)}
+          </div>
           <div className="text-sm text-gray-600 dark:text-gray-300">云服务&工具</div>
         </div>
       </div>
@@ -248,7 +261,7 @@ export default function TechStackPage() {
         <div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">按分类筛选</h3>
           <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
+            {categories.map(category => (
               <button
                 key={category.key}
                 onClick={() => setSelectedCategory(category.key)}
@@ -269,7 +282,7 @@ export default function TechStackPage() {
         <div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">按难度筛选</h3>
           <div className="flex flex-wrap gap-2">
-            {difficulties.map((difficulty) => (
+            {difficulties.map(difficulty => (
               <button
                 key={difficulty.key}
                 onClick={() => setSelectedDifficulty(difficulty.key)}
@@ -288,7 +301,7 @@ export default function TechStackPage() {
 
       {/* 技术栈卡片 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-        {filteredTechStack.map((tech) => (
+        {filteredTechStack.map(tech => (
           <div
             key={tech.name}
             className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-shadow"
@@ -306,13 +319,13 @@ export default function TechStackPage() {
 
             {/* 卡片内容 */}
             <div className="p-6">
-              <p className="text-gray-600 dark:text-gray-300 mb-4">
-                {tech.description}
-              </p>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">{tech.description}</p>
 
               {/* 难度标签 */}
               <div className="mb-4">
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getDifficultyColor(tech.difficulty)}`}>
+                <span
+                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getDifficultyColor(tech.difficulty)}`}
+                >
                   {tech.difficulty === 'beginner' && '初级'}
                   {tech.difficulty === 'intermediate' && '中级'}
                   {tech.difficulty === 'advanced' && '高级'}
@@ -321,10 +334,15 @@ export default function TechStackPage() {
 
               {/* 特性列表 */}
               <div className="mb-6">
-                <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">主要特性</h4>
+                <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                  主要特性
+                </h4>
                 <ul className="space-y-1">
                   {tech.features.map((feature, index) => (
-                    <li key={index} className="flex items-center text-sm text-gray-600 dark:text-gray-300">
+                    <li
+                      key={index}
+                      className="flex items-center text-sm text-gray-600 dark:text-gray-300"
+                    >
                       <CheckCircle className="h-3 w-3 text-green-600 mr-2 flex-shrink-0" />
                       {feature}
                     </li>

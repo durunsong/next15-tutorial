@@ -1,13 +1,16 @@
 'use client';
 
-import { TutorialLayout } from '@/components/TutorialLayout';
-import { DemoSection } from '@/components/DemoSection';
+import { ArrowRight, Copy, Download, Eye, FileText, Image, Trash2, Upload } from 'lucide-react';
+
+import { useCallback, useState } from 'react';
+
+import NextImage from 'next/image';
+import Link from 'next/link';
+
 import { CodeBlock } from '@/components/CodeBlock';
 import { CodeEditor } from '@/components/CodeEditor';
-import { useState, useCallback } from 'react';
-import Link from 'next/link';
-import NextImage from 'next/image';
-import { ArrowRight, Upload, Image, FileText, Download, Trash2, Eye, Copy } from 'lucide-react';
+import { DemoSection } from '@/components/DemoSection';
+import { TutorialLayout } from '@/components/TutorialLayout';
 
 // 文件上传演示组件
 function FileUploadDemo() {
@@ -18,7 +21,7 @@ function FileUploadDemo() {
       size: 245760,
       type: 'image/jpeg',
       url: 'https://next-static-oss.oss-rg-china-mainland.aliyuncs.com/profile-photo.jpg',
-      uploadedAt: '2024-01-15 10:30:00'
+      uploadedAt: '2024-01-15 10:30:00',
     },
     {
       id: 2,
@@ -26,7 +29,7 @@ function FileUploadDemo() {
       size: 1048576,
       type: 'application/pdf',
       url: 'https://next-static-oss.oss-rg-china-mainland.aliyuncs.com/document.pdf',
-      uploadedAt: '2024-01-15 11:15:00'
+      uploadedAt: '2024-01-15 11:15:00',
     },
     {
       id: 3,
@@ -34,8 +37,8 @@ function FileUploadDemo() {
       size: 2097152,
       type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
       url: 'https://next-static-oss.oss-rg-china-mainland.aliyuncs.com/presentation.pptx',
-      uploadedAt: '2024-01-15 14:20:00'
-    }
+      uploadedAt: '2024-01-15 14:20:00',
+    },
   ]);
 
   const [uploading, setUploading] = useState(false);
@@ -80,23 +83,23 @@ function FileUploadDemo() {
 
   const simulateUpload = async (filesToUpload: File[]) => {
     setUploading(true);
-    
+
     // 模拟上传过程
     for (const file of filesToUpload) {
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       const newFile = {
         id: Date.now() + Math.random(),
         name: file.name,
         size: file.size,
         type: file.type,
         url: `https://next-static-oss.oss-rg-china-mainland.aliyuncs.com/${file.name}`,
-        uploadedAt: new Date().toLocaleString('zh-CN')
+        uploadedAt: new Date().toLocaleString('zh-CN'),
       };
-      
+
       setFiles(prev => [...prev, newFile]);
     }
-    
+
     setUploading(false);
   };
 
@@ -127,12 +130,8 @@ function FileUploadDemo() {
         onDrop={handleDrop}
       >
         <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-          上传文件到 OSS
-        </h3>
-        <p className="text-gray-600 dark:text-gray-300 mb-4">
-          拖拽文件到此处，或点击选择文件
-        </p>
+        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">上传文件到 OSS</h3>
+        <p className="text-gray-600 dark:text-gray-300 mb-4">拖拽文件到此处，或点击选择文件</p>
         <label className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer transition-colors">
           <Upload className="h-4 w-4 mr-2" />
           选择文件
@@ -157,13 +156,14 @@ function FileUploadDemo() {
       {/* 文件列表 */}
       <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
         <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-          <h4 className="font-medium text-gray-900 dark:text-white">
-            已上传文件 ({files.length})
-          </h4>
+          <h4 className="font-medium text-gray-900 dark:text-white">已上传文件 ({files.length})</h4>
         </div>
         <div className="divide-y divide-gray-200 dark:divide-gray-700">
-          {files.map((file) => (
-            <div key={file.id} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+          {files.map(file => (
+            <div
+              key={file.id}
+              className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+            >
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   {getFileIcon(file.type)}
@@ -209,9 +209,7 @@ function FileUploadDemo() {
             </div>
           ))}
           {files.length === 0 && (
-            <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-              暂无文件
-            </div>
+            <div className="p-8 text-center text-gray-500 dark:text-gray-400">暂无文件</div>
           )}
         </div>
       </div>
@@ -221,7 +219,9 @@ function FileUploadDemo() {
 
 // 图片处理演示组件
 function ImageProcessingDemo() {
-  const [selectedImage, setSelectedImage] = useState('https://next-static-oss.oss-rg-china-mainland.aliyuncs.com/sample-image.jpg');
+  const [selectedImage, setSelectedImage] = useState(
+    'https://next-static-oss.oss-rg-china-mainland.aliyuncs.com/sample-image.jpg'
+  );
   // 使用变量避免 lint 错误
   void selectedImage;
   void setSelectedImage;
@@ -229,35 +229,38 @@ function ImageProcessingDemo() {
     resize: { width: 400, height: 300 },
     quality: 80,
     format: 'jpg',
-    watermark: false
+    watermark: false,
   });
 
-  const baseImageUrl = 'https://next-static-oss.oss-rg-china-mainland.aliyuncs.com/sample-image.jpg';
+  const baseImageUrl =
+    'https://next-static-oss.oss-rg-china-mainland.aliyuncs.com/sample-image.jpg';
 
   const generateProcessedUrl = () => {
     const processParams = [];
-    
+
     // 调整尺寸
     if (processing.resize.width || processing.resize.height) {
-      processParams.push(`resize,w_${processing.resize.width || ''},h_${processing.resize.height || ''}`);
+      processParams.push(
+        `resize,w_${processing.resize.width || ''},h_${processing.resize.height || ''}`
+      );
     }
-    
+
     // 质量压缩
     if (processing.quality < 100) {
       processParams.push(`quality,q_${processing.quality}`);
     }
-    
+
     // 格式转换
     if (processing.format !== 'jpg') {
       processParams.push(`format,${processing.format}`);
     }
-    
+
     // 水印
     if (processing.watermark) {
       processParams.push('watermark,text_Sample,color_FFFFFF,size_20');
     }
-    
-    return processParams.length > 0 
+
+    return processParams.length > 0
       ? `${baseImageUrl}?x-oss-process=image/${processParams.join('/')}`
       : baseImageUrl;
   };
@@ -265,10 +268,27 @@ function ImageProcessingDemo() {
   const processedUrl = generateProcessedUrl();
 
   const presets = [
-    { name: '原图', params: { resize: { width: 0, height: 0 }, quality: 100, format: 'jpg', watermark: false } },
-    { name: '缩略图', params: { resize: { width: 200, height: 150 }, quality: 80, format: 'jpg', watermark: false } },
-    { name: '高压缩', params: { resize: { width: 400, height: 300 }, quality: 50, format: 'webp', watermark: false } },
-    { name: '带水印', params: { resize: { width: 400, height: 300 }, quality: 80, format: 'jpg', watermark: true } },
+    {
+      name: '原图',
+      params: { resize: { width: 0, height: 0 }, quality: 100, format: 'jpg', watermark: false },
+    },
+    {
+      name: '缩略图',
+      params: { resize: { width: 200, height: 150 }, quality: 80, format: 'jpg', watermark: false },
+    },
+    {
+      name: '高压缩',
+      params: {
+        resize: { width: 400, height: 300 },
+        quality: 50,
+        format: 'webp',
+        watermark: false,
+      },
+    },
+    {
+      name: '带水印',
+      params: { resize: { width: 400, height: 300 }, quality: 80, format: 'jpg', watermark: true },
+    },
   ];
 
   return (
@@ -276,7 +296,7 @@ function ImageProcessingDemo() {
       {/* 处理参数控制 */}
       <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
         <h4 className="font-medium text-gray-900 dark:text-white mb-4">图片处理参数</h4>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* 尺寸调整 */}
           <div>
@@ -288,20 +308,24 @@ function ImageProcessingDemo() {
                 type="number"
                 placeholder="宽度"
                 value={processing.resize.width || ''}
-                onChange={(e) => setProcessing(prev => ({
-                  ...prev,
-                  resize: { ...prev.resize, width: parseInt(e.target.value) || 0 }
-                }))}
+                onChange={e =>
+                  setProcessing(prev => ({
+                    ...prev,
+                    resize: { ...prev.resize, width: parseInt(e.target.value) || 0 },
+                  }))
+                }
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
               />
               <input
                 type="number"
                 placeholder="高度"
                 value={processing.resize.height || ''}
-                onChange={(e) => setProcessing(prev => ({
-                  ...prev,
-                  resize: { ...prev.resize, height: parseInt(e.target.value) || 0 }
-                }))}
+                onChange={e =>
+                  setProcessing(prev => ({
+                    ...prev,
+                    resize: { ...prev.resize, height: parseInt(e.target.value) || 0 },
+                  }))
+                }
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
               />
             </div>
@@ -317,7 +341,9 @@ function ImageProcessingDemo() {
               min="10"
               max="100"
               value={processing.quality}
-              onChange={(e) => setProcessing(prev => ({ ...prev, quality: parseInt(e.target.value) }))}
+              onChange={e =>
+                setProcessing(prev => ({ ...prev, quality: parseInt(e.target.value) }))
+              }
               className="w-full"
             />
           </div>
@@ -329,7 +355,7 @@ function ImageProcessingDemo() {
             </label>
             <select
               value={processing.format}
-              onChange={(e) => setProcessing(prev => ({ ...prev, format: e.target.value }))}
+              onChange={e => setProcessing(prev => ({ ...prev, format: e.target.value }))}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
             >
               <option value="jpg">JPG</option>
@@ -348,7 +374,7 @@ function ImageProcessingDemo() {
               <input
                 type="checkbox"
                 checked={processing.watermark}
-                onChange={(e) => setProcessing(prev => ({ ...prev, watermark: e.target.checked }))}
+                onChange={e => setProcessing(prev => ({ ...prev, watermark: e.target.checked }))}
                 className="mr-2"
               />
               <span className="text-sm">添加水印</span>
@@ -362,7 +388,7 @@ function ImageProcessingDemo() {
             快速预设
           </label>
           <div className="flex flex-wrap gap-2">
-            {presets.map((preset) => (
+            {presets.map(preset => (
               <button
                 key={preset.name}
                 onClick={() => setProcessing(preset.params)}
@@ -388,9 +414,7 @@ function ImageProcessingDemo() {
               height={300}
             />
           </div>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-            原始尺寸，未处理
-          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">原始尺寸，未处理</p>
         </div>
 
         <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
@@ -406,7 +430,8 @@ function ImageProcessingDemo() {
           </div>
           <div className="mt-2">
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              {processing.resize.width}×{processing.resize.height} • {processing.quality}% • {processing.format.toUpperCase()}
+              {processing.resize.width}×{processing.resize.height} • {processing.quality}% •{' '}
+              {processing.format.toUpperCase()}
             </p>
             <div className="mt-2">
               <label className="text-xs text-gray-400">处理后 URL:</label>
@@ -945,12 +970,12 @@ export function generateResponsiveImageUrls(originalUrl: string) {
       title="阿里云 OSS 教程"
       description="学习使用阿里云对象存储服务 (OSS) 实现文件上传、存储和图片处理功能"
       prevTutorial={{
-        title: "Redis 缓存",
-        href: "/tutorials/redis"
+        title: 'Redis 缓存',
+        href: '/tutorials/redis',
       }}
       nextTutorial={{
-        title: "Zustand 状态管理",
-        href: "/tutorials/zustand"
+        title: 'Zustand 状态管理',
+        href: '/tutorials/zustand',
       }}
     >
       <div className="space-y-12">
@@ -964,7 +989,7 @@ export function generateResponsiveImageUrls(originalUrl: string) {
               阿里云对象存储服务 (OSS) 是一款海量、安全、低成本、高可靠的云存储服务。
               它提供了丰富的文件存储和处理功能，特别适合 Web 应用的静态资源存储。
             </p>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-6">
               <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <Upload className="h-8 w-8 text-blue-600 mb-2" />
@@ -994,22 +1019,16 @@ export function generateResponsiveImageUrls(originalUrl: string) {
 
         {/* 设置和配置 */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            OSS 设置和配置
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">OSS 设置和配置</h2>
           <div className="prose prose-lg max-w-none dark:prose-invert mb-6">
             <p>
-              首先需要在阿里云控制台创建 OSS Bucket，获取访问密钥，
-              然后在 Next.js 项目中配置 OSS 客户端。
+              首先需要在阿里云控制台创建 OSS Bucket，获取访问密钥， 然后在 Next.js 项目中配置 OSS
+              客户端。
             </p>
           </div>
-          
-          <CodeBlock
-            code={setupCode}
-            language="typescript"
-            filename="lib/oss.ts"
-          />
-          
+
+          <CodeBlock code={setupCode} language="typescript" filename="lib/oss.ts" />
+
           <div className="mt-6 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
             <h4 className="font-medium text-yellow-900 dark:text-yellow-100 mb-2">环境变量配置</h4>
             <CodeBlock
@@ -1031,17 +1050,10 @@ BASE_OSS_URL="https://your-bucket-name.oss-rg-china-mainland.aliyuncs.com"`}
             文件上传 API 实现
           </h2>
           <div className="prose prose-lg max-w-none dark:prose-invert mb-6">
-            <p>
-              创建 API 路由来处理文件上传和删除操作，包含文件类型验证、
-              大小限制和错误处理。
-            </p>
+            <p>创建 API 路由来处理文件上传和删除操作，包含文件类型验证、 大小限制和错误处理。</p>
           </div>
-          
-          <CodeBlock
-            code={uploadApiCode}
-            language="typescript"
-            filename="API 路由实现"
-          />
+
+          <CodeBlock code={uploadApiCode} language="typescript" filename="API 路由实现" />
         </section>
 
         {/* 文件上传演示 */}
@@ -1050,11 +1062,7 @@ BASE_OSS_URL="https://your-bucket-name.oss-rg-china-mainland.aliyuncs.com"`}
           description="体验完整的文件上传流程，包括拖拽上传、进度显示和文件管理"
           demoComponent={<FileUploadDemo />}
           codeComponent={
-            <CodeBlock
-              code={clientUploadCode}
-              language="tsx"
-              filename="客户端上传组件"
-            />
+            <CodeBlock code={clientUploadCode} language="tsx" filename="客户端上传组件" />
           }
         />
 
@@ -1064,11 +1072,7 @@ BASE_OSS_URL="https://your-bucket-name.oss-rg-china-mainland.aliyuncs.com"`}
           description="利用 OSS 的图片处理服务实现实时的图片缩放、压缩、格式转换等"
           demoComponent={<ImageProcessingDemo />}
           codeComponent={
-            <CodeBlock
-              code={imageProcessingCode}
-              language="typescript"
-              filename="图片处理工具"
-            />
+            <CodeBlock code={imageProcessingCode} language="typescript" filename="图片处理工具" />
           }
         />
 
@@ -1079,9 +1083,7 @@ BASE_OSS_URL="https://your-bucket-name.oss-rg-china-mainland.aliyuncs.com"`}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h3 className="text-lg font-semibold text-blue-600 mb-2">
-                安全配置
-              </h3>
+              <h3 className="text-lg font-semibold text-blue-600 mb-2">安全配置</h3>
               <ul className="space-y-2 text-gray-600 dark:text-gray-300">
                 <li className="flex items-start">
                   <ArrowRight className="h-4 w-4 mt-1 mr-2 text-blue-600 flex-shrink-0" />
@@ -1102,9 +1104,7 @@ BASE_OSS_URL="https://your-bucket-name.oss-rg-china-mainland.aliyuncs.com"`}
               </ul>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-green-600 mb-2">
-                性能优化
-              </h3>
+              <h3 className="text-lg font-semibold text-green-600 mb-2">性能优化</h3>
               <ul className="space-y-2 text-gray-600 dark:text-gray-300">
                 <li className="flex items-start">
                   <ArrowRight className="h-4 w-4 mt-1 mr-2 text-green-600 flex-shrink-0" />
@@ -1129,13 +1129,11 @@ BASE_OSS_URL="https://your-bucket-name.oss-rg-china-mainland.aliyuncs.com"`}
 
         {/* 互动编辑器 */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            OSS 操作练习
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">OSS 操作练习</h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6">
             尝试编写 OSS 相关代码，掌握文件存储和处理技巧：
           </p>
-          
+
           <CodeEditor
             title="OSS 操作练习场"
             defaultCode={`// OSS 文件操作练习
@@ -1263,16 +1261,14 @@ async function runOSSExercises() {
 runOSSExercises();`}
             language="typescript"
             height="600px"
-            onRun={(code) => console.log('执行 OSS 代码:', code)}
+            onRun={code => console.log('执行 OSS 代码:', code)}
             showConsole={true}
           />
         </section>
 
         {/* 下一步 */}
         <section className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            准备好了吗？
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">准备好了吗？</h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6">
             现在你已经掌握了阿里云 OSS 的核心功能，让我们继续学习 Zustand 状态管理。
           </p>

@@ -1,13 +1,16 @@
 'use client';
 
-import { TutorialLayout } from '@/components/TutorialLayout';
-import { DemoSection } from '@/components/DemoSection';
+import { AlertCircle, ArrowRight, CheckCircle, Shield, Zap } from 'lucide-react';
+
+import { useState } from 'react';
+
+import Link from 'next/link';
+
 import { CodeBlock } from '@/components/CodeBlock';
 import { CodeEditor } from '@/components/CodeEditor';
-import { TypeScriptTypesDemo, TSConfigDemo } from '@/components/demos/TypeScriptDemos';
-import { useState } from 'react';
-import Link from 'next/link';
-import { ArrowRight, Shield, Zap, CheckCircle, AlertCircle } from 'lucide-react';
+import { DemoSection } from '@/components/DemoSection';
+import { TutorialLayout } from '@/components/TutorialLayout';
+import { TSConfigDemo, TypeScriptTypesDemo } from '@/components/demos/TypeScriptDemos';
 
 // TypeScript 类型演示组件
 function TypeScriptDemo() {
@@ -20,14 +23,16 @@ function TypeScriptDemo() {
     id: 1,
     name: '张三',
     email: 'zhangsan@example.com',
-    isActive: true
+    isActive: true,
   });
 
-  const [todos, setTodos] = useState<Array<{
-    id: number;
-    text: string;
-    completed: boolean;
-  }>>([
+  const [todos, setTodos] = useState<
+    Array<{
+      id: number;
+      text: string;
+      completed: boolean;
+    }>
+  >([
     { id: 1, text: '学习 TypeScript', completed: true },
     { id: 2, text: '构建 Next.js 应用', completed: false },
   ]);
@@ -36,15 +41,13 @@ function TypeScriptDemo() {
     const newTodo = {
       id: Date.now(),
       text: '新的待办事项',
-      completed: false
+      completed: false,
     };
     setTodos([...todos, newTodo]);
   };
 
   const toggleTodo = (id: number) => {
-    setTodos(todos.map(todo => 
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    ));
+    setTodos(todos.map(todo => (todo.id === id ? { ...todo, completed: !todo.completed } : todo)));
   };
 
   return (
@@ -90,7 +93,7 @@ function TypeScriptDemo() {
           类型安全的待办事项
         </h4>
         <div className="space-y-2">
-          {todos.map((todo) => (
+          {todos.map(todo => (
             <div key={todo.id} className="flex items-center space-x-3">
               <input
                 type="checkbox"
@@ -118,15 +121,17 @@ function TypeScriptDemo() {
 
 // 组件属性类型演示
 function PropsDemo() {
-  const [selectedButton, setSelectedButton] = useState<'primary' | 'secondary' | 'danger'>('primary');
+  const [selectedButton, setSelectedButton] = useState<'primary' | 'secondary' | 'danger'>(
+    'primary'
+  );
 
   // 模拟组件
-  const Button = ({ 
-    variant, 
-    size, 
-    disabled, 
-    children, 
-    onClick 
+  const Button = ({
+    variant,
+    size,
+    disabled,
+    children,
+    onClick,
   }: {
     variant: 'primary' | 'secondary' | 'danger';
     size: 'sm' | 'md' | 'lg';
@@ -138,12 +143,12 @@ function PropsDemo() {
     const variantClasses = {
       primary: 'bg-blue-600 hover:bg-blue-700 text-white',
       secondary: 'bg-gray-600 hover:bg-gray-700 text-white',
-      danger: 'bg-red-600 hover:bg-red-700 text-white'
+      danger: 'bg-red-600 hover:bg-red-700 text-white',
     };
     const sizeClasses = {
       sm: 'px-2 py-1 text-sm',
       md: 'px-4 py-2',
-      lg: 'px-6 py-3 text-lg'
+      lg: 'px-6 py-3 text-lg',
     };
 
     return (
@@ -162,28 +167,32 @@ function PropsDemo() {
   return (
     <div className="space-y-4">
       <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-        <h4 className="font-semibold text-gray-900 dark:text-white mb-3">
-          类型安全的 Button 组件
-        </h4>
+        <h4 className="font-semibold text-gray-900 dark:text-white mb-3">类型安全的 Button 组件</h4>
         <div className="space-y-3">
           <div className="flex flex-wrap gap-2">
-            <Button variant="primary" size="sm">小号主要按钮</Button>
-            <Button variant="secondary" size="md">中号次要按钮</Button>
-            <Button variant="danger" size="lg">大号危险按钮</Button>
-            <Button variant="primary" size="md" disabled>禁用按钮</Button>
+            <Button variant="primary" size="sm">
+              小号主要按钮
+            </Button>
+            <Button variant="secondary" size="md">
+              中号次要按钮
+            </Button>
+            <Button variant="danger" size="lg">
+              大号危险按钮
+            </Button>
+            <Button variant="primary" size="md" disabled>
+              禁用按钮
+            </Button>
           </div>
         </div>
       </div>
 
       <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-        <h4 className="font-semibold text-gray-900 dark:text-white mb-3">
-          类型约束演示
-        </h4>
+        <h4 className="font-semibold text-gray-900 dark:text-white mb-3">类型约束演示</h4>
         <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
           选择按钮类型（TypeScript 确保只能选择预定义的值）：
         </p>
         <div className="flex gap-2">
-          {(['primary', 'secondary', 'danger'] as const).map((variant) => (
+          {(['primary', 'secondary', 'danger'] as const).map(variant => (
             <Button
               key={variant}
               variant={variant}
@@ -195,7 +204,8 @@ function PropsDemo() {
           ))}
         </div>
         <p className="mt-3 text-sm text-gray-600 dark:text-gray-300">
-          当前选择: <code className="bg-gray-200 dark:bg-gray-700 px-1 rounded">{selectedButton}</code>
+          当前选择:{' '}
+          <code className="bg-gray-200 dark:bg-gray-700 px-1 rounded">{selectedButton}</code>
         </p>
       </div>
     </div>
@@ -387,12 +397,12 @@ type ButtonEvent = \`button\${Capitalize<string>}\`;`;
       title="TypeScript 集成教程"
       description="学习如何在 Next.js 15 项目中有效使用 TypeScript，提升代码质量和开发体验"
       prevTutorial={{
-        title: "Next.js 15 基础",
-        href: "/tutorials/nextjs-basics"
+        title: 'Next.js 15 基础',
+        href: '/tutorials/nextjs-basics',
       }}
       nextTutorial={{
-        title: "Prisma ORM",
-        href: "/tutorials/prisma"
+        title: 'Prisma ORM',
+        href: '/tutorials/prisma',
       }}
     >
       <div className="space-y-12">
@@ -406,7 +416,7 @@ type ButtonEvent = \`button\${Capitalize<string>}\`;`;
               TypeScript 为 JavaScript 添加了静态类型系统，帮助开发者在编译时发现错误，
               提供更好的代码智能提示和重构支持。在 Next.js 15 中，TypeScript 支持是开箱即用的。
             </p>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-6">
               <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <Shield className="h-8 w-8 text-blue-600 mb-2" />
@@ -425,9 +435,7 @@ type ButtonEvent = \`button\${Capitalize<string>}\`;`;
               <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <CheckCircle className="h-8 w-8 text-green-600 mb-2" />
                 <h3 className="font-semibold text-gray-900 dark:text-white">代码质量</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  更好的代码可读性和维护性
-                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-300">更好的代码可读性和维护性</p>
               </div>
             </div>
           </div>
@@ -435,40 +443,28 @@ type ButtonEvent = \`button\${Capitalize<string>}\`;`;
 
         {/* 基本类型 */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            基本类型系统
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">基本类型系统</h2>
           <div className="prose prose-lg max-w-none dark:prose-invert mb-6">
             <p>
               TypeScript 提供了丰富的类型系统，包括基本类型、联合类型、接口等。
               这些类型帮助我们更好地描述数据的结构和函数的行为。
             </p>
           </div>
-          
-          <CodeBlock
-            code={basicTypesCode}
-            language="typescript"
-            filename="基本类型示例"
-          />
+
+          <CodeBlock code={basicTypesCode} language="typescript" filename="基本类型示例" />
         </section>
 
         {/* 接口和类型定义 */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            接口和类型定义
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">接口和类型定义</h2>
           <div className="prose prose-lg max-w-none dark:prose-invert mb-6">
             <p>
               接口（Interface）是 TypeScript 中定义对象类型的主要方式。
               它们可以描述对象的形状、函数的签名、类的结构等。
             </p>
           </div>
-          
-          <CodeBlock
-            code={interfaceCode}
-            language="typescript"
-            filename="接口定义示例"
-          />
+
+          <CodeBlock code={interfaceCode} language="typescript" filename="接口定义示例" />
         </section>
 
         {/* TypeScript 类型系统演示 */}
@@ -659,11 +655,7 @@ function UserProfile() {
           description="学习如何为 React 组件定义严格的 Props 类型"
           demoComponent={<PropsDemo />}
           codeComponent={
-            <CodeBlock
-              code={componentTypesCode}
-              language="tsx"
-              filename="React 组件类型定义"
-            />
+            <CodeBlock code={componentTypesCode} language="tsx" filename="React 组件类型定义" />
           }
         />
 
@@ -678,12 +670,8 @@ function UserProfile() {
               这些类型涵盖了页面组件、API 路由、元数据等各个方面。
             </p>
           </div>
-          
-          <CodeBlock
-            code={nextjsTypesCode}
-            language="typescript"
-            filename="Next.js 类型定义"
-          />
+
+          <CodeBlock code={nextjsTypesCode} language="typescript" filename="Next.js 类型定义" />
         </section>
 
         {/* 高级类型技巧 */}
@@ -697,12 +685,8 @@ function UserProfile() {
               帮助我们基于现有类型创建新类型，提高代码的复用性和灵活性。
             </p>
           </div>
-          
-          <CodeBlock
-            code={utilityTypesCode}
-            language="typescript"
-            filename="TypeScript 实用类型"
-          />
+
+          <CodeBlock code={utilityTypesCode} language="typescript" filename="TypeScript 实用类型" />
         </section>
 
         {/* 互动编辑器 */}
@@ -713,7 +697,7 @@ function UserProfile() {
           <p className="text-gray-600 dark:text-gray-300 mb-6">
             尝试编写 TypeScript 代码，体验类型检查和智能提示：
           </p>
-          
+
           <CodeEditor
             title="TypeScript 练习场"
             defaultCode={`// 定义一个用户类型
@@ -757,7 +741,7 @@ console.log('验证结果:', validationErrors.length === 0 ? '通过' : validati
 // 尝试修改 user 对象，看看 TypeScript 如何提供类型检查！`}
             language="typescript"
             height="400px"
-            onRun={(code) => console.log('执行 TypeScript 代码:', code)}
+            onRun={code => console.log('执行 TypeScript 代码:', code)}
             showConsole={true}
           />
         </section>
@@ -821,9 +805,7 @@ console.log('验证结果:', validationErrors.length === 0 ? '通过' : validati
 
         {/* 下一步 */}
         <section className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            准备好了吗？
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">准备好了吗？</h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6">
             现在你已经掌握了 TypeScript 的核心概念，让我们继续学习 Prisma ORM 和数据库操作。
           </p>

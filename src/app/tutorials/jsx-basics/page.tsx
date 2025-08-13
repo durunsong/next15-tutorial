@@ -1,14 +1,16 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Card, Button, Input, Alert, Tabs, Tag } from 'antd';
-import { 
-  PlayCircleOutlined, 
-  CheckCircleOutlined,
+import {
   BulbOutlined,
+  CheckCircleOutlined,
   CodeOutlined,
-  ExperimentOutlined 
+  ExperimentOutlined,
+  PlayCircleOutlined,
 } from '@ant-design/icons';
+import { Alert, Button, Card, Input, Tabs, Tag } from 'antd';
+
+import React, { useState } from 'react';
+
 import { CodeBlock } from '@/components/CodeBlock';
 
 const { TabPane } = Tabs;
@@ -17,12 +19,8 @@ const { TabPane } = Tabs;
 const GreetingComponent = ({ name }: { name: string }) => {
   return (
     <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg border">
-      <h3 className="text-lg font-semibold text-blue-700 dark:text-blue-400">
-        你好, {name}！
-      </h3>
-      <p className="text-gray-600 dark:text-gray-300 mt-2">
-        欢迎学习 JSX 语法基础
-      </p>
+      <h3 className="text-lg font-semibold text-blue-700 dark:text-blue-400">你好, {name}！</h3>
+      <p className="text-gray-600 dark:text-gray-300 mt-2">欢迎学习 JSX 语法基础</p>
     </div>
   );
 };
@@ -35,20 +33,20 @@ const ConditionalExample = () => {
   return (
     <div className="space-y-4">
       <div className="flex space-x-2">
-        <Button 
+        <Button
           type={isLoggedIn ? 'primary' : 'default'}
           onClick={() => setIsLoggedIn(!isLoggedIn)}
         >
           {isLoggedIn ? '已登录' : '未登录'}
         </Button>
-        <Button 
+        <Button
           onClick={() => setUserRole(userRole === 'admin' ? 'user' : 'admin')}
           disabled={!isLoggedIn}
         >
           切换角色: {userRole}
         </Button>
       </div>
-      
+
       <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
         {isLoggedIn ? (
           <div>
@@ -87,35 +85,29 @@ const ListRenderingExample = () => {
         <Input
           placeholder="添加新框架"
           value={newItem}
-          onChange={(e) => setNewItem(e.target.value)}
+          onChange={e => setNewItem(e.target.value)}
           onPressEnter={addItem}
         />
         <Button type="primary" onClick={addItem}>
           添加
         </Button>
       </div>
-      
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
         {items.map((item, index) => (
-          <div 
+          <div
             key={index}
             className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border"
           >
             <span className="font-medium">{item}</span>
-            <Button 
-              size="small" 
-              danger 
-              onClick={() => removeItem(index)}
-            >
+            <Button size="small" danger onClick={() => removeItem(index)}>
               删除
             </Button>
           </div>
         ))}
       </div>
-      
-      {items.length === 0 && (
-        <p className="text-gray-500 text-center py-4">暂无数据</p>
-      )}
+
+      {items.length === 0 && <p className="text-gray-500 text-center py-4">暂无数据</p>}
     </div>
   );
 };
@@ -136,34 +128,29 @@ const EventHandlingExample = () => {
     <div className="space-y-4">
       <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border">
         <p className="mb-2">点击计数器:</p>
-        <Button 
-          type="primary" 
-          onClick={() => setClickCount(clickCount + 1)}
-          className="mr-2"
-        >
+        <Button type="primary" onClick={() => setClickCount(clickCount + 1)} className="mr-2">
           点击我 ({clickCount})
         </Button>
-        <Button onClick={() => setClickCount(0)}>
-          重置
-        </Button>
+        <Button onClick={() => setClickCount(0)}>重置</Button>
       </div>
-      
-      <form onSubmit={handleSubmit} className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border">
+
+      <form
+        onSubmit={handleSubmit}
+        className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border"
+      >
         <p className="mb-2">表单提交:</p>
         <div className="flex space-x-2">
           <Input
             placeholder="输入一些文字"
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={e => setInputValue(e.target.value)}
           />
           <Button type="primary" htmlType="submit">
             提交
           </Button>
         </div>
         {submittedValue && (
-          <p className="mt-2 text-green-600 dark:text-green-400">
-            提交的内容: {submittedValue}
-          </p>
+          <p className="mt-2 text-green-600 dark:text-green-400">提交的内容: {submittedValue}</p>
         )}
       </form>
     </div>
@@ -350,7 +337,7 @@ function Card({ children, title }) {
 // 使用
 <Card title="用户信息">
   <UserInfo user={user} />
-</Card>`
+</Card>`,
   };
 
   return (
@@ -362,7 +349,8 @@ function Card({ children, title }) {
             JSX 语法基础
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            学习 JSX 语法，掌握 React 开发的基础语言。JSX 是 JavaScript 的语法扩展，让你能够以类似 HTML 的方式编写组件。
+            学习 JSX 语法，掌握 React 开发的基础语言。JSX 是 JavaScript 的语法扩展，让你能够以类似
+            HTML 的方式编写组件。
           </p>
         </div>
 
@@ -372,7 +360,7 @@ function Card({ children, title }) {
             { key: 'syntax', title: '基础语法', icon: <CodeOutlined /> },
             { key: 'conditional', title: '条件渲染', icon: <BulbOutlined /> },
             { key: 'lists', title: '列表渲染', icon: <ExperimentOutlined /> },
-            { key: 'events', title: '事件处理', icon: <PlayCircleOutlined /> }
+            { key: 'events', title: '事件处理', icon: <PlayCircleOutlined /> },
           ].map(item => (
             <Button
               key={item.key}
@@ -398,7 +386,7 @@ function Card({ children, title }) {
                   type="info"
                   showIcon
                 />
-                
+
                 <div className="space-y-2">
                   <h4 className="font-semibold text-lg">核心规则：</h4>
                   <ul className="space-y-2 text-gray-600 dark:text-gray-300">
@@ -462,7 +450,7 @@ function Card({ children, title }) {
                     </p>
                   </div>
                 </TabPane>
-                
+
                 <TabPane tab="条件渲染" key="conditional">
                   <div className="space-y-4">
                     <h4 className="font-semibold">条件渲染演示</h4>
@@ -472,7 +460,7 @@ function Card({ children, title }) {
                     </p>
                   </div>
                 </TabPane>
-                
+
                 <TabPane tab="列表渲染" key="lists">
                   <div className="space-y-4">
                     <h4 className="font-semibold">列表渲染演示</h4>
@@ -482,7 +470,7 @@ function Card({ children, title }) {
                     </p>
                   </div>
                 </TabPane>
-                
+
                 <TabPane tab="事件处理" key="events">
                   <div className="space-y-4">
                     <h4 className="font-semibold">事件处理演示</h4>
@@ -508,7 +496,7 @@ function Card({ children, title }) {
                       列表渲染时使用唯一且稳定的 key，避免使用数组索引
                     </p>
                   </div>
-                  
+
                   <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-l-4 border-blue-500">
                     <div className="flex items-center space-x-2 mb-1">
                       <BulbOutlined className="text-blue-500" />
@@ -518,7 +506,7 @@ function Card({ children, title }) {
                       相同的输入应该产生相同的输出，避免副作用
                     </p>
                   </div>
-                  
+
                   <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border-l-4 border-purple-500">
                     <div className="flex items-center space-x-2 mb-1">
                       <ExperimentOutlined className="text-purple-500" />
@@ -544,7 +532,7 @@ function Card({ children, title }) {
               </p>
               <Tag color="orange">初级</Tag>
             </div>
-            
+
             <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border">
               <h4 className="font-semibold mb-2">练习 2: 待办事项列表</h4>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
@@ -552,7 +540,7 @@ function Card({ children, title }) {
               </p>
               <Tag color="blue">中级</Tag>
             </div>
-            
+
             <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border">
               <h4 className="font-semibold mb-2">练习 3: 动态表单</h4>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">

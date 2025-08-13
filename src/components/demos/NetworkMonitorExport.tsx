@@ -4,4 +4,3 @@ import { NetworkMonitor } from './NetworkMonitor';
 export function NetworkMonitorDemo() {
   return <NetworkMonitor />;
 }
-

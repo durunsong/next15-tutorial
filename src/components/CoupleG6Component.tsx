@@ -23,7 +23,7 @@ export default function CoupleG6Component({
 
   useEffect(() => {
     // 确保G6已加载且容器存在
-    if (typeof window === 'undefined' || !window.G6 || !containerRef.current) return;
+    if (typeof window === 'undefined' || !window.G6 || !containerRef.current) return () => {};
 
     const G6 = window.G6;
 

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+
 import { prisma } from '@/lib/prisma';
 
 /**
@@ -18,25 +19,25 @@ export async function GET() {
     ] = await Promise.all([
       // 获取 PostgreSQL 版本信息
       prisma.$queryRaw<Array<{ version: string }>>`SELECT version()`,
-      
+
       // 获取数据库大小
       prisma.$queryRaw<Array<{ size: string }>>`
         SELECT pg_size_pretty(pg_database_size(current_database())) as size
       `,
-      
+
       // 获取用户表数量（非系统表）
       prisma.$queryRaw<Array<{ count: bigint }>>`
         SELECT COUNT(*) as count 
         FROM information_schema.tables 
         WHERE table_schema = 'public'
       `,
-      
+
       // 获取用户数量
       prisma.user.count(),
-      
+
       // 获取文章数量
       prisma.post.count(),
-      
+
       // 获取评论数量
       prisma.comment.count(),
     ]);
@@ -96,7 +97,7 @@ export async function GET() {
     return NextResponse.json(responseData);
   } catch (error) {
     console.error('Database API error:', error);
-    
+
     return NextResponse.json(
       {
         success: false,
@@ -116,16 +117,15 @@ export async function HEAD() {
   try {
     // 简单的数据库连接测试
     await prisma.$queryRaw`SELECT 1`;
-    
-    return new Response(null, { 
+
+    return new Response(null, {
       status: 200,
       headers: {
         'Cache-Control': 'no-cache',
-      }
+      },
     });
   } catch (error) {
     console.error('Database health check failed:', error);
     return new Response(null, { status: 503 });
   }
 }
-

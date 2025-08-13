@@ -1,9 +1,9 @@
-import { Callout, Tabs, Tab } from 'nextra/components'
+import { Callout, Tab, Tabs } from 'nextra/components';
 
 # 用户管理 API
 
 <Callout type="info">
-用户管理 API 提供了完整的用户 CRUD 操作，包括注册、登录、查询和更新功能。
+  用户管理 API 提供了完整的用户 CRUD 操作，包括注册、登录、查询和更新功能。
 </Callout>
 
 ## 基础信息
@@ -15,14 +15,14 @@ import { Callout, Tabs, Tab } from 'nextra/components'
 
 ## API 端点列表
 
-| 方法 | 端点 | 描述 | 认证 |
-|------|------|------|------|
-| POST | `/api/users` | 创建用户（注册） | 否 |
-| GET | `/api/users` | 获取用户列表 | 是 |
-| GET | `/api/users/[id]` | 获取用户详情 | 否 |
-| PUT | `/api/users/[id]` | 更新用户信息 | 是 |
-| DELETE | `/api/users/[id]` | 删除用户 | 是 |
-| GET | `/api/users/[id]/posts` | 获取用户文章 | 否 |
+| 方法   | 端点                    | 描述             | 认证 |
+| ------ | ----------------------- | ---------------- | ---- |
+| POST   | `/api/users`            | 创建用户（注册） | 否   |
+| GET    | `/api/users`            | 获取用户列表     | 是   |
+| GET    | `/api/users/[id]`       | 获取用户详情     | 否   |
+| PUT    | `/api/users/[id]`       | 更新用户信息     | 是   |
+| DELETE | `/api/users/[id]`       | 删除用户         | 是   |
+| GET    | `/api/users/[id]/posts` | 获取用户文章     | 否   |
 
 ## 数据模型
 
@@ -30,12 +30,12 @@ import { Callout, Tabs, Tab } from 'nextra/components'
 
 ```typescript
 interface User {
-  id: string
-  email: string
-  username: string
-  avatar?: string
-  createdAt: string
-  updatedAt: string
+  id: string;
+  email: string;
+  username: string;
+  avatar?: string;
+  createdAt: string;
+  updatedAt: string;
   // 密码字段在响应中永远不会返回
 }
 ```
@@ -45,10 +45,10 @@ interface User {
 ```typescript
 interface UserProfile extends User {
   _count: {
-    posts: number
-    comments: number
-  }
-  posts?: Post[] // 可选，根据接口而定
+    posts: number;
+    comments: number;
+  };
+  posts?: Post[]; // 可选，根据接口而定
 }
 ```
 
@@ -75,6 +75,7 @@ interface UserProfile extends User {
     - `email` (string, required): 用户邮箱，必须唯一
     - `username` (string, required): 用户名，3-20字符，必须唯一
     - `password` (string, required): 密码，最少6字符
+
   </Tab>
   <Tab>
     ```json
@@ -88,6 +89,7 @@ interface UserProfile extends User {
     ```
 
     **响应状态码**: `201 Created`
+
   </Tab>
   <Tab>
     **400 Bad Request** - 参数验证失败
@@ -105,6 +107,7 @@ interface UserProfile extends User {
       "message": "创建用户失败"
     }
     ```
+
   </Tab>
 </Tabs>
 
@@ -145,6 +148,7 @@ interface UserProfile extends User {
     ```
 
     **响应状态码**: `200 OK`
+
   </Tab>
   <Tab>
     **查询参数** (可选):
@@ -156,6 +160,7 @@ interface UserProfile extends User {
 
     **请求头**:
     - `Authorization: Bearer <token>` (required)
+
   </Tab>
 </Tabs>
 
@@ -171,6 +176,7 @@ interface UserProfile extends User {
 
     **路径参数**:
     - `id` (string): 用户 ID
+
   </Tab>
   <Tab>
     ```json
@@ -198,6 +204,7 @@ interface UserProfile extends User {
     ```
 
     **响应状态码**: `200 OK`
+
   </Tab>
   <Tab>
     **404 Not Found** - 用户不存在
@@ -213,6 +220,7 @@ interface UserProfile extends User {
       "error": "服务器错误"
     }
     ```
+
   </Tab>
 </Tabs>
 
@@ -220,9 +228,7 @@ interface UserProfile extends User {
 
 更新当前认证用户的信息。
 
-<Callout type="warning">
-此接口只能更新当前认证用户的信息，不能更新其他用户。
-</Callout>
+<Callout type="warning">此接口只能更新当前认证用户的信息，不能更新其他用户。</Callout>
 
 <Tabs items={['请求', '响应', '权限验证']}>
   <Tab>
@@ -244,6 +250,7 @@ interface UserProfile extends User {
 
     **不可更新字段**:
     - `id`, `createdAt`, `password` (密码需要专门的接口)
+
   </Tab>
   <Tab>
     ```json
@@ -257,6 +264,7 @@ interface UserProfile extends User {
     ```
 
     **响应状态码**: `200 OK`
+
   </Tab>
   <Tab>
     **401 Unauthorized** - 未认证
@@ -280,6 +288,7 @@ interface UserProfile extends User {
       "error": "用户名已存在"
     }
     ```
+
   </Tab>
 </Tabs>
 
@@ -287,9 +296,7 @@ interface UserProfile extends User {
 
 删除指定用户（管理员权限或本人）。
 
-<Callout type="error">
-此操作不可逆，会同时删除用户的所有文章和评论。
-</Callout>
+<Callout type="error">此操作不可逆，会同时删除用户的所有文章和评论。</Callout>
 
 <Tabs items={['请求', '响应', '级联删除']}>
   <Tab>
@@ -300,9 +307,10 @@ interface UserProfile extends User {
 
     **请求头**:
     - `Authorization: Bearer <token>` (required)
-    
+
     **路径参数**:
     - `id` (string): 要删除的用户 ID
+
   </Tab>
   <Tab>
     ```json
@@ -320,6 +328,7 @@ interface UserProfile extends User {
     ```
 
     **响应状态码**: `200 OK`
+
   </Tab>
   <Tab>
     删除用户时会级联删除以下关联数据：
@@ -338,6 +347,7 @@ interface UserProfile extends User {
       author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
     }
     ```
+
   </Tab>
 </Tabs>
 
@@ -382,6 +392,7 @@ interface UserProfile extends User {
     ```
 
     **响应状态码**: `200 OK`
+
   </Tab>
   <Tab>
     **查询参数**:
@@ -396,6 +407,7 @@ interface UserProfile extends User {
     **可用的过滤值**:
     - `category`: "技术", "生活", "学习", "其他"
     - `difficulty`: "初级", "中级", "高级"
+
   </Tab>
 </Tabs>
 
@@ -406,11 +418,11 @@ interface UserProfile extends User {
 ```typescript
 // Token payload
 interface JWTPayload {
-  userId: string
-  username: string
-  email: string
-  iat: number  // 签发时间
-  exp: number  // 过期时间
+  userId: string;
+  username: string;
+  email: string;
+  iat: number; // 签发时间
+  exp: number; // 过期时间
 }
 ```
 
@@ -444,20 +456,20 @@ const registerSchema = {
   email: {
     required: true,
     format: 'email',
-    maxLength: 255
+    maxLength: 255,
   },
   username: {
     required: true,
     minLength: 3,
     maxLength: 20,
-    pattern: /^[a-zA-Z0-9_]+$/
+    pattern: /^[a-zA-Z0-9_]+$/,
   },
   password: {
     required: true,
     minLength: 6,
-    maxLength: 128
-  }
-}
+    maxLength: 128,
+  },
+};
 
 // 用户更新验证
 const updateSchema = {
@@ -465,19 +477,19 @@ const updateSchema = {
     optional: true,
     minLength: 3,
     maxLength: 20,
-    pattern: /^[a-zA-Z0-9_]+$/
+    pattern: /^[a-zA-Z0-9_]+$/,
   },
   email: {
     optional: true,
     format: 'email',
-    maxLength: 255
+    maxLength: 255,
   },
   avatar: {
     optional: true,
     format: 'url',
-    maxLength: 500
-  }
-}
+    maxLength: 500,
+  },
+};
 ```
 
 ## 缓存策略
@@ -489,13 +501,13 @@ const CACHE_KEYS = {
   USER_PROFILE: (id: string) => `user:${id}`,
   USER_POSTS: (id: string, page: number) => `user:${id}:posts:${page}`,
   USER_LIST: (page: number) => `users:list:${page}`,
-}
+};
 
 const CACHE_TTL = {
-  USER_PROFILE: 600,    // 10分钟
-  USER_POSTS: 300,      // 5分钟  
-  USER_LIST: 180,       // 3分钟
-}
+  USER_PROFILE: 600, // 10分钟
+  USER_POSTS: 300, // 5分钟
+  USER_LIST: 180, // 3分钟
+};
 ```
 
 ### 缓存失效
@@ -506,16 +518,16 @@ const CACHE_TTL = {
 
 ## 错误代码说明
 
-| 状态码 | 错误代码 | 描述 |
-|--------|----------|------|
-| 400 | `VALIDATION_ERROR` | 请求参数验证失败 |
-| 400 | `USER_EXISTS` | 用户已存在（邮箱或用户名重复） |
-| 401 | `UNAUTHORIZED` | 未提供有效的认证令牌 |
-| 403 | `FORBIDDEN` | 权限不足，无法执行操作 |
-| 404 | `USER_NOT_FOUND` | 用户不存在 |
-| 409 | `CONFLICT` | 数据冲突（如用户名已被占用） |
-| 429 | `RATE_LIMIT_EXCEEDED` | 请求频率超过限制 |
-| 500 | `INTERNAL_ERROR` | 服务器内部错误 |
+| 状态码 | 错误代码              | 描述                           |
+| ------ | --------------------- | ------------------------------ |
+| 400    | `VALIDATION_ERROR`    | 请求参数验证失败               |
+| 400    | `USER_EXISTS`         | 用户已存在（邮箱或用户名重复） |
+| 401    | `UNAUTHORIZED`        | 未提供有效的认证令牌           |
+| 403    | `FORBIDDEN`           | 权限不足，无法执行操作         |
+| 404    | `USER_NOT_FOUND`      | 用户不存在                     |
+| 409    | `CONFLICT`            | 数据冲突（如用户名已被占用）   |
+| 429    | `RATE_LIMIT_EXCEEDED` | 请求频率超过限制               |
+| 500    | `INTERNAL_ERROR`      | 服务器内部错误                 |
 
 ## 使用示例
 
@@ -523,66 +535,58 @@ const CACHE_TTL = {
 
 ```typescript
 // 用户注册
-async function registerUser(userData: {
-  email: string
-  username: string
-  password: string
-}) {
+async function registerUser(userData: { email: string; username: string; password: string }) {
   const response = await fetch('/api/users', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(userData),
-  })
-  
+  });
+
   if (!response.ok) {
-    const error = await response.json()
-    throw new Error(error.error || '注册失败')
+    const error = await response.json();
+    throw new Error(error.error || '注册失败');
   }
-  
-  return response.json()
+
+  return response.json();
 }
 
 // 获取用户信息（带缓存）
 async function getUserProfile(userId: string, token?: string) {
-  const headers: HeadersInit = {}
+  const headers: HeadersInit = {};
   if (token) {
-    headers.Authorization = `Bearer ${token}`
+    headers.Authorization = `Bearer ${token}`;
   }
-  
+
   const response = await fetch(`/api/users/${userId}`, {
     headers,
-  })
-  
+  });
+
   if (!response.ok) {
-    throw new Error('获取用户信息失败')
+    throw new Error('获取用户信息失败');
   }
-  
-  return response.json()
+
+  return response.json();
 }
 
 // 更新用户信息
-async function updateUser(
-  userId: string, 
-  updateData: Partial<User>,
-  token: string
-) {
+async function updateUser(userId: string, updateData: Partial<User>, token: string) {
   const response = await fetch(`/api/users/${userId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(updateData),
-  })
-  
+  });
+
   if (!response.ok) {
-    const error = await response.json()
-    throw new Error(error.error || '更新失败')
+    const error = await response.json();
+    throw new Error(error.error || '更新失败');
   }
-  
-  return response.json()
+
+  return response.json();
 }
 ```
 
@@ -624,4 +628,3 @@ curl -X DELETE http://localhost:3000/api/users/USER_ID \
 - [文章管理 API](/api-reference/posts) - 文章相关操作
 - [文件上传 API](/api-reference/uploads) - 头像上传功能
 - [错误处理](/api-reference/error-handling) - 统一错误响应格式
-

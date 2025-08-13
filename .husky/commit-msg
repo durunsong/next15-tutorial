@@ -1,9 +1,24 @@
-echo "🔍 Checking commit message..."
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
 
-# 检查提交信息长度
-if [ ${#1} -lt 10 ]; then
-    echo "❌ Commit message too short. Please provide a meaningful commit message (at least 10 characters)."
+# 检查提交信息格式 (Conventional Commits)
+echo "🔍 Checking commit message format..."
+
+# 基本的提交信息格式检查
+commit_regex='^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\(.+\))?: .{1,50}'
+
+if ! grep -qE "$commit_regex" "$1"; then
+    echo "❌ Invalid commit message format!"
+    echo "Please use the format: type(scope): description"
+    echo "Examples:"
+    echo "  feat: add new feature"
+    echo "  fix: resolve login issue"
+    echo "  docs: update README"
+    echo "  style: format code"
+    echo "  refactor: improve code structure"
+    echo "  test: add unit tests"
+    echo "  chore: update dependencies"
     exit 1
 fi
 
-echo "✅ Commit message looks good!" 
+echo "✅ Commit message format is valid!"

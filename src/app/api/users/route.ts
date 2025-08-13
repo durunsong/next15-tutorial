@@ -1,7 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
+
+import { NextRequest, NextResponse } from 'next/server';
+
+import { prisma } from '@/lib/prisma';
 
 // 用户创建验证schema
 const createUserSchema = z.object({
@@ -75,10 +77,7 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     console.error('获取用户列表失败:', error);
-    return NextResponse.json(
-      { error: '获取用户列表失败' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '获取用户列表失败' }, { status: 500 });
   }
 }
 
@@ -89,7 +88,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    
+
     // 验证输入数据
     const validationResult = createUserSchema.safeParse(body);
     if (!validationResult.success) {
@@ -113,10 +112,7 @@ export async function POST(req: NextRequest) {
 
     if (existingUser) {
       const conflictField = existingUser.email === email ? '邮箱' : '用户名';
-      return NextResponse.json(
-        { error: `${conflictField}已被使用` },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: `${conflictField}已被使用` }, { status: 400 });
     }
 
     // 加密密码
@@ -148,10 +144,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(user, { status: 201 });
   } catch (error) {
     console.error('创建用户失败:', error);
-    return NextResponse.json(
-      { error: '创建用户失败' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '创建用户失败' }, { status: 500 });
   }
 }
-

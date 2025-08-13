@@ -1,6 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
+
+import { NextRequest, NextResponse } from 'next/server';
+
+import { prisma } from '@/lib/prisma';
 
 // 文章创建验证schema
 const createPostSchema = z.object({
@@ -93,10 +95,7 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     console.error('获取文章列表失败:', error);
-    return NextResponse.json(
-      { error: '获取文章列表失败' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '获取文章列表失败' }, { status: 500 });
   }
 }
 
@@ -107,7 +106,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    
+
     // 验证输入数据
     const validationResult = createPostSchema.safeParse(body);
     if (!validationResult.success) {
@@ -120,16 +119,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { 
-      title, 
-      content, 
-      category, 
-      difficulty, 
-      tags, 
-      published, 
-      coverImage, 
-      authorId 
-    } = validationResult.data;
+    const { title, content, category, difficulty, tags, published, coverImage, authorId } =
+      validationResult.data;
 
     // 验证作者是否存在
     const author = await prisma.user.findUnique({
@@ -138,10 +129,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!author) {
-      return NextResponse.json(
-        { error: '作者不存在' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '作者不存在' }, { status: 400 });
     }
 
     // 创建文章
@@ -175,10 +163,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(post, { status: 201 });
   } catch (error) {
     console.error('创建文章失败:', error);
-    return NextResponse.json(
-      { error: '创建文章失败' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '创建文章失败' }, { status: 500 });
   }
 }
 
@@ -192,10 +177,7 @@ export async function DELETE(req: NextRequest) {
     const ids = searchParams.get('ids')?.split(',').filter(Boolean);
 
     if (!ids || ids.length === 0) {
-      return NextResponse.json(
-        { error: '请提供要删除的文章ID' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '请提供要删除的文章ID' }, { status: 400 });
     }
 
     // 获取要删除的文章信息
@@ -215,10 +197,7 @@ export async function DELETE(req: NextRequest) {
     });
 
     if (postsToDelete.length === 0) {
-      return NextResponse.json(
-        { error: '未找到要删除的文章' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: '未找到要删除的文章' }, { status: 404 });
     }
 
     // 删除文章（评论会因为级联删除一并删除）
@@ -235,10 +214,6 @@ export async function DELETE(req: NextRequest) {
     });
   } catch (error) {
     console.error('批量删除文章失败:', error);
-    return NextResponse.json(
-      { error: '批量删除文章失败' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '批量删除文章失败' }, { status: 500 });
   }
 }
-

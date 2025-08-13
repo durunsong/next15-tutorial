@@ -1,8 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { CacheManager } from '@/lib/redis';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
+
+import { NextRequest, NextResponse } from 'next/server';
+
+import { prisma } from '@/lib/prisma';
+import { CacheManager } from '@/lib/redis';
 
 // 注册验证schema
 const registerSchema = z.object({
@@ -17,10 +19,7 @@ const registerSchema = z.object({
     .regex(/^1[3-9]\d{9}$/, '请输入有效的手机号')
     .optional()
     .or(z.literal('')),
-  password: z
-    .string()
-    .min(6, '密码至少6个字符')
-    .max(128, '密码最多128个字符'),
+  password: z.string().min(6, '密码至少6个字符').max(128, '密码最多128个字符'),
   avatar: z.string().optional(),
 });
 
@@ -81,31 +80,31 @@ async function checkRateLimit(ip: string): Promise<{
   const window = 5 * 60; // 5分钟窗口
 
   try {
-    const current = await CacheManager.get<number>(key) || 0;
-    
+    const current = (await CacheManager.get<number>(key)) || 0;
+
     if (current >= limit) {
       const ttl = await CacheManager.ttl(key);
-      const resetTime = Date.now() + (ttl * 1000);
+      const resetTime = Date.now() + ttl * 1000;
       return {
         allowed: false,
         remaining: 0,
-        resetTime
+        resetTime,
       };
     }
 
     // 递增计数器
     const newCount = await CacheManager.increment(key);
-    
+
     // 设置过期时间
     if (newCount === 1) {
       await CacheManager.expire(key, window);
     }
 
-    const resetTime = Date.now() + (window * 1000);
+    const resetTime = Date.now() + window * 1000;
     return {
       allowed: true,
       remaining: Math.max(0, limit - newCount),
-      resetTime
+      resetTime,
     };
   } catch (error) {
     console.error('Rate limit check failed:', error);
@@ -113,7 +112,7 @@ async function checkRateLimit(ip: string): Promise<{
     return {
       allowed: true,
       remaining: limit - 1,
-      resetTime: Date.now() + window * 1000
+      resetTime: Date.now() + window * 1000,
     };
   }
 }
@@ -132,21 +131,21 @@ export async function POST(req: NextRequest) {
         {
           error: '注册过于频繁',
           message: `请在 ${resetDate.toLocaleTimeString('zh-CN')} 后再试`,
-          resetTime: rateLimit.resetTime
+          resetTime: rateLimit.resetTime,
         },
-        { 
+        {
           status: 429,
           headers: {
             'X-RateLimit-Limit': '1',
             'X-RateLimit-Remaining': rateLimit.remaining.toString(),
             'X-RateLimit-Reset': Math.ceil(rateLimit.resetTime / 1000).toString(),
-          }
+          },
         }
       );
     }
 
     const body = await req.json();
-    
+
     // 验证输入数据
     const validationResult = registerSchema.safeParse(body);
     if (!validationResult.success) {
@@ -169,14 +168,17 @@ export async function POST(req: NextRequest) {
           error: '密码强度不足',
           message: '密码太简单，请选择更安全的密码',
           feedback: passwordStrength.feedback,
-          score: passwordStrength.score
+          score: passwordStrength.score,
         },
         { status: 400 }
       );
     }
 
     // 检查用户是否已存在
-    const whereConditions: Array<{ email?: string; username?: string; phone?: string }> = [{ email }, { username }];
+    const whereConditions: Array<{ email?: string; username?: string; phone?: string }> = [
+      { email },
+      { username },
+    ];
     if (phone && phone.trim()) {
       whereConditions.push({ phone });
     }
@@ -190,7 +192,7 @@ export async function POST(req: NextRequest) {
     if (existingUser) {
       let conflictField = '邮箱';
       let field = 'email';
-      
+
       if (existingUser.email === email) {
         conflictField = '邮箱';
         field = 'email';
@@ -201,11 +203,11 @@ export async function POST(req: NextRequest) {
         conflictField = '手机号';
         field = 'phone';
       }
-      
+
       return NextResponse.json(
-        { 
+        {
           error: `${conflictField}已被使用`,
-          field
+          field,
         },
         { status: 409 }
       );
@@ -241,24 +243,24 @@ export async function POST(req: NextRequest) {
         user,
         passwordStrength: {
           score: passwordStrength.score,
-          level: passwordStrength.score >= 80 ? '强' : passwordStrength.score >= 60 ? '中' : '弱'
-        }
+          level: passwordStrength.score >= 80 ? '强' : passwordStrength.score >= 60 ? '中' : '弱',
+        },
       },
-      { 
+      {
         status: 201,
         headers: {
           'X-RateLimit-Limit': '1',
           'X-RateLimit-Remaining': rateLimit.remaining.toString(),
           'X-RateLimit-Reset': Math.ceil(rateLimit.resetTime / 1000).toString(),
-        }
+        },
       }
     );
   } catch (error) {
     console.error('注册失败:', error);
     return NextResponse.json(
-      { 
+      {
         error: '注册失败',
-        message: '服务器内部错误，请稍后重试'
+        message: '服务器内部错误，请稍后重试',
       },
       { status: 500 }
     );

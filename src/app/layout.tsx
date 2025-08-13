@@ -4,10 +4,10 @@ import type { Metadata } from 'next';
 // import { Geist, Geist_Mono } from 'next/font/google';
 import Script from 'next/script';
 
-import { Navigation } from '@/components/Navigation';
-import { ThemeProvider } from '@/components/ThemeProvider';
 import { AuthProvider } from '@/components/AuthProvider';
+import { Navigation } from '@/components/Navigation';
 import TawkToWidget from '@/components/TawkToWidget';
+import { ThemeProvider } from '@/components/ThemeProvider';
 
 import './globals.css';
 

@@ -1,6 +1,8 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
+
+import { NextResponse } from 'next/server';
+
+import { prisma } from '@/lib/prisma';
 
 /**
  * 创建演示用户（仅用于开发和演示）
@@ -9,10 +11,7 @@ import bcrypt from 'bcryptjs';
 export async function POST() {
   // 只在开发环境中允许
   if (process.env.NODE_ENV === 'production') {
-    return NextResponse.json(
-      { error: '生产环境中不允许此操作' },
-      { status: 403 }
-    );
+    return NextResponse.json({ error: '生产环境中不允许此操作' }, { status: 403 });
   }
 
   try {
@@ -43,11 +42,8 @@ export async function POST() {
       // 检查用户是否已存在
       const existingUser = await prisma.user.findFirst({
         where: {
-          OR: [
-            { email: userData.email },
-            { username: userData.username }
-          ]
-        }
+          OR: [{ email: userData.email }, { username: userData.username }],
+        },
       });
 
       if (!existingUser) {
@@ -204,17 +200,17 @@ model Post {
         published: true,
         views: 234,
         likes: 45,
-      }
+      },
     ];
 
     // 为第一个用户创建文章
     if (createdUsers.length > 0) {
       const firstUser = createdUsers[0];
-      
+
       for (const postData of demoPosts) {
         // 检查文章是否已存在
         const existingPost = await prisma.post.findFirst({
-          where: { title: postData.title }
+          where: { title: postData.title },
         });
 
         if (!existingPost) {
@@ -222,29 +218,27 @@ model Post {
             data: {
               ...postData,
               authorId: firstUser.id,
-            }
+            },
           });
         }
       }
     }
 
-    return NextResponse.json({
-      message: '演示数据创建成功',
-      users: createdUsers,
-      note: '这些是演示账户，仅用于测试功能',
-      credentials: {
-        demo: { email: 'demo@example.com', password: 'Demo123!' },
-        admin: { email: 'admin@example.com', password: 'Admin123!' },
-        test: { email: 'test@example.com', password: 'Test123!' },
-      }
-    }, { status: 201 });
-
+    return NextResponse.json(
+      {
+        message: '演示数据创建成功',
+        users: createdUsers,
+        note: '这些是演示账户，仅用于测试功能',
+        credentials: {
+          demo: { email: 'demo@example.com', password: 'Demo123!' },
+          admin: { email: 'admin@example.com', password: 'Admin123!' },
+          test: { email: 'test@example.com', password: 'Test123!' },
+        },
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error('创建演示数据失败:', error);
-    return NextResponse.json(
-      { error: '创建演示数据失败' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '创建演示数据失败' }, { status: 500 });
   }
 }
-

@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
 import OSS from 'ali-oss';
+import jwt from 'jsonwebtoken';
+
+import { NextRequest, NextResponse } from 'next/server';
 
 // 验证JWT Token
 function verifyToken(token: string): { userId: string } | null {
@@ -42,7 +43,7 @@ export async function POST(request: NextRequest) {
   try {
     // 验证认证
     let token = request.headers.get('authorization')?.replace('Bearer ', '');
-    
+
     if (!token) {
       const cookies = request.headers.get('cookie');
       if (cookies) {
@@ -54,28 +55,19 @@ export async function POST(request: NextRequest) {
     }
 
     if (!token) {
-      return NextResponse.json(
-        { error: '未找到认证令牌' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: '未找到认证令牌' }, { status: 401 });
     }
 
     const decoded = verifyToken(token);
     if (!decoded) {
-      return NextResponse.json(
-        { error: '无效的认证令牌' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: '无效的认证令牌' }, { status: 401 });
     }
 
     const data = await request.formData();
     const file: File | null = data.get('avatar') as unknown as File;
 
     if (!file) {
-      return NextResponse.json(
-        { error: '没有找到文件' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '没有找到文件' }, { status: 400 });
     }
 
     // 检查文件类型
@@ -90,10 +82,7 @@ export async function POST(request: NextRequest) {
     // 检查文件大小 (5MB)
     const maxSize = 5 * 1024 * 1024; // 5MB
     if (file.size > maxSize) {
-      return NextResponse.json(
-        { error: '文件大小不能超过 5MB' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '文件大小不能超过 5MB' }, { status: 400 });
     }
 
     // 转换文件为Buffer
@@ -103,7 +92,7 @@ export async function POST(request: NextRequest) {
     // 生成唯一文件名
     const fileExtension = file.name.split('.').pop();
     const fileName = `avatars/${decoded.userId}_${Date.now()}.${fileExtension}`;
-    
+
     // 初始化OSS客户端
     const client = createOSSClient();
 
@@ -125,14 +114,10 @@ export async function POST(request: NextRequest) {
       ossResult: {
         name: result.name,
         url: result.url,
-      }
+      },
     });
-
   } catch (error) {
     console.error('头像上传失败:', error);
-    return NextResponse.json(
-      { error: '上传失败，请重试' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '上传失败，请重试' }, { status: 500 });
   }
 }

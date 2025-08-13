@@ -21,7 +21,7 @@ interface AuthState {
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  
+
   // Actions
   login: (user: User, token: string) => void;
   logout: () => Promise<void>;
@@ -54,7 +54,7 @@ export const useAuthStore = create<AuthState>()(
             method: 'POST',
             credentials: 'include',
           });
-          
+
           if (!response.ok) {
             console.error('Logout API failed:', response.status);
           }
@@ -86,7 +86,7 @@ export const useAuthStore = create<AuthState>()(
 
       checkAuth: async () => {
         const { token } = get();
-        
+
         if (!token) {
           set({
             user: null,
@@ -100,7 +100,7 @@ export const useAuthStore = create<AuthState>()(
           const headers: HeadersInit = {
             'Content-Type': 'application/json',
           };
-          
+
           if (token) {
             headers['Authorization'] = `Bearer ${token}`;
           }
@@ -140,7 +140,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'auth-storage',
-      partialize: (state) => ({
+      partialize: state => ({
         user: state.user,
         token: state.token,
         isAuthenticated: state.isAuthenticated,

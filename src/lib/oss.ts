@@ -1,7 +1,12 @@
 import OSS from 'ali-oss';
 
 // 检查必需的环境变量
-if (!process.env.OSS_ACCESS_KEY_ID || !process.env.OSS_ACCESS_KEY_SECRET || !process.env.OSS_REGION || !process.env.OSS_BUCKET) {
+if (
+  !process.env.OSS_ACCESS_KEY_ID ||
+  !process.env.OSS_ACCESS_KEY_SECRET ||
+  !process.env.OSS_REGION ||
+  !process.env.OSS_BUCKET
+) {
   console.warn('OSS 配置缺失，某些功能可能无法使用');
 }
 
@@ -34,7 +39,7 @@ export function generateUniqueFilename(originalName: string): string {
 export class OSSManager {
   // 上传文件
   static async uploadFile(
-    file: File | Buffer, 
+    file: File | Buffer,
     filename: string,
     options?: {
       folder?: string;
@@ -44,19 +49,19 @@ export class OSSManager {
     try {
       const { folder = '', metadata = {} } = options || {};
       const fullPath = folder ? `${folder}/${filename}` : filename;
-      
+
       const result = await ossClient.put(fullPath, file, {
         meta: {
           ...metadata,
           uploadTime: new Date().toISOString(),
           uid: 1,
-          pid: 1
-        }
+          pid: 1,
+        },
       });
-      
+
       return {
         url: result.url,
-        filename: fullPath
+        filename: fullPath,
       };
     } catch (error) {
       console.error('OSS upload error:', error);
@@ -150,10 +155,7 @@ export interface ImageProcessOptions {
   contrast?: number;
 }
 
-export function buildImageProcessUrl(
-  originalUrl: string, 
-  options: ImageProcessOptions
-): string {
+export function buildImageProcessUrl(originalUrl: string, options: ImageProcessOptions): string {
   const processes: string[] = [];
 
   // 尺寸调整
@@ -229,20 +231,20 @@ export const ImagePresets = {
   thumbnail: (width = 200, height = 200): ImageProcessOptions => ({
     resize: { width, height, mode: 'fill' },
     quality: 80,
-    format: 'webp'
+    format: 'webp',
   }),
 
   avatar: (size = 100): ImageProcessOptions => ({
     resize: { width: size, height: size, mode: 'fill' },
     crop: { width: size, height: size, gravity: 'center' },
     quality: 85,
-    format: 'webp'
+    format: 'webp',
   }),
 
   banner: (width = 1200, height = 400): ImageProcessOptions => ({
     resize: { width, height, mode: 'fill' },
     quality: 90,
-    format: 'webp'
+    format: 'webp',
   }),
 
   watermarked: (text: string): ImageProcessOptions => ({
@@ -250,7 +252,7 @@ export const ImagePresets = {
     watermark: {
       text,
       position: 'br',
-      opacity: 60
-    }
-  })
+      opacity: 60,
+    },
+  }),
 };

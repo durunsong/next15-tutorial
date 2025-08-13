@@ -1,14 +1,15 @@
-import { Callout, Steps, Tabs, Tab } from 'nextra/components'
+import { Callout, Steps, Tab, Tabs } from 'nextra/components';
 
 # Prisma 数据库教程
 
 <Callout type="info" emoji="ℹ️">
-本教程将带你深入了解 Prisma ORM 的使用，包含真实的数据库操作演示。
+  本教程将带你深入了解 Prisma ORM 的使用，包含真实的数据库操作演示。
 </Callout>
 
 ## 什么是 Prisma？
 
 Prisma 是一个现代化的数据库工具包，包含：
+
 - **Prisma Client**: 类型安全的数据库客户端
 - **Prisma Migrate**: 数据库迁移工具
 - **Prisma Studio**: 数据库可视化管理工具
@@ -34,6 +35,7 @@ Prisma 是一个现代化的数据库工具包，包含：
       @@map("users")
     }
     ```
+
   </Tab>
   <Tab>
     ```prisma filename="schema.prisma" {24-42}
@@ -57,6 +59,7 @@ Prisma 是一个现代化的数据库工具包，包含：
       @@map("posts")
     }
     ```
+
   </Tab>
   <Tab>
     ```prisma filename="schema.prisma" {44-55}
@@ -73,6 +76,7 @@ Prisma 是一个现代化的数据库工具包，包含：
       @@map("comments")
     }
     ```
+
   </Tab>
   <Tab>
     ```prisma filename="schema.prisma" {57-68}
@@ -101,48 +105,44 @@ Prisma 是一个现代化的数据库工具包，包含：
 ### 导入 Prisma 客户端
 
 ```typescript filename="lib/prisma.ts"
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
 
 const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined
-}
+  prisma: PrismaClient | undefined;
+};
 
-export const prisma = globalForPrisma.prisma ?? new PrismaClient()
+export const prisma = globalForPrisma.prisma ?? new PrismaClient();
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 ```
 
 ### 创建用户 API
 
 ```typescript filename="app/api/users/route.ts" {1,4-5,8-20}
-import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
-import bcrypt from 'bcryptjs'
+import bcrypt from 'bcryptjs';
+
+import { NextRequest, NextResponse } from 'next/server';
+
+import { prisma } from '@/lib/prisma';
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, username, password } = await req.json()
-    
+    const { email, username, password } = await req.json();
+
     // 检查用户是否已存在
     const existingUser = await prisma.user.findFirst({
       where: {
-        OR: [
-          { email },
-          { username }
-        ]
-      }
-    })
-    
+        OR: [{ email }, { username }],
+      },
+    });
+
     if (existingUser) {
-      return NextResponse.json(
-        { error: '用户已存在' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: '用户已存在' }, { status: 400 });
     }
-    
+
     // 加密密码
-    const hashedPassword = await bcrypt.hash(password, 12)
-    
+    const hashedPassword = await bcrypt.hash(password, 12);
+
     // 创建用户
     const user = await prisma.user.create({
       data: {
@@ -155,16 +155,13 @@ export async function POST(req: NextRequest) {
         email: true,
         username: true,
         createdAt: true,
-      }
-    })
-    
-    return NextResponse.json(user, { status: 201 })
+      },
+    });
+
+    return NextResponse.json(user, { status: 201 });
   } catch (error) {
-    console.error('创建用户失败:', error)
-    return NextResponse.json(
-      { error: '服务器错误' },
-      { status: 500 }
-    )
+    console.error('创建用户失败:', error);
+    return NextResponse.json({ error: '服务器错误' }, { status: 500 });
   }
 }
 ```
@@ -339,20 +336,20 @@ const userWithPosts = await prisma.user.findUnique({
               select: {
                 username: true,
                 avatar: true,
-              }
-            }
-          }
+              },
+            },
+          },
         },
         _count: {
           select: {
             comments: true,
-          }
-        }
+          },
+        },
       },
-      orderBy: { createdAt: 'desc' }
-    }
-  }
-})
+      orderBy: { createdAt: 'desc' },
+    },
+  },
+});
 ```
 
 ### 2. 聚合查询
@@ -367,11 +364,11 @@ const statistics = await prisma.user.aggregate({
       _count: {
         select: {
           comments: true,
-        }
-      }
-    }
-  }
-})
+        },
+      },
+    },
+  },
+});
 
 // 或者使用 groupBy
 const usersByMonth = await prisma.user.groupBy({
@@ -381,40 +378,40 @@ const usersByMonth = await prisma.user.groupBy({
   },
   orderBy: {
     createdAt: 'asc',
-  }
-})
+  },
+});
 ```
 
 ### 3. 事务操作
 
 <Callout type="warning" emoji="⚠️">
-在进行批量操作或需要保证数据一致性时，务必使用事务。
+  在进行批量操作或需要保证数据一致性时，务必使用事务。
 </Callout>
 
 ```typescript filename="例子：创建文章和通知"
-const result = await prisma.$transaction(async (tx) => {
+const result = await prisma.$transaction(async tx => {
   // 创建文章
   const post = await tx.post.create({
     data: {
-      title: "新文章",
-      content: "文章内容",
+      title: '新文章',
+      content: '文章内容',
       authorId: userId,
-      category: "技术",
-      difficulty: "初级",
-    }
-  })
-  
+      category: '技术',
+      difficulty: '初级',
+    },
+  });
+
   // 更新用户文章数量（如果有相关计数字段）
   const updatedUser = await tx.user.update({
     where: { id: userId },
     data: {
       // 假设有 postsCount 字段
       // postsCount: { increment: 1 }
-    }
-  })
-  
-  return { post, user: updatedUser }
-})
+    },
+  });
+
+  return { post, user: updatedUser };
+});
 ```
 
 ## 性能优化
@@ -466,7 +463,7 @@ model Post {
   published Boolean  @default(false)
   authorId  String
   createdAt DateTime @default(now())
-  
+
   // 添加索引
   @@index([category])
   @@index([published])
@@ -484,7 +481,7 @@ model Post {
 - [文章管理演示](/posts) - 文章的 CRUD 操作
 
 <Callout type="info" emoji="💡">
-这些演示页面连接真实的 PostgreSQL 数据库，你可以看到实际的数据操作效果。
+  这些演示页面连接真实的 PostgreSQL 数据库，你可以看到实际的数据操作效果。
 </Callout>
 
 ## 常见问题
@@ -494,17 +491,17 @@ model Post {
 A: Prisma Client 会自动管理连接池，但在 serverless 环境中建议使用单例模式：
 
 ```typescript filename="lib/prisma.ts"
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
 
 declare global {
-  var __prisma: PrismaClient | undefined
+  var __prisma: PrismaClient | undefined;
 }
 
-const prisma = globalThis.__prisma ?? new PrismaClient()
+const prisma = globalThis.__prisma ?? new PrismaClient();
 
-if (process.env.NODE_ENV !== 'production') globalThis.__prisma = prisma
+if (process.env.NODE_ENV !== 'production') globalThis.__prisma = prisma;
 
-export default prisma
+export default prisma;
 ```
 
 ### Q: 如何处理数据验证？
@@ -512,26 +509,23 @@ export default prisma
 A: 建议结合 Zod 进行数据验证：
 
 ```typescript
-import { z } from 'zod'
+import { z } from 'zod';
 
 const createUserSchema = z.object({
   email: z.string().email(),
   username: z.string().min(3).max(20),
   password: z.string().min(6),
-})
+});
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json()
-    const { email, username, password } = createUserSchema.parse(body)
-    
+    const body = await req.json();
+    const { email, username, password } = createUserSchema.parse(body);
+
     // 继续处理...
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: '数据验证失败', details: error.errors },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: '数据验证失败', details: error.errors }, { status: 400 });
     }
     // 处理其他错误...
   }
@@ -543,4 +537,3 @@ export async function POST(req: NextRequest) {
 - 学习 [Redis 缓存教程](/tutorials/redis) 来优化数据库查询性能
 - 查看 [API 设计教程](/tutorials/api-design) 了解更多 API 最佳实践
 - 探索 [性能优化教程](/tutorials/performance) 提升应用性能
-

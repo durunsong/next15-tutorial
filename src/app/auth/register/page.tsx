@@ -1,10 +1,13 @@
 'use client';
 
+import { LinkOutlined, LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
+import { Alert, Button, Card, Divider, Form, Input, message } from 'antd';
+
 import React, { useState } from 'react';
-import { Card, Form, Input, Button, Alert, Divider, message } from 'antd';
-import { UserOutlined, LockOutlined, MailOutlined, LinkOutlined } from '@ant-design/icons';
+
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+
 import PasswordStrengthIndicator from '@/components/PasswordStrengthIndicator';
 import { checkPasswordStrength } from '@/utils/passwordValidation';
 
@@ -52,10 +55,12 @@ export default function RegisterPage() {
 
       if (response.ok) {
         message.success('注册成功！请登录您的账户');
-        
+
         // 显示密码强度反馈
         if (data.passwordStrength) {
-          message.info(`密码强度: ${data.passwordStrength.level} (${data.passwordStrength.score}/100)`);
+          message.info(
+            `密码强度: ${data.passwordStrength.level} (${data.passwordStrength.score}/100)`
+          );
         }
 
         // 跳转到登录页面
@@ -98,17 +103,17 @@ export default function RegisterPage() {
   // 倒计时显示
   const getRateLimitMessage = () => {
     if (!rateLimitInfo.resetTime) return '';
-    
+
     const now = Date.now();
     const resetTime = rateLimitInfo.resetTime;
     const remaining = Math.max(0, Math.ceil((resetTime - now) / 1000));
-    
+
     if (remaining > 0) {
       const minutes = Math.floor(remaining / 60);
       const seconds = remaining % 60;
       return `请等待 ${minutes}分${seconds}秒 后再试`;
     }
-    
+
     return '';
   };
 
@@ -117,12 +122,8 @@ export default function RegisterPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="text-4xl mb-4">✨</div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            用户注册
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            创建您的账户，开始精彩旅程
-          </p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">用户注册</h1>
+          <p className="text-gray-600 dark:text-gray-400">创建您的账户，开始精彩旅程</p>
         </div>
 
         <Card className="shadow-xl border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
@@ -164,11 +165,7 @@ export default function RegisterPage() {
                 { type: 'email', message: '请输入有效的邮箱地址' },
               ]}
             >
-              <Input
-                prefix={<MailOutlined />}
-                placeholder="请输入邮箱地址"
-                autoComplete="email"
-              />
+              <Input prefix={<MailOutlined />} placeholder="请输入邮箱地址" autoComplete="email" />
             </Form.Item>
 
             <Form.Item
@@ -178,17 +175,13 @@ export default function RegisterPage() {
                 { required: true, message: '请输入用户名' },
                 { min: 3, message: '用户名至少3个字符' },
                 { max: 20, message: '用户名最多20个字符' },
-                { 
-                  pattern: /^[a-zA-Z0-9_]+$/, 
-                  message: '用户名只能包含字母、数字和下划线' 
+                {
+                  pattern: /^[a-zA-Z0-9_]+$/,
+                  message: '用户名只能包含字母、数字和下划线',
                 },
               ]}
             >
-              <Input
-                prefix={<UserOutlined />}
-                placeholder="请输入用户名"
-                autoComplete="username"
-              />
+              <Input prefix={<UserOutlined />} placeholder="请输入用户名" autoComplete="username" />
             </Form.Item>
 
             <Form.Item
@@ -213,7 +206,7 @@ export default function RegisterPage() {
                 prefix={<LockOutlined />}
                 placeholder="请输入密码"
                 autoComplete="new-password"
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
               />
             </Form.Item>
 
@@ -250,14 +243,9 @@ export default function RegisterPage() {
             <Form.Item
               name="avatar"
               label="头像URL (可选)"
-              rules={[
-                { type: 'url', message: '请输入有效的URL' },
-              ]}
+              rules={[{ type: 'url', message: '请输入有效的URL' }]}
             >
-              <Input
-                prefix={<LinkOutlined />}
-                placeholder="请输入头像图片URL"
-              />
+              <Input prefix={<LinkOutlined />} placeholder="请输入头像图片URL" />
             </Form.Item>
 
             <Form.Item>
@@ -314,4 +302,3 @@ export default function RegisterPage() {
     </div>
   );
 }
-

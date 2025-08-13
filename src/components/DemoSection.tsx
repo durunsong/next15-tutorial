@@ -1,7 +1,8 @@
 'use client';
 
+import { Code, Eye } from 'lucide-react';
+
 import { ReactNode } from 'react';
-import { Eye, Code } from 'lucide-react';
 import { useState } from 'react';
 
 interface DemoSectionProps {
@@ -25,14 +26,8 @@ export function DemoSection({
     <div className="my-8">
       {/* 标题和描述 */}
       <div className="mb-4">
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-          {title}
-        </h3>
-        {description && (
-          <p className="text-gray-600 dark:text-gray-300">
-            {description}
-          </p>
-        )}
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{title}</h3>
+        {description && <p className="text-gray-600 dark:text-gray-300">{description}</p>}
       </div>
 
       {/* 选项卡 */}
@@ -65,13 +60,9 @@ export function DemoSection({
         {/* 内容区域 */}
         <div className="bg-white dark:bg-gray-900">
           {activeTab === 'demo' ? (
-            <div className="p-6">
-              {demoComponent}
-            </div>
+            <div className="p-6">{demoComponent}</div>
           ) : (
-            <div>
-              {codeComponent}
-            </div>
+            <div>{codeComponent}</div>
           )}
         </div>
       </div>

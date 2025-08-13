@@ -1,35 +1,55 @@
 'use client';
 
-import { TutorialLayout } from '@/components/TutorialLayout';
-import { DemoSection } from '@/components/DemoSection';
+import { ArrowRight, Database, FileText, Globe, Layers, Server, Settings, Zap } from 'lucide-react';
+
+import { useState } from 'react';
+
+import Link from 'next/link';
+
 import { CodeBlock } from '@/components/CodeBlock';
 import { CodeEditor } from '@/components/CodeEditor';
-import { DynamicRouteDemo, DataFetchingDemo, PerformanceDemo, MiddlewareDemo } from '@/components/demos/NextJSDemos';
-import { RenderingModesDemo, APICallDemo } from '@/components/demos/RenderingDemos';
-import { NetworkMonitorDemo } from '@/components/demos/NetworkMonitorExport';
+import { DemoSection } from '@/components/DemoSection';
 import { QuickAccessDemos } from '@/components/QuickAccessDemos';
-import { useState } from 'react';
-import Link from 'next/link';
-import { ArrowRight, Server, FileText, Layers, Zap, Globe, Database, Settings } from 'lucide-react';
+import { TutorialLayout } from '@/components/TutorialLayout';
+import { NetworkMonitorDemo } from '@/components/demos/NetworkMonitorExport';
+import {
+  DataFetchingDemo,
+  DynamicRouteDemo,
+  MiddlewareDemo,
+  PerformanceDemo,
+} from '@/components/demos/NextJSDemos';
+import { APICallDemo, RenderingModesDemo } from '@/components/demos/RenderingDemos';
 
 // 演示组件：App Router 示例
 function AppRouterDemo() {
   const [currentRoute, setCurrentRoute] = useState('/');
-  
+
   const routes = [
-    { path: '/', name: '首页', component: <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded">这是首页内容</div> },
-    { path: '/about', name: '关于', component: <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded">这是关于页面</div> },
-    { path: '/blog', name: '博客', component: <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded">这是博客页面</div> },
+    {
+      path: '/',
+      name: '首页',
+      component: <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded">这是首页内容</div>,
+    },
+    {
+      path: '/about',
+      name: '关于',
+      component: <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded">这是关于页面</div>,
+    },
+    {
+      path: '/blog',
+      name: '博客',
+      component: <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded">这是博客页面</div>,
+    },
   ];
-  
+
   const currentComponent = routes.find(r => r.path === currentRoute)?.component;
-  
+
   return (
     <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
       <div className="bg-gray-50 dark:bg-gray-800 p-4 border-b border-gray-200 dark:border-gray-700">
         <h4 className="font-medium text-gray-900 dark:text-white mb-3">App Router 路由演示</h4>
         <div className="flex flex-wrap gap-2">
-          {routes.map((route) => (
+          {routes.map(route => (
             <button
               key={route.path}
               onClick={() => setCurrentRoute(route.path)}
@@ -44,9 +64,7 @@ function AppRouterDemo() {
           ))}
         </div>
       </div>
-      <div className="p-4">
-        {currentComponent}
-      </div>
+      <div className="p-4">{currentComponent}</div>
     </div>
   );
 }
@@ -54,7 +72,7 @@ function AppRouterDemo() {
 // 演示组件：Server Components vs Client Components
 function ComponentTypesDemo() {
   const [count, setCount] = useState(0);
-  
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -73,7 +91,7 @@ function ComponentTypesDemo() {
             </div>
           </div>
         </div>
-        
+
         <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
           <h4 className="font-medium text-gray-900 dark:text-white mb-2 flex items-center">
             <Zap className="h-4 w-4 mr-2 text-yellow-600" />
@@ -85,7 +103,7 @@ function ComponentTypesDemo() {
             <p>• 支持交互和事件处理</p>
             <p>• 使用 &apos;use client&apos; 指令</p>
             <div className="mt-2 p-2 bg-gray-50 dark:bg-gray-800 rounded">
-              <button 
+              <button
                 onClick={() => setCount(count + 1)}
                 className="px-3 py-1 bg-yellow-600 text-white rounded text-xs hover:bg-yellow-700 transition-colors"
               >
@@ -103,7 +121,7 @@ function ComponentTypesDemo() {
 function LoadingErrorDemo() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  
+
   const simulateLoading = () => {
     setLoading(true);
     setError(false);
@@ -111,35 +129,38 @@ function LoadingErrorDemo() {
       setLoading(false);
     }, 2000);
   };
-  
+
   const simulateError = () => {
     setError(true);
     setLoading(false);
   };
-  
+
   return (
     <div className="space-y-4">
       <div className="flex gap-2">
-        <button 
+        <button
           onClick={simulateLoading}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
         >
           模拟加载
         </button>
-        <button 
+        <button
           onClick={simulateError}
           className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
         >
           模拟错误
         </button>
-        <button 
-          onClick={() => { setLoading(false); setError(false); }}
+        <button
+          onClick={() => {
+            setLoading(false);
+            setError(false);
+          }}
           className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
         >
           重置
         </button>
       </div>
-      
+
       <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg min-h-24 flex items-center justify-center">
         {loading && (
           <div className="text-center">
@@ -147,17 +168,15 @@ function LoadingErrorDemo() {
             <p className="text-gray-600 dark:text-gray-300">加载中...</p>
           </div>
         )}
-        
+
         {error && (
           <div className="text-center text-red-600">
             <p className="font-medium">出错了！</p>
             <p className="text-sm">这是一个错误演示</p>
           </div>
         )}
-        
-        {!loading && !error && (
-          <p className="text-gray-600 dark:text-gray-300">内容已加载完成</p>
-        )}
+
+        {!loading && !error && <p className="text-gray-600 dark:text-gray-300">内容已加载完成</p>}
       </div>
     </div>
   );
@@ -302,8 +321,8 @@ export default function StreamingPage() {
       title="Next.js 15 基础教程"
       description="学习 Next.js 15 的核心概念，包括 App Router、Server Components、流式渲染等最新特性"
       nextTutorial={{
-        title: "TypeScript 集成",
-        href: "/tutorials/typescript"
+        title: 'TypeScript 集成',
+        href: '/tutorials/typescript',
       }}
     >
       <div className="space-y-12">
@@ -317,11 +336,11 @@ export default function StreamingPage() {
               Next.js 是一个基于 React 的全栈框架，由 Vercel 开发和维护。它为 React 应用提供了
               生产级的功能和优化，让开发者能够轻松构建现代 Web 应用程序。
             </p>
-            
+
             <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mt-6 mb-3">
               Next.js 解决了什么问题？
             </h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
               <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <h4 className="font-semibold text-gray-900 dark:text-white mb-2 flex items-center">
@@ -335,7 +354,7 @@ export default function StreamingPage() {
                   <li>• 图片优化手动处理</li>
                 </ul>
               </div>
-              
+
               <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <h4 className="font-semibold text-gray-900 dark:text-white mb-2 flex items-center">
                   <Settings className="h-5 w-5 mr-2 text-blue-600" />
@@ -348,7 +367,7 @@ export default function StreamingPage() {
                   <li>• TypeScript 配置困难</li>
                 </ul>
               </div>
-              
+
               <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <h4 className="font-semibold text-gray-900 dark:text-white mb-2 flex items-center">
                   <Globe className="h-5 w-5 mr-2 text-green-600" />
@@ -361,7 +380,7 @@ export default function StreamingPage() {
                   <li>• 缓存策略难以实现</li>
                 </ul>
               </div>
-              
+
               <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <h4 className="font-semibold text-gray-900 dark:text-white mb-2 flex items-center">
                   <Database className="h-5 w-5 mr-2 text-purple-600" />
@@ -375,11 +394,11 @@ export default function StreamingPage() {
                 </ul>
               </div>
             </div>
-            
+
             <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mt-6 mb-3">
               Next.js 15 的核心特性
             </h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-6">
               <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <FileText className="h-8 w-8 text-blue-600 mb-2" />
@@ -412,11 +431,7 @@ export default function StreamingPage() {
           description="Next.js 15 使用 app 目录结构来定义路由，每个文件夹代表一个路由段"
           demoComponent={<AppRouterDemo />}
           codeComponent={
-            <CodeBlock
-              code={appRouterCode}
-              language="tsx"
-              filename="app 目录结构示例"
-            />
+            <CodeBlock code={appRouterCode} language="tsx" filename="app 目录结构示例" />
           }
         />
 
@@ -431,11 +446,7 @@ export default function StreamingPage() {
                 <h4 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
                   Server Component 示例
                 </h4>
-                <CodeBlock
-                  code={serverComponentCode}
-                  language="tsx"
-                  filename="posts/page.tsx"
-                />
+                <CodeBlock code={serverComponentCode} language="tsx" filename="posts/page.tsx" />
               </div>
               <div>
                 <h4 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
@@ -687,11 +698,11 @@ export async function GET(request: NextRequest) {
           </h2>
           <div className="prose prose-lg max-w-none dark:prose-invert mb-6">
             <p>
-              Next.js 提供了两种路由系统：传统的 Pages Router 和新的 App Router。
-              App Router 是 Next.js 13+ 引入的新路由系统，提供了更强大的功能。
+              Next.js 提供了两种路由系统：传统的 Pages Router 和新的 App Router。 App Router 是
+              Next.js 13+ 引入的新路由系统，提供了更强大的功能。
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
@@ -702,14 +713,20 @@ export async function GET(request: NextRequest) {
                 <div className="text-sm">
                   <div className="font-mono text-gray-600 dark:text-gray-400 mb-2">文件结构:</div>
                   <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded font-mono text-xs">
-                    pages/<br/>
-                    ├── index.js          → /<br/>
-                    ├── about.js          → /about<br/>
-                    ├── blog/<br/>
-                    │   ├── index.js      → /blog<br/>
-                    │   └── [slug].js     → /blog/:slug<br/>
-                    └── api/<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;└── users.js      → /api/users
+                    pages/
+                    <br />
+                    ├── index.js → /<br />
+                    ├── about.js → /about
+                    <br />
+                    ├── blog/
+                    <br />
+                    │ ├── index.js → /blog
+                    <br />
+                    │ └── [slug].js → /blog/:slug
+                    <br />
+                    └── api/
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;└── users.js → /api/users
                   </div>
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">
@@ -723,7 +740,7 @@ export async function GET(request: NextRequest) {
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                 <Layers className="h-5 w-5 mr-2 text-green-600" />
@@ -733,19 +750,30 @@ export async function GET(request: NextRequest) {
                 <div className="text-sm">
                   <div className="font-mono text-gray-600 dark:text-gray-400 mb-2">文件结构:</div>
                   <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded font-mono text-xs">
-                    app/<br/>
-                    ├── layout.js         → 根布局<br/>
-                    ├── page.js           → /<br/>
-                    ├── about/<br/>
-                    │   └── page.js       → /about<br/>
-                    ├── blog/<br/>
-                    │   ├── layout.js     → 博客布局<br/>
-                    │   ├── page.js       → /blog<br/>
-                    │   └── [slug]/<br/>
-                    │   &nbsp;&nbsp;&nbsp;&nbsp;└── page.js   → /blog/:slug<br/>
-                    └── api/<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;└── users/<br/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── route.js  → /api/users
+                    app/
+                    <br />
+                    ├── layout.js → 根布局
+                    <br />
+                    ├── page.js → /<br />
+                    ├── about/
+                    <br />
+                    │ └── page.js → /about
+                    <br />
+                    ├── blog/
+                    <br />
+                    │ ├── layout.js → 博客布局
+                    <br />
+                    │ ├── page.js → /blog
+                    <br />
+                    │ └── [slug]/
+                    <br />
+                    │ &nbsp;&nbsp;&nbsp;&nbsp;└── page.js → /blog/:slug
+                    <br />
+                    └── api/
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;└── users/
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── route.js → /api/users
                   </div>
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">
@@ -760,7 +788,7 @@ export async function GET(request: NextRequest) {
               </div>
             </div>
           </div>
-          
+
           <CodeBlock
             code={`// App Router 示例
 // app/layout.tsx - 根布局
@@ -934,7 +962,7 @@ export default function CSRPage() {
               了解这些模式可以帮助你选择最适合的渲染策略。
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
@@ -942,53 +970,85 @@ export default function CSRPage() {
                 SSR (服务端渲染)
               </h3>
               <div className="text-sm text-gray-600 dark:text-gray-300 space-y-2">
-                <p><strong>特点:</strong> 每次请求时在服务器生成 HTML</p>
-                <p><strong>适用:</strong> 需要实时数据的页面</p>
-                <p><strong>优势:</strong> SEO 友好，首屏快速显示</p>
-                <p><strong>劣势:</strong> 服务器负载高，TTFB 较慢</p>
+                <p>
+                  <strong>特点:</strong> 每次请求时在服务器生成 HTML
+                </p>
+                <p>
+                  <strong>适用:</strong> 需要实时数据的页面
+                </p>
+                <p>
+                  <strong>优势:</strong> SEO 友好，首屏快速显示
+                </p>
+                <p>
+                  <strong>劣势:</strong> 服务器负载高，TTFB 较慢
+                </p>
               </div>
             </div>
-            
+
             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
                 <FileText className="h-5 w-5 mr-2 text-green-600" />
                 SSG (静态生成)
               </h3>
               <div className="text-sm text-gray-600 dark:text-gray-300 space-y-2">
-                <p><strong>特点:</strong> 构建时预生成静态 HTML</p>
-                <p><strong>适用:</strong> 内容相对固定的页面</p>
-                <p><strong>优势:</strong> 性能最佳，CDN 友好</p>
-                <p><strong>劣势:</strong> 需要重新构建更新内容</p>
+                <p>
+                  <strong>特点:</strong> 构建时预生成静态 HTML
+                </p>
+                <p>
+                  <strong>适用:</strong> 内容相对固定的页面
+                </p>
+                <p>
+                  <strong>优势:</strong> 性能最佳，CDN 友好
+                </p>
+                <p>
+                  <strong>劣势:</strong> 需要重新构建更新内容
+                </p>
               </div>
             </div>
-            
+
             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
                 <Zap className="h-5 w-5 mr-2 text-yellow-600" />
                 ISR (增量静态再生)
               </h3>
               <div className="text-sm text-gray-600 dark:text-gray-300 space-y-2">
-                <p><strong>特点:</strong> 静态生成 + 后台更新</p>
-                <p><strong>适用:</strong> 需要定期更新的静态内容</p>
-                <p><strong>优势:</strong> 兼顾性能和内容新鲜度</p>
-                <p><strong>劣势:</strong> 实现相对复杂</p>
+                <p>
+                  <strong>特点:</strong> 静态生成 + 后台更新
+                </p>
+                <p>
+                  <strong>适用:</strong> 需要定期更新的静态内容
+                </p>
+                <p>
+                  <strong>优势:</strong> 兼顾性能和内容新鲜度
+                </p>
+                <p>
+                  <strong>劣势:</strong> 实现相对复杂
+                </p>
               </div>
             </div>
-            
+
             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
                 <Globe className="h-5 w-5 mr-2 text-purple-600" />
                 CSR (客户端渲染)
               </h3>
               <div className="text-sm text-gray-600 dark:text-gray-300 space-y-2">
-                <p><strong>特点:</strong> 在浏览器中渲染内容</p>
-                <p><strong>适用:</strong> 高度交互的应用界面</p>
-                <p><strong>优势:</strong> 丰富的交互体验</p>
-                <p><strong>劣势:</strong> SEO 需要特殊处理</p>
+                <p>
+                  <strong>特点:</strong> 在浏览器中渲染内容
+                </p>
+                <p>
+                  <strong>适用:</strong> 高度交互的应用界面
+                </p>
+                <p>
+                  <strong>优势:</strong> 丰富的交互体验
+                </p>
+                <p>
+                  <strong>劣势:</strong> SEO 需要特殊处理
+                </p>
               </div>
             </div>
           </div>
-          
+
           <CodeBlock
             code={`// SSR 示例 (App Router)
 export default async function ProductPage({ params }: { params: { id: string } }) {
@@ -1029,16 +1089,14 @@ export async function getStaticProps() {
 
         {/* 数据获取 */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            数据获取策略
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">数据获取策略</h2>
           <div className="prose prose-lg max-w-none dark:prose-invert mb-6">
             <p>
-              Next.js 提供了多种数据获取方法，支持不同的渲染策略和使用场景。
-              App Router 简化了数据获取，使其更加直观和强大。
+              Next.js 提供了多种数据获取方法，支持不同的渲染策略和使用场景。 App Router
+              简化了数据获取，使其更加直观和强大。
             </p>
           </div>
-          
+
           <div className="space-y-6 mb-6">
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-3">
@@ -1065,28 +1123,34 @@ export async function getStaticProps() {
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
                 Pages Router 数据获取 (传统)
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <h4 className="font-medium text-gray-800 dark:text-gray-200 mb-2">getStaticProps</h4>
+                  <h4 className="font-medium text-gray-800 dark:text-gray-200 mb-2">
+                    getStaticProps
+                  </h4>
                   <p className="text-sm text-gray-600 dark:text-gray-400">构建时数据获取</p>
                 </div>
                 <div>
-                  <h4 className="font-medium text-gray-800 dark:text-gray-200 mb-2">getServerSideProps</h4>
+                  <h4 className="font-medium text-gray-800 dark:text-gray-200 mb-2">
+                    getServerSideProps
+                  </h4>
                   <p className="text-sm text-gray-600 dark:text-gray-400">请求时数据获取</p>
                 </div>
                 <div>
-                  <h4 className="font-medium text-gray-800 dark:text-gray-200 mb-2">getStaticPaths</h4>
+                  <h4 className="font-medium text-gray-800 dark:text-gray-200 mb-2">
+                    getStaticPaths
+                  </h4>
                   <p className="text-sm text-gray-600 dark:text-gray-400">动态路由预生成</p>
                 </div>
               </div>
             </div>
           </div>
-          
+
           <CodeBlock
             code={`// App Router 数据获取示例
 
@@ -1254,41 +1318,55 @@ function UsersComponent() {
           </h2>
           <div className="prose prose-lg max-w-none dark:prose-invert mb-6">
             <p>
-              Next.js 允许你在同一个项目中创建 API 端点，实现全栈开发。
-              API Routes 让你可以轻松构建后端功能，而无需单独的服务器。
+              Next.js 允许你在同一个项目中创建 API 端点，实现全栈开发。 API Routes
+              让你可以轻松构建后端功能，而无需单独的服务器。
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 Pages Router API
               </h3>
               <div className="text-sm text-gray-600 dark:text-gray-300 space-y-2">
-                <p>文件位置: <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">pages/api/</code></p>
+                <p>
+                  文件位置:{' '}
+                  <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">pages/api/</code>
+                </p>
                 <p>路由示例:</p>
                 <ul className="pl-4 space-y-1">
-                  <li>• <code>pages/api/users.js</code> → <code>/api/users</code></li>
-                  <li>• <code>pages/api/posts/[id].js</code> → <code>/api/posts/:id</code></li>
+                  <li>
+                    • <code>pages/api/users.js</code> → <code>/api/users</code>
+                  </li>
+                  <li>
+                    • <code>pages/api/posts/[id].js</code> → <code>/api/posts/:id</code>
+                  </li>
                 </ul>
               </div>
             </div>
-            
+
             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 App Router API
               </h3>
               <div className="text-sm text-gray-600 dark:text-gray-300 space-y-2">
-                <p>文件位置: <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">app/api/</code></p>
+                <p>
+                  文件位置:{' '}
+                  <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">app/api/</code>
+                </p>
                 <p>路由示例:</p>
                 <ul className="pl-4 space-y-1">
-                  <li>• <code>app/api/users/route.js</code> → <code>/api/users</code></li>
-                  <li>• <code>app/api/posts/[id]/route.js</code> → <code>/api/posts/:id</code></li>
+                  <li>
+                    • <code>app/api/users/route.js</code> → <code>/api/users</code>
+                  </li>
+                  <li>
+                    • <code>app/api/posts/[id]/route.js</code> → <code>/api/posts/:id</code>
+                  </li>
                 </ul>
               </div>
             </div>
           </div>
-          
+
           <CodeBlock
             code={`// App Router API Route 示例
 // app/api/users/route.ts
@@ -1620,7 +1698,7 @@ function Analytics() {
               而无需手动配置复杂的优化设置。
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
@@ -1634,7 +1712,7 @@ function Analytics() {
                 <li>• 尺寸优化</li>
               </ul>
             </div>
-            
+
             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
                 <Zap className="h-5 w-5 mr-2 text-yellow-600" />
@@ -1647,7 +1725,7 @@ function Analytics() {
                 <li>• 按需加载</li>
               </ul>
             </div>
-            
+
             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
                 <Settings className="h-5 w-5 mr-2 text-green-600" />
@@ -1660,7 +1738,7 @@ function Analytics() {
                 <li>• 子集化</li>
               </ul>
             </div>
-            
+
             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
                 <Globe className="h-5 w-5 mr-2 text-purple-600" />
@@ -1673,7 +1751,7 @@ function Analytics() {
                 <li>• 预连接</li>
               </ul>
             </div>
-            
+
             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
                 <Database className="h-5 w-5 mr-2 text-indigo-600" />
@@ -1686,7 +1764,7 @@ function Analytics() {
                 <li>• 组件缓存</li>
               </ul>
             </div>
-            
+
             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
                 <ArrowRight className="h-5 w-5 mr-2 text-red-600" />
@@ -1700,7 +1778,7 @@ function Analytics() {
               </ul>
             </div>
           </div>
-          
+
           <CodeBlock
             code={`// 1. 图片优化示例
 import Image from 'next/image';
@@ -1833,23 +1911,17 @@ function Navigation() {
               用户可以立即看到页面的一部分，而其他部分仍在加载中。
             </p>
           </div>
-          
-          <CodeBlock
-            code={streamingCode}
-            language="tsx"
-            filename="流式渲染示例"
-          />
+
+          <CodeBlock code={streamingCode} language="tsx" filename="流式渲染示例" />
         </section>
 
         {/* 互动编辑器 */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            在线代码编辑器
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">在线代码编辑器</h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6">
             尝试修改下面的代码，体验 Next.js 15 的特性：
           </p>
-          
+
           <CodeEditor
             title="Next.js 15 组件示例"
             defaultCode={`'use client';
@@ -1873,7 +1945,7 @@ export default function MyComponent() {
 }`}
             language="tsx"
             height="300px"
-            onRun={(code) => console.log('执行代码:', code)}
+            onRun={code => console.log('执行代码:', code)}
             showConsole={true}
           />
         </section>
@@ -1908,7 +1980,7 @@ export default function MyComponent() {
                 </li>
               </ul>
             </div>
-            
+
             <div>
               <h3 className="text-lg font-semibold text-green-600 mb-3 flex items-center">
                 <Server className="h-5 w-5 mr-2" />
@@ -1933,7 +2005,7 @@ export default function MyComponent() {
                 </li>
               </ul>
             </div>
-            
+
             <div>
               <h3 className="text-lg font-semibold text-purple-600 mb-3 flex items-center">
                 <Database className="h-5 w-5 mr-2" />
@@ -1958,7 +2030,7 @@ export default function MyComponent() {
                 </li>
               </ul>
             </div>
-            
+
             <div>
               <h3 className="text-lg font-semibold text-orange-600 mb-3 flex items-center">
                 <Globe className="h-5 w-5 mr-2" />
@@ -1983,7 +2055,7 @@ export default function MyComponent() {
                 </li>
               </ul>
             </div>
-            
+
             <div>
               <h3 className="text-lg font-semibold text-red-600 mb-3 flex items-center">
                 <Zap className="h-5 w-5 mr-2" />
@@ -2008,7 +2080,7 @@ export default function MyComponent() {
                 </li>
               </ul>
             </div>
-            
+
             <div>
               <h3 className="text-lg font-semibold text-indigo-600 mb-3 flex items-center">
                 <Settings className="h-5 w-5 mr-2" />
@@ -2034,21 +2106,33 @@ export default function MyComponent() {
               </ul>
             </div>
           </div>
-          
+
           <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
             <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
               💡 Next.js 最佳实践建议
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-800 dark:text-blue-200">
               <div>
-                <p><strong>路由设计：</strong>合理规划页面结构，利用嵌套布局</p>
-                <p><strong>渲染策略：</strong>根据内容特性选择合适的渲染模式</p>
-                <p><strong>数据获取：</strong>在服务端获取数据，减少客户端请求</p>
+                <p>
+                  <strong>路由设计：</strong>合理规划页面结构，利用嵌套布局
+                </p>
+                <p>
+                  <strong>渲染策略：</strong>根据内容特性选择合适的渲染模式
+                </p>
+                <p>
+                  <strong>数据获取：</strong>在服务端获取数据，减少客户端请求
+                </p>
               </div>
               <div>
-                <p><strong>性能优化：</strong>使用 Next.js Image 组件优化图片</p>
-                <p><strong>代码分割：</strong>使用动态导入进行组件懒加载</p>
-                <p><strong>SEO 优化：</strong>合理使用 metadata API 提升搜索排名</p>
+                <p>
+                  <strong>性能优化：</strong>使用 Next.js Image 组件优化图片
+                </p>
+                <p>
+                  <strong>代码分割：</strong>使用动态导入进行组件懒加载
+                </p>
+                <p>
+                  <strong>SEO 优化：</strong>合理使用 metadata API 提升搜索排名
+                </p>
               </div>
             </div>
           </div>
@@ -2059,9 +2143,7 @@ export default function MyComponent() {
 
         {/* 下一步 */}
         <section className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            准备好了吗？
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">准备好了吗？</h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6">
             现在你已经了解了 Next.js 15 的基础概念，让我们继续学习 TypeScript 集成。
           </p>

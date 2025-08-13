@@ -1,21 +1,26 @@
 'use client';
 
-import { TutorialLayout } from '@/components/TutorialLayout';
-import { DemoSection } from '@/components/DemoSection';
+import { ArrowRight, Clock, Database, Plus, RefreshCw, Trash2, Zap } from 'lucide-react';
+
+import { useEffect, useState } from 'react';
+
+import Link from 'next/link';
+
 import { CodeBlock } from '@/components/CodeBlock';
 import { CodeEditor } from '@/components/CodeEditor';
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { ArrowRight, Zap, Clock, Database, Trash2, RefreshCw, Plus } from 'lucide-react';
+import { DemoSection } from '@/components/DemoSection';
+import { TutorialLayout } from '@/components/TutorialLayout';
 
 // 模拟 Redis 缓存演示组件
 function RedisDemo() {
   const [cache, setCache] = useState<Record<string, { value: unknown; expiry?: number }>>({
     'user:1': { value: { id: 1, name: '张三', email: 'zhangsan@example.com' } },
-    'posts:latest': { value: [
-      { id: 1, title: 'Next.js 15 新特性' },
-      { id: 2, title: 'Redis 缓存最佳实践' }
-    ]},
+    'posts:latest': {
+      value: [
+        { id: 1, title: 'Next.js 15 新特性' },
+        { id: 2, title: 'Redis 缓存最佳实践' },
+      ],
+    },
     'stats:views': { value: 1250 },
   });
 
@@ -29,14 +34,14 @@ function RedisDemo() {
         const parsedValue = JSON.parse(newValue);
         setCache(prev => ({
           ...prev,
-          [newKey]: { value: parsedValue, expiry: Date.now() + 300000 } // 5分钟过期
+          [newKey]: { value: parsedValue, expiry: Date.now() + 300000 }, // 5分钟过期
         }));
         setNewKey('');
         setNewValue('');
       } catch {
         setCache(prev => ({
           ...prev,
-          [newKey]: { value: newValue, expiry: Date.now() + 300000 }
+          [newKey]: { value: newValue, expiry: Date.now() + 300000 },
         }));
         setNewKey('');
         setNewValue('');
@@ -62,7 +67,7 @@ function RedisDemo() {
     setCache(prev => ({
       ...prev,
       'stats:views': { value: Math.floor(Math.random() * 5000) + 1000 },
-      'timestamp': { value: new Date().toISOString() }
+      timestamp: { value: new Date().toISOString() },
     }));
   };
 
@@ -71,12 +76,15 @@ function RedisDemo() {
     const interval = setInterval(() => {
       setCache(prev => {
         const now = Date.now();
-        const filtered = Object.entries(prev).reduce((acc, [key, data]) => {
-          if (!data.expiry || data.expiry > now) {
-            acc[key] = data;
-          }
-          return acc;
-        }, {} as typeof prev);
+        const filtered = Object.entries(prev).reduce(
+          (acc, [key, data]) => {
+            if (!data.expiry || data.expiry > now) {
+              acc[key] = data;
+            }
+            return acc;
+          },
+          {} as typeof prev
+        );
         return filtered;
       });
     }, 1000);
@@ -112,14 +120,14 @@ function RedisDemo() {
               type="text"
               placeholder="缓存键 (如: user:123)"
               value={newKey}
-              onChange={(e) => setNewKey(e.target.value)}
+              onChange={e => setNewKey(e.target.value)}
               className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
             />
             <input
               type="text"
               placeholder="缓存值 (支持JSON)"
               value={newValue}
-              onChange={(e) => setNewValue(e.target.value)}
+              onChange={e => setNewValue(e.target.value)}
               className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
             />
             <button
@@ -172,7 +180,7 @@ function RedisDemo() {
                       {key}
                     </span>
                     <button
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         deleteFromCache(key);
                       }}
@@ -188,9 +196,7 @@ function RedisDemo() {
                 </div>
               ))}
               {Object.keys(cache).length === 0 && (
-                <div className="text-center text-gray-500 dark:text-gray-400 py-4">
-                  缓存为空
-                </div>
+                <div className="text-center text-gray-500 dark:text-gray-400 py-4">缓存为空</div>
               )}
             </div>
           </div>
@@ -204,13 +210,17 @@ function RedisDemo() {
               </h4>
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">过期时间:</label>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    过期时间:
+                  </label>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     {getExpiryStatus(cache[selectedKey]?.expiry)}
                   </p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">缓存值:</label>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    缓存值:
+                  </label>
                   <pre className="mt-2 p-3 bg-gray-900 text-green-400 rounded text-sm overflow-x-auto">
                     {formatValue(cache[selectedKey]?.value)}
                   </pre>
@@ -237,7 +247,9 @@ interface CacheStrategyData {
 }
 
 function CacheStrategyDemo() {
-  const [strategy, setStrategy] = useState<'cache-first' | 'cache-aside' | 'write-through' | 'write-behind'>('cache-first');
+  const [strategy, setStrategy] = useState<
+    'cache-first' | 'cache-aside' | 'write-through' | 'write-behind'
+  >('cache-first');
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<CacheStrategyData | null>(null);
   const [cacheHit, setCacheHit] = useState<boolean | null>(null);
@@ -259,23 +271,23 @@ function CacheStrategyDemo() {
       'cache-first': {
         strategy: 'Cache First',
         description: '优先从缓存读取，缓存未命中时从数据库读取',
-        data: { id: 1, name: '用户数据', source: hit ? 'cache' : 'database' }
+        data: { id: 1, name: '用户数据', source: hit ? 'cache' : 'database' },
       },
       'cache-aside': {
         strategy: 'Cache Aside',
         description: '应用程序管理缓存，缓存未命中时读取数据库并更新缓存',
-        data: { id: 2, name: '文章列表', source: hit ? 'cache' : 'database' }
+        data: { id: 2, name: '文章列表', source: hit ? 'cache' : 'database' },
       },
       'write-through': {
         strategy: 'Write Through',
         description: '写入时同时更新缓存和数据库',
-        data: { id: 3, name: '用户配置', source: 'database', cached: true }
+        data: { id: 3, name: '用户配置', source: 'database', cached: true },
       },
       'write-behind': {
         strategy: 'Write Behind',
         description: '写入缓存后异步更新数据库',
-        data: { id: 4, name: '访问日志', source: 'cache', pending_db_write: true }
-      }
+        data: { id: 4, name: '访问日志', source: 'cache', pending_db_write: true },
+      },
     };
 
     setData(mockData[strategy]);
@@ -293,11 +305,9 @@ function CacheStrategyDemo() {
     <div className="space-y-6">
       {/* 策略选择 */}
       <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-        <h4 className="font-semibold text-gray-900 dark:text-white mb-3">
-          选择缓存策略
-        </h4>
+        <h4 className="font-semibold text-gray-900 dark:text-white mb-3">选择缓存策略</h4>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          {strategies.map((s) => (
+          {strategies.map(s => (
             <button
               key={s.key}
               onClick={() => setStrategy(s.key as typeof strategy)}
@@ -316,9 +326,7 @@ function CacheStrategyDemo() {
       {/* 执行结果 */}
       <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
         <div className="flex items-center justify-between mb-4">
-          <h4 className="font-semibold text-gray-900 dark:text-white">
-            策略执行结果
-          </h4>
+          <h4 className="font-semibold text-gray-900 dark:text-white">策略执行结果</h4>
           <button
             onClick={executeStrategy}
             disabled={isLoading}
@@ -343,30 +351,40 @@ function CacheStrategyDemo() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded">
                 <div className="text-sm font-medium text-gray-700 dark:text-gray-300">策略</div>
-                <div className="text-lg font-semibold text-gray-900 dark:text-white">{data?.strategy || strategy}</div>
+                <div className="text-lg font-semibold text-gray-900 dark:text-white">
+                  {data?.strategy || strategy}
+                </div>
               </div>
               <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded">
                 <div className="text-sm font-medium text-gray-700 dark:text-gray-300">响应时间</div>
-                <div className="text-lg font-semibold text-gray-900 dark:text-white">{responseTime}ms</div>
+                <div className="text-lg font-semibold text-gray-900 dark:text-white">
+                  {responseTime}ms
+                </div>
               </div>
               <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded">
                 <div className="text-sm font-medium text-gray-700 dark:text-gray-300">缓存状态</div>
-                <div className={`text-lg font-semibold ${
-                  cacheHit ? 'text-green-600' : 'text-orange-600'
-                }`}>
+                <div
+                  className={`text-lg font-semibold ${
+                    cacheHit ? 'text-green-600' : 'text-orange-600'
+                  }`}
+                >
                   {cacheHit ? '命中' : '未命中'}
                 </div>
               </div>
             </div>
-            
+
             <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded">
-              <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">策略说明</div>
+              <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                策略说明
+              </div>
               <p className="text-gray-600 dark:text-gray-300">{data?.description || ''}</p>
             </div>
-            
+
             <div className="p-3 bg-gray-900 rounded">
               <div className="text-sm font-medium text-gray-300 mb-2">返回数据</div>
-              <pre className="text-green-400 text-sm">{JSON.stringify(data?.data || {}, null, 2)}</pre>
+              <pre className="text-green-400 text-sm">
+                {JSON.stringify(data?.data || {}, null, 2)}
+              </pre>
             </div>
           </div>
         )}
@@ -709,12 +727,12 @@ export async function updatePost(id: number, data: Record<string, unknown>) {
       title="Redis 缓存教程"
       description="学习使用 Upstash Redis 实现高性能缓存，提升应用程序的响应速度和用户体验"
       prevTutorial={{
-        title: "Prisma ORM",
-        href: "/tutorials/prisma"
+        title: 'Prisma ORM',
+        href: '/tutorials/prisma',
       }}
       nextTutorial={{
-        title: "阿里云 OSS",
-        href: "/tutorials/oss"
+        title: '阿里云 OSS',
+        href: '/tutorials/oss',
       }}
     >
       <div className="space-y-12">
@@ -725,17 +743,15 @@ export async function updatePost(id: number, data: Record<string, unknown>) {
           </h2>
           <div className="prose prose-lg max-w-none dark:prose-invert">
             <p>
-              Redis 是一个内存键值数据库，常用作缓存层来提升应用性能。
-              通过减少数据库查询次数，Redis 可以显著提高应用的响应速度和并发处理能力。
+              Redis 是一个内存键值数据库，常用作缓存层来提升应用性能。 通过减少数据库查询次数，Redis
+              可以显著提高应用的响应速度和并发处理能力。
             </p>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-6">
               <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <Zap className="h-8 w-8 text-yellow-600 mb-2" />
                 <h3 className="font-semibold text-gray-900 dark:text-white">高性能</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  内存操作，微秒级响应时间
-                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-300">内存操作，微秒级响应时间</p>
               </div>
               <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <Database className="h-8 w-8 text-blue-600 mb-2" />
@@ -762,17 +778,13 @@ export async function updatePost(id: number, data: Record<string, unknown>) {
           </h2>
           <div className="prose prose-lg max-w-none dark:prose-invert mb-6">
             <p>
-              Upstash 提供了无服务器的 Redis 服务，与 Next.js 完美集成。
-              它支持基于 HTTP 的连接，非常适合 Edge 环境。
+              Upstash 提供了无服务器的 Redis 服务，与 Next.js 完美集成。 它支持基于 HTTP
+              的连接，非常适合 Edge 环境。
             </p>
           </div>
-          
-          <CodeBlock
-            code={setupCode}
-            language="typescript"
-            filename="lib/redis.ts"
-          />
-          
+
+          <CodeBlock code={setupCode} language="typescript" filename="lib/redis.ts" />
+
           <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
             <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">环境变量配置</h4>
             <CodeBlock
@@ -787,21 +799,15 @@ UPSTASH_REDIS_REST_TOKEN="ASz2AAIjcDFmOTJhYmMyNjI1MmQ0NmIwOGIxYjgyMWMyODA5NTBhOX
 
         {/* 基本操作 */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Redis 基本操作
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Redis 基本操作</h2>
           <div className="prose prose-lg max-w-none dark:prose-invert mb-6">
             <p>
-              Redis 支持多种数据结构，包括字符串、哈希、列表、集合等。
-              了解这些基本操作是使用 Redis 的基础。
+              Redis 支持多种数据结构，包括字符串、哈希、列表、集合等。 了解这些基本操作是使用 Redis
+              的基础。
             </p>
           </div>
-          
-          <CodeBlock
-            code={basicOperationsCode}
-            language="typescript"
-            filename="Redis 基本操作"
-          />
+
+          <CodeBlock code={basicOperationsCode} language="typescript" filename="Redis 基本操作" />
         </section>
 
         {/* Redis 演示 */}
@@ -848,11 +854,7 @@ await pipeline.exec();`}
           description="了解不同的缓存策略及其适用场景"
           demoComponent={<CacheStrategyDemo />}
           codeComponent={
-            <CodeBlock
-              code={cacheStrategiesCode}
-              language="typescript"
-              filename="缓存策略实现"
-            />
+            <CodeBlock code={cacheStrategiesCode} language="typescript" filename="缓存策略实现" />
           }
         />
 
@@ -867,42 +869,30 @@ await pipeline.exec();`}
               合理的缓存策略可以大幅提升 API 响应速度。
             </p>
           </div>
-          
-          <CodeBlock
-            code={apiIntegrationCode}
-            language="typescript"
-            filename="API 路由缓存集成"
-          />
+
+          <CodeBlock code={apiIntegrationCode} language="typescript" filename="API 路由缓存集成" />
         </section>
 
         {/* 性能优化 */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            性能优化技巧
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">性能优化技巧</h2>
           <div className="prose prose-lg max-w-none dark:prose-invert mb-6">
             <p>
               通过合理的缓存设计和优化技巧，可以进一步提升缓存的效率和可靠性。
               这些技巧包括批量操作、缓存穿透保护、分布式锁等。
             </p>
           </div>
-          
-          <CodeBlock
-            code={performanceCode}
-            language="typescript"
-            filename="性能优化技巧"
-          />
+
+          <CodeBlock code={performanceCode} language="typescript" filename="性能优化技巧" />
         </section>
 
         {/* 互动编辑器 */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Redis 操作练习
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Redis 操作练习</h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6">
             尝试编写 Redis 操作代码，体验缓存的强大功能：
           </p>
-          
+
           <CodeEditor
             title="Redis 练习场"
             defaultCode={`// Redis 缓存练习
@@ -984,16 +974,14 @@ runExercises().then(() => {
 });`}
             language="typescript"
             height="600px"
-            onRun={(code) => console.log('执行 Redis 代码:', code)}
+            onRun={code => console.log('执行 Redis 代码:', code)}
             showConsole={true}
           />
         </section>
 
         {/* 最佳实践 */}
         <section className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Redis 最佳实践
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Redis 最佳实践</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <h3 className="text-lg font-semibold text-green-600 mb-2 flex items-center">
@@ -1048,9 +1036,7 @@ runExercises().then(() => {
 
         {/* 下一步 */}
         <section className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            准备好了吗？
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">准备好了吗？</h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6">
             现在你已经掌握了 Redis 缓存的核心概念，让我们继续学习阿里云 OSS 文件存储服务。
           </p>

@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import { Activity, Clock, Download, Globe, Server, Monitor, Zap, ExternalLink } from 'lucide-react';
+import { Activity, Clock, Download, ExternalLink, Globe, Monitor, Server, Zap } from 'lucide-react';
+
+import { useRef, useState } from 'react';
+
 import Link from 'next/link';
 
 interface NetworkRequest {
@@ -49,23 +51,23 @@ export function NetworkMonitor() {
       url: '/demo/ssr-page',
       icon: <Server className="h-4 w-4" />,
       description: '服务端渲染 - 每次请求时渲染',
-      color: 'blue'
+      color: 'blue',
     },
     {
       id: 'ssg',
-      name: 'SSG 演示', 
+      name: 'SSG 演示',
       url: '/demo/ssg-page',
       icon: <Globe className="h-4 w-4" />,
       description: '静态生成 - 构建时预生成',
-      color: 'green'
+      color: 'green',
     },
     {
       id: 'isr',
       name: 'ISR 演示',
-      url: '/demo/isr-page', 
+      url: '/demo/isr-page',
       icon: <Zap className="h-4 w-4" />,
       description: '增量静态再生 - 按需更新',
-      color: 'purple'
+      color: 'purple',
     },
     {
       id: 'csr',
@@ -73,8 +75,8 @@ export function NetworkMonitor() {
       url: '/demo/csr-page',
       icon: <Monitor className="h-4 w-4" />,
       description: '客户端渲染 - 浏览器中渲染',
-      color: 'orange'
-    }
+      color: 'orange',
+    },
   ];
 
   // 模拟网络请求数据
@@ -84,20 +86,20 @@ export function NetworkMonitor() {
         url: renderingModes.find(m => m.id === mode)?.url || '/',
         method: 'GET',
         type: 'document',
-        status: 200
+        status: 200,
       },
       {
         url: '/_next/static/css/app.css',
-        method: 'GET', 
+        method: 'GET',
         type: 'stylesheet',
-        status: 200
+        status: 200,
       },
       {
         url: '/_next/static/js/app.js',
         method: 'GET',
-        type: 'script', 
-        status: 200
-      }
+        type: 'script',
+        status: 200,
+      },
     ];
 
     // 根据渲染模式添加不同的请求
@@ -107,13 +109,13 @@ export function NetworkMonitor() {
           url: '/api/users',
           method: 'GET',
           type: 'fetch',
-          status: 200
+          status: 200,
         },
         {
           url: '/api/posts',
-          method: 'GET', 
+          method: 'GET',
           type: 'fetch',
-          status: 200
+          status: 200,
         }
       );
     } else if (mode === 'csr') {
@@ -121,14 +123,14 @@ export function NetworkMonitor() {
         {
           url: '/api/data',
           method: 'GET',
-          type: 'fetch', 
-          status: 200
+          type: 'fetch',
+          status: 200,
         },
         {
           url: '/api/user-profile',
           method: 'GET',
           type: 'fetch',
-          status: 200
+          status: 200,
         }
       );
     }
@@ -141,7 +143,7 @@ export function NetworkMonitor() {
         connect: Math.random() * 30 + 10,
         request: Math.random() * 40 + 20,
         response: Math.random() * 100 + 50,
-        total: 0
+        total: 0,
       };
       timing.total = timing.dns + timing.connect + timing.request + timing.response;
 
@@ -155,7 +157,7 @@ export function NetworkMonitor() {
         time: timing.total,
         startTime,
         endTime: startTime + timing.total,
-        timing
+        timing,
       };
     });
 
@@ -171,7 +173,7 @@ export function NetworkMonitor() {
         largestContentfulPaint: 400,
         firstInputDelay: 50,
         cumulativeLayoutShift: 0.05,
-        timeToInteractive: 600
+        timeToInteractive: 600,
       },
       ssg: {
         firstPaint: 80,
@@ -179,7 +181,7 @@ export function NetworkMonitor() {
         largestContentfulPaint: 250,
         firstInputDelay: 30,
         cumulativeLayoutShift: 0.02,
-        timeToInteractive: 300
+        timeToInteractive: 300,
       },
       isr: {
         firstPaint: 100,
@@ -187,7 +189,7 @@ export function NetworkMonitor() {
         largestContentfulPaint: 300,
         firstInputDelay: 40,
         cumulativeLayoutShift: 0.03,
-        timeToInteractive: 450
+        timeToInteractive: 450,
       },
       csr: {
         firstPaint: 200,
@@ -195,8 +197,8 @@ export function NetworkMonitor() {
         largestContentfulPaint: 1200,
         firstInputDelay: 100,
         cumulativeLayoutShift: 0.15,
-        timeToInteractive: 1500
-      }
+        timeToInteractive: 1500,
+      },
     };
 
     return baseMetrics[mode as keyof typeof baseMetrics] || baseMetrics.ssr;
@@ -210,10 +212,10 @@ export function NetworkMonitor() {
     const mode = renderingModes.find(m => m.id === selectedMode);
     if (mode) {
       setCurrentUrl(mode.url);
-      
+
       // 模拟逐步加载请求
       const newRequests = simulateNetworkRequests(selectedMode);
-      
+
       newRequests.forEach((request, index) => {
         setTimeout(() => {
           setRequests(prev => [...prev, request]);
@@ -221,10 +223,13 @@ export function NetworkMonitor() {
       });
 
       // 设置性能指标
-      setTimeout(() => {
-        setMetrics(simulateMetrics(selectedMode));
-        setIsMonitoring(false);
-      }, newRequests.length * 100 + 500);
+      setTimeout(
+        () => {
+          setMetrics(simulateMetrics(selectedMode));
+          setIsMonitoring(false);
+        },
+        newRequests.length * 100 + 500
+      );
     }
   };
 
@@ -252,7 +257,7 @@ export function NetworkMonitor() {
       stylesheet: 'bg-purple-100 text-purple-800',
       script: 'bg-orange-100 text-orange-800',
       fetch: 'bg-green-100 text-green-800',
-      image: 'bg-pink-100 text-pink-800'
+      image: 'bg-pink-100 text-pink-800',
     };
     return colors[type as keyof typeof colors] || 'bg-gray-100 text-gray-800';
   };
@@ -277,7 +282,7 @@ export function NetworkMonitor() {
               </div>
               <div className="text-xs text-gray-500">{mode.description}</div>
             </button>
-            
+
             <Link
               href={mode.url}
               target="_blank"
@@ -312,7 +317,7 @@ export function NetworkMonitor() {
             >
               {isMonitoring ? '监控中...' : '开始监控'}
             </button>
-            
+
             <Link
               href={renderingModes.find(m => m.id === selectedMode)?.url || '/'}
               rel="noopener noreferrer"
@@ -326,7 +331,8 @@ export function NetworkMonitor() {
 
         {currentUrl && (
           <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-            当前页面: <code className="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">{currentUrl}</code>
+            当前页面:{' '}
+            <code className="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">{currentUrl}</code>
           </div>
         )}
       </div>
@@ -338,19 +344,24 @@ export function NetworkMonitor() {
             <Globe className="h-4 w-4 mr-2" />
             网络请求瀑布图
           </h4>
-          
+
           <div className="space-y-2 max-h-96 overflow-y-auto">
             {requests.length === 0 && !isMonitoring && (
               <div className="text-center text-gray-500 py-8">
                 点击&quot;开始监控&quot;来查看网络请求
               </div>
             )}
-            
-            {requests.map((request) => (
-              <div key={request.id} className="border border-gray-200 dark:border-gray-600 rounded p-3">
+
+            {requests.map(request => (
+              <div
+                key={request.id}
+                className="border border-gray-200 dark:border-gray-600 rounded p-3"
+              >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center space-x-2">
-                    <span className={`px-2 py-1 text-xs rounded font-medium ${getTypeColor(request.type)}`}>
+                    <span
+                      className={`px-2 py-1 text-xs rounded font-medium ${getTypeColor(request.type)}`}
+                    >
                       {request.type}
                     </span>
                     <span className={`text-sm font-medium ${getStatusColor(request.status)}`}>
@@ -362,35 +373,35 @@ export function NetworkMonitor() {
                     {formatTime(request.time)} • {formatBytes(request.size)}
                   </div>
                 </div>
-                
+
                 <div className="text-sm text-gray-700 dark:text-gray-300 mb-2 truncate">
                   {request.url}
                 </div>
-                
+
                 {/* 时序图 */}
                 <div className="flex space-x-1 h-3 rounded overflow-hidden bg-gray-100 dark:bg-gray-700">
-                  <div 
-                    className="bg-blue-400" 
+                  <div
+                    className="bg-blue-400"
                     style={{ width: `${(request.timing.dns / request.timing.total) * 100}%` }}
                     title={`DNS: ${formatTime(request.timing.dns)}`}
                   ></div>
-                  <div 
+                  <div
                     className="bg-green-400"
                     style={{ width: `${(request.timing.connect / request.timing.total) * 100}%` }}
                     title={`Connect: ${formatTime(request.timing.connect)}`}
                   ></div>
-                  <div 
+                  <div
                     className="bg-yellow-400"
                     style={{ width: `${(request.timing.request / request.timing.total) * 100}%` }}
                     title={`Request: ${formatTime(request.timing.request)}`}
                   ></div>
-                  <div 
+                  <div
                     className="bg-red-400"
                     style={{ width: `${(request.timing.response / request.timing.total) * 100}%` }}
                     title={`Response: ${formatTime(request.timing.response)}`}
                   ></div>
                 </div>
-                
+
                 <div className="flex justify-between text-xs text-gray-500 mt-1">
                   <span>DNS</span>
                   <span>Connect</span>
@@ -410,48 +421,56 @@ export function NetworkMonitor() {
               <Clock className="h-4 w-4 mr-2" />
               Core Web Vitals
             </h4>
-            
+
             {metrics ? (
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm">First Contentful Paint (FCP)</span>
-                  <span className={`font-mono text-sm ${metrics.firstContentfulPaint < 1800 ? 'text-green-600' : 'text-orange-600'}`}>
+                  <span
+                    className={`font-mono text-sm ${metrics.firstContentfulPaint < 1800 ? 'text-green-600' : 'text-orange-600'}`}
+                  >
                     {formatTime(metrics.firstContentfulPaint)}
                   </span>
                 </div>
-                
+
                 <div className="flex justify-between items-center">
                   <span className="text-sm">Largest Contentful Paint (LCP)</span>
-                  <span className={`font-mono text-sm ${metrics.largestContentfulPaint < 2500 ? 'text-green-600' : 'text-orange-600'}`}>
+                  <span
+                    className={`font-mono text-sm ${metrics.largestContentfulPaint < 2500 ? 'text-green-600' : 'text-orange-600'}`}
+                  >
                     {formatTime(metrics.largestContentfulPaint)}
                   </span>
                 </div>
-                
+
                 <div className="flex justify-between items-center">
                   <span className="text-sm">First Input Delay (FID)</span>
-                  <span className={`font-mono text-sm ${metrics.firstInputDelay < 100 ? 'text-green-600' : 'text-orange-600'}`}>
+                  <span
+                    className={`font-mono text-sm ${metrics.firstInputDelay < 100 ? 'text-green-600' : 'text-orange-600'}`}
+                  >
                     {formatTime(metrics.firstInputDelay)}
                   </span>
                 </div>
-                
+
                 <div className="flex justify-between items-center">
                   <span className="text-sm">Cumulative Layout Shift (CLS)</span>
-                  <span className={`font-mono text-sm ${metrics.cumulativeLayoutShift < 0.1 ? 'text-green-600' : 'text-orange-600'}`}>
+                  <span
+                    className={`font-mono text-sm ${metrics.cumulativeLayoutShift < 0.1 ? 'text-green-600' : 'text-orange-600'}`}
+                  >
                     {metrics.cumulativeLayoutShift.toFixed(3)}
                   </span>
                 </div>
-                
+
                 <div className="flex justify-between items-center">
                   <span className="text-sm">Time to Interactive (TTI)</span>
-                  <span className={`font-mono text-sm ${metrics.timeToInteractive < 3800 ? 'text-green-600' : 'text-orange-600'}`}>
+                  <span
+                    className={`font-mono text-sm ${metrics.timeToInteractive < 3800 ? 'text-green-600' : 'text-orange-600'}`}
+                  >
                     {formatTime(metrics.timeToInteractive)}
                   </span>
                 </div>
               </div>
             ) : (
-              <div className="text-center text-gray-500 py-4">
-                运行监控以查看性能指标
-              </div>
+              <div className="text-center text-gray-500 py-4">运行监控以查看性能指标</div>
             )}
           </div>
 
@@ -461,28 +480,31 @@ export function NetworkMonitor() {
               <Download className="h-4 w-4 mr-2" />
               请求统计
             </h4>
-            
+
             {requests.length > 0 ? (
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm">总请求数</span>
                   <span className="font-mono text-sm">{requests.length}</span>
                 </div>
-                
+
                 <div className="flex justify-between items-center">
                   <span className="text-sm">总传输大小</span>
                   <span className="font-mono text-sm">
                     {formatBytes(requests.reduce((sum, req) => sum + req.size, 0))}
                   </span>
                 </div>
-                
+
                 <div className="flex justify-between items-center">
                   <span className="text-sm">总加载时间</span>
                   <span className="font-mono text-sm">
-                    {formatTime(Math.max(...requests.map(req => req.endTime)) - Math.min(...requests.map(req => req.startTime)))}
+                    {formatTime(
+                      Math.max(...requests.map(req => req.endTime)) -
+                        Math.min(...requests.map(req => req.startTime))
+                    )}
                   </span>
                 </div>
-                
+
                 <div className="flex justify-between items-center">
                   <span className="text-sm">平均响应时间</span>
                   <span className="font-mono text-sm">
@@ -491,9 +513,7 @@ export function NetworkMonitor() {
                 </div>
               </div>
             ) : (
-              <div className="text-center text-gray-500 py-4">
-                暂无请求数据
-              </div>
+              <div className="text-center text-gray-500 py-4">暂无请求数据</div>
             )}
           </div>
 
@@ -503,7 +523,7 @@ export function NetworkMonitor() {
               <Zap className="h-4 w-4 mr-2" />
               优化建议
             </h4>
-            
+
             <div className="space-y-2 text-sm">
               {selectedMode === 'ssr' && (
                 <>
@@ -517,7 +537,7 @@ export function NetworkMonitor() {
                   </div>
                 </>
               )}
-              
+
               {selectedMode === 'ssg' && (
                 <>
                   <div className="flex items-start space-x-2">
@@ -530,7 +550,7 @@ export function NetworkMonitor() {
                   </div>
                 </>
               )}
-              
+
               {selectedMode === 'csr' && (
                 <>
                   <div className="flex items-start space-x-2">

@@ -1,9 +1,9 @@
-import { Callout, Steps, Tabs, Tab } from 'nextra/components'
+import { Callout, Steps, Tab, Tabs } from 'nextra/components';
 
 # Redis 缓存教程
 
 <Callout type="info" emoji="⚡">
-本教程将教你如何在 Next.js 项目中使用 Redis 进行缓存，提升应用性能。
+  本教程将教你如何在 Next.js 项目中使用 Redis 进行缓存，提升应用性能。
 </Callout>
 
 ## 为什么使用 Redis？
@@ -21,16 +21,16 @@ Redis 是一个高性能的内存数据库，在 Web 应用中主要用于：
 我们使用 Upstash Redis 作为云 Redis 服务：
 
 ```typescript filename="lib/redis.ts" {1-11}
-import { Redis } from '@upstash/redis'
+import { Redis } from '@upstash/redis';
 
 if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
-  throw new Error('UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN must be defined')
+  throw new Error('UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN must be defined');
 }
 
 export const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL,
   token: process.env.UPSTASH_REDIS_REST_TOKEN,
-})
+});
 ```
 
 ## 缓存管理工具类
@@ -54,8 +54,8 @@ export const redis = new Redis({
 
       // 设置缓存
       static async set<T>(
-        key: string, 
-        value: T, 
+        key: string,
+        value: T,
         options?: { ex?: number; px?: number }
       ): Promise<boolean> {
         try {
@@ -85,6 +85,7 @@ export const redis = new Redis({
       }
     }
     ```
+
   </Tab>
   <Tab>
     ```typescript filename="lib/redis.ts" {44-91}
@@ -134,6 +135,7 @@ export const redis = new Redis({
       }
     }
     ```
+
   </Tab>
   <Tab>
     ```typescript filename="lib/redis.ts"
@@ -166,17 +168,18 @@ export const redis = new Redis({
 
       // 带重试的设置操作
       static async setWithRetry<T>(
-        key: string, 
-        value: T, 
+        key: string,
+        value: T,
         options?: { ex?: number }
       ): Promise<boolean> {
-        const result = await this.retryOperation(() => 
+        const result = await this.retryOperation(() =>
           redis.set(key, value, options)
         )
         return result !== null
       }
     }
     ```
+
   </Tab>
 </Tabs>
 
@@ -189,8 +192,8 @@ export const redis = new Redis({
 ### 创建缓存包装函数
 
 ```typescript filename="lib/cache-helpers.ts"
-import { CacheManager } from './redis'
-import { prisma } from './prisma'
+import { prisma } from './prisma';
+import { CacheManager } from './redis';
 
 // 通用缓存包装函数
 export async function withCache<T>(
@@ -199,34 +202,31 @@ export async function withCache<T>(
   ttl: number = 300 // 默认5分钟
 ): Promise<T> {
   // 尝试从缓存获取
-  const cached = await CacheManager.get<T>(key)
+  const cached = await CacheManager.get<T>(key);
   if (cached !== null) {
-    console.log(`Cache hit for key: ${key}`)
-    return cached
+    console.log(`Cache hit for key: ${key}`);
+    return cached;
   }
 
   // 缓存未命中，从数据库获取
-  console.log(`Cache miss for key: ${key}`)
-  const data = await fetcher()
-  
+  console.log(`Cache miss for key: ${key}`);
+  const data = await fetcher();
+
   // 存入缓存
-  await CacheManager.set(key, data, { ex: ttl })
-  return data
+  await CacheManager.set(key, data, { ex: ttl });
+  return data;
 }
 ```
 
 ### 应用到用户查询
 
 ```typescript filename="app/api/users/[id]/route.ts" {8-20}
-import { withCache } from '@/lib/cache-helpers'
+import { withCache } from '@/lib/cache-helpers';
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const userId = params.id
-    
+    const userId = params.id;
+
     // 使用缓存包装器
     const user = await withCache(
       `user:${userId}`,
@@ -239,26 +239,20 @@ export async function GET(
             username: true,
             avatar: true,
             createdAt: true,
-          }
-        })
+          },
+        });
       },
       600 // 缓存10分钟
-    )
-    
+    );
+
     if (!user) {
-      return NextResponse.json(
-        { error: '用户不存在' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: '用户不存在' }, { status: 404 });
     }
-    
-    return NextResponse.json(user)
+
+    return NextResponse.json(user);
   } catch (error) {
-    console.error('查询用户失败:', error)
-    return NextResponse.json(
-      { error: '服务器错误' },
-      { status: 500 }
-    )
+    console.error('查询用户失败:', error);
+    return NextResponse.json({ error: '服务器错误' }, { status: 500 });
   }
 }
 ```
@@ -266,14 +260,11 @@ export async function GET(
 ### 缓存失效策略
 
 ```typescript filename="app/api/users/[id]/route.ts"
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const userId = params.id
-    const updateData = await req.json()
-    
+    const userId = params.id;
+    const updateData = await req.json();
+
     // 更新数据库
     const updatedUser = await prisma.user.update({
       where: { id: userId },
@@ -284,23 +275,20 @@ export async function PUT(
         username: true,
         avatar: true,
         updatedAt: true,
-      }
-    })
-    
+      },
+    });
+
     // 删除相关缓存
     await Promise.all([
       CacheManager.del(`user:${userId}`),
       CacheManager.del(`user:profile:${userId}`),
       CacheManager.del('users:list'), // 如果有用户列表缓存
-    ])
-    
-    return NextResponse.json(updatedUser)
+    ]);
+
+    return NextResponse.json(updatedUser);
   } catch (error) {
-    console.error('更新用户失败:', error)
-    return NextResponse.json(
-      { error: '服务器错误' },
-      { status: 500 }
-    )
+    console.error('更新用户失败:', error);
+    return NextResponse.json({ error: '服务器错误' }, { status: 500 });
   }
 }
 ```
@@ -312,11 +300,11 @@ export async function PUT(
 实现基于 Redis 的 API 限流：
 
 ```typescript filename="lib/rate-limit.ts"
-import { CacheManager } from './redis'
+import { CacheManager } from './redis';
 
 export interface RateLimitConfig {
-  interval: number // 时间窗口（秒）
-  limit: number    // 请求限制数量
+  interval: number; // 时间窗口（秒）
+  limit: number; // 请求限制数量
 }
 
 export class RateLimiter {
@@ -324,48 +312,48 @@ export class RateLimiter {
     identifier: string,
     config: RateLimitConfig
   ): Promise<{
-    allowed: boolean
-    remaining: number
-    resetTime: number
+    allowed: boolean;
+    remaining: number;
+    resetTime: number;
   }> {
-    const key = `rate_limit:${identifier}`
-    const now = Date.now()
-    const window = Math.floor(now / (config.interval * 1000))
-    const windowKey = `${key}:${window}`
-    
+    const key = `rate_limit:${identifier}`;
+    const now = Date.now();
+    const window = Math.floor(now / (config.interval * 1000));
+    const windowKey = `${key}:${window}`;
+
     try {
       // 获取当前窗口的请求数量
-      const current = await CacheManager.get<number>(windowKey) || 0
-      
+      const current = (await CacheManager.get<number>(windowKey)) || 0;
+
       if (current >= config.limit) {
-        const resetTime = (window + 1) * config.interval * 1000
+        const resetTime = (window + 1) * config.interval * 1000;
         return {
           allowed: false,
           remaining: 0,
-          resetTime
-        }
+          resetTime,
+        };
       }
-      
+
       // 递增计数器
-      const newCount = await CacheManager.increment(windowKey)
-      
+      const newCount = await CacheManager.increment(windowKey);
+
       // 设置过期时间
-      await CacheManager.expire(windowKey, config.interval)
-      
-      const resetTime = (window + 1) * config.interval * 1000
+      await CacheManager.expire(windowKey, config.interval);
+
+      const resetTime = (window + 1) * config.interval * 1000;
       return {
         allowed: true,
         remaining: Math.max(0, config.limit - newCount),
-        resetTime
-      }
+        resetTime,
+      };
     } catch (error) {
-      console.error('Rate limit check failed:', error)
+      console.error('Rate limit check failed:', error);
       // 在 Redis 错误时允许请求通过
       return {
         allowed: true,
         remaining: config.limit - 1,
-        resetTime: now + config.interval * 1000
-      }
+        resetTime: now + config.interval * 1000,
+      };
     }
   }
 }
@@ -376,64 +364,57 @@ export class RateLimiter {
 使用 Redis 存储用户会话：
 
 ```typescript filename="lib/session.ts"
-import { CacheManager } from './redis'
-import { randomBytes } from 'crypto'
+import { randomBytes } from 'crypto';
+
+import { CacheManager } from './redis';
 
 export interface Session {
-  userId: string
-  username: string
-  email: string
-  createdAt: number
-  lastActivity: number
+  userId: string;
+  username: string;
+  email: string;
+  createdAt: number;
+  lastActivity: number;
 }
 
 export class SessionManager {
-  private static readonly SESSION_TTL = 7 * 24 * 60 * 60 // 7天
+  private static readonly SESSION_TTL = 7 * 24 * 60 * 60; // 7天
 
   // 创建会话
   static async createSession(user: {
-    id: string
-    username: string
-    email: string
+    id: string;
+    username: string;
+    email: string;
   }): Promise<string> {
-    const sessionId = randomBytes(32).toString('hex')
+    const sessionId = randomBytes(32).toString('hex');
     const session: Session = {
       userId: user.id,
       username: user.username,
       email: user.email,
       createdAt: Date.now(),
       lastActivity: Date.now(),
-    }
-    
-    await CacheManager.set(
-      `session:${sessionId}`,
-      session,
-      { ex: this.SESSION_TTL }
-    )
-    
-    return sessionId
+    };
+
+    await CacheManager.set(`session:${sessionId}`, session, { ex: this.SESSION_TTL });
+
+    return sessionId;
   }
 
   // 获取会话
   static async getSession(sessionId: string): Promise<Session | null> {
-    const session = await CacheManager.get<Session>(`session:${sessionId}`)
-    
+    const session = await CacheManager.get<Session>(`session:${sessionId}`);
+
     if (session) {
       // 更新最后活动时间
-      session.lastActivity = Date.now()
-      await CacheManager.set(
-        `session:${sessionId}`,
-        session,
-        { ex: this.SESSION_TTL }
-      )
+      session.lastActivity = Date.now();
+      await CacheManager.set(`session:${sessionId}`, session, { ex: this.SESSION_TTL });
     }
-    
-    return session
+
+    return session;
   }
 
   // 删除会话
   static async deleteSession(sessionId: string): Promise<void> {
-    await CacheManager.del(`session:${sessionId}`)
+    await CacheManager.del(`session:${sessionId}`);
   }
 
   // 清除用户的所有会话
@@ -452,11 +433,11 @@ export class SessionManager {
 export class UserService {
   static async getUserById(id: string) {
     // 1. 检查缓存
-    const cachedUser = await CacheManager.get<User>(`user:${id}`)
+    const cachedUser = await CacheManager.get<User>(`user:${id}`);
     if (cachedUser) {
-      return cachedUser
+      return cachedUser;
     }
-    
+
     // 2. 从数据库获取
     const user = await prisma.user.findUnique({
       where: { id },
@@ -465,28 +446,28 @@ export class UserService {
         username: true,
         email: true,
         avatar: true,
-      }
-    })
-    
+      },
+    });
+
     // 3. 写入缓存
     if (user) {
-      await CacheManager.set(`user:${id}`, user, { ex: 600 })
+      await CacheManager.set(`user:${id}`, user, { ex: 600 });
     }
-    
-    return user
+
+    return user;
   }
-  
+
   static async updateUser(id: string, data: Partial<User>) {
     // 1. 更新数据库
     const updatedUser = await prisma.user.update({
       where: { id },
       data,
-    })
-    
+    });
+
     // 2. 删除缓存（让下次查询重新加载）
-    await CacheManager.del(`user:${id}`)
-    
-    return updatedUser
+    await CacheManager.del(`user:${id}`);
+
+    return updatedUser;
   }
 }
 ```
@@ -504,18 +485,18 @@ export class PostService {
           select: {
             username: true,
             avatar: true,
-          }
-        }
-      }
-    })
-    
+          },
+        },
+      },
+    });
+
     // 2. 同时写入缓存
-    await CacheManager.set(`post:${post.id}`, post, { ex: 1800 })
-    
+    await CacheManager.set(`post:${post.id}`, post, { ex: 1800 });
+
     // 3. 清除列表缓存
-    await CacheManager.del('posts:latest')
-    
-    return post
+    await CacheManager.del('posts:latest');
+
+    return post;
   }
 }
 ```
@@ -526,17 +507,18 @@ export class PostService {
 export class ViewCountService {
   static async incrementView(postId: string) {
     // 1. 立即更新 Redis 计数器
-    const newCount = await CacheManager.increment(`views:${postId}`)
-    
+    const newCount = await CacheManager.increment(`views:${postId}`);
+
     // 2. 异步批量更新数据库（可以使用队列）
-    if (newCount % 10 === 0) { // 每10次浏览量更新一次数据库
+    if (newCount % 10 === 0) {
+      // 每10次浏览量更新一次数据库
       await prisma.post.update({
         where: { id: postId },
-        data: { views: newCount }
-      })
+        data: { views: newCount },
+      });
     }
-    
-    return newCount
+
+    return newCount;
   }
 }
 ```
@@ -554,7 +536,7 @@ export class ViewCountService {
 5. **缓存测试** - 数据库查询缓存
 
 <Callout type="info" emoji="🔬">
-这个演示页面连接真实的 Redis 服务，你可以看到实际的缓存操作效果。
+  这个演示页面连接真实的 Redis 服务，你可以看到实际的缓存操作效果。
 </Callout>
 
 ### API 限流演示
@@ -575,32 +557,32 @@ done
 
 ```typescript filename="lib/cache-metrics.ts"
 export class CacheMetrics {
-  private static hits = 0
-  private static misses = 0
-  
+  private static hits = 0;
+  private static misses = 0;
+
   static recordHit() {
-    this.hits++
+    this.hits++;
   }
-  
+
   static recordMiss() {
-    this.misses++
+    this.misses++;
   }
-  
+
   static getStats() {
-    const total = this.hits + this.misses
-    const hitRate = total > 0 ? (this.hits / total) * 100 : 0
-    
+    const total = this.hits + this.misses;
+    const hitRate = total > 0 ? (this.hits / total) * 100 : 0;
+
     return {
       hits: this.hits,
       misses: this.misses,
       total,
-      hitRate: parseFloat(hitRate.toFixed(2))
-    }
+      hitRate: parseFloat(hitRate.toFixed(2)),
+    };
   }
-  
+
   static reset() {
-    this.hits = 0
-    this.misses = 0
+    this.hits = 0;
+    this.misses = 0;
   }
 }
 
@@ -608,18 +590,18 @@ export class CacheMetrics {
 export class CacheManager {
   static async get<T>(key: string): Promise<T | null> {
     try {
-      const data = await redis.get(key)
+      const data = await redis.get(key);
       if (data !== null) {
-        CacheMetrics.recordHit()
-        return data as T
+        CacheMetrics.recordHit();
+        return data as T;
       } else {
-        CacheMetrics.recordMiss()
-        return null
+        CacheMetrics.recordMiss();
+        return null;
       }
     } catch (error) {
-      CacheMetrics.recordMiss()
-      console.error('Redis get error:', error)
-      return null
+      CacheMetrics.recordMiss();
+      console.error('Redis get error:', error);
+      return null;
     }
   }
 }
@@ -634,21 +616,21 @@ export class CacheDebug {
       CacheManager.exists(key),
       CacheManager.ttl(key),
       redis.type(key),
-      CacheManager.get(key)
-    ])
-    
+      CacheManager.get(key),
+    ]);
+
     return {
       key,
       exists,
       ttl: ttl === -1 ? '永不过期' : `${ttl} 秒`,
       type,
-      value: JSON.stringify(value, null, 2)
-    }
+      value: JSON.stringify(value, null, 2),
+    };
   }
-  
+
   static async listKeys(pattern: string = '*') {
     // 注意：在生产环境中谨慎使用 KEYS 命令
-    return await redis.keys(pattern)
+    return await redis.keys(pattern);
   }
 }
 ```
@@ -659,15 +641,15 @@ export class CacheDebug {
 
 ```typescript
 // 好的键命名方式
-const userKey = `user:${userId}`                    // user:123
-const userPostsKey = `user:${userId}:posts`         // user:123:posts
-const sessionKey = `session:${sessionId}`           // session:abc123
-const rateLimitKey = `rate_limit:api:${ip}`         // rate_limit:api:192.168.1.1
+const userKey = `user:${userId}`; // user:123
+const userPostsKey = `user:${userId}:posts`; // user:123:posts
+const sessionKey = `session:${sessionId}`; // session:abc123
+const rateLimitKey = `rate_limit:api:${ip}`; // rate_limit:api:192.168.1.1
 
 // 避免的键命名方式
-const badKey1 = `user_${userId}_data`               // 不一致的分隔符
-const badKey2 = `userPosts${userId}`                // 没有分隔符
-const badKey3 = `user:${userId}:posts:${Date.now()}` // 包含时间戳
+const badKey1 = `user_${userId}_data`; // 不一致的分隔符
+const badKey2 = `userPosts${userId}`; // 没有分隔符
+const badKey3 = `user:${userId}:posts:${Date.now()}`; // 包含时间戳
 ```
 
 ### 2. 适当的 TTL 设置
@@ -675,23 +657,23 @@ const badKey3 = `user:${userId}:posts:${Date.now()}` // 包含时间戳
 ```typescript
 const TTL_CONFIG = {
   // 用户信息 - 相对稳定
-  USER_PROFILE: 600,      // 10分钟
-  
+  USER_PROFILE: 600, // 10分钟
+
   // 文章内容 - 较稳定
-  POST_CONTENT: 1800,     // 30分钟
-  
+  POST_CONTENT: 1800, // 30分钟
+
   // 文章列表 - 经常变化
-  POST_LIST: 300,         // 5分钟
-  
+  POST_LIST: 300, // 5分钟
+
   // 统计数据 - 可以稍旧
-  STATISTICS: 3600,       // 1小时
-  
+  STATISTICS: 3600, // 1小时
+
   // 会话信息 - 长期有效
   USER_SESSION: 7 * 24 * 60 * 60, // 7天
-  
+
   // 验证码 - 短期有效
-  VERIFICATION_CODE: 300,  // 5分钟
-}
+  VERIFICATION_CODE: 300, // 5分钟
+};
 ```
 
 ### 3. 错误处理和降级
@@ -700,27 +682,27 @@ const TTL_CONFIG = {
 export async function getUserWithFallback(userId: string) {
   try {
     // 尝试从缓存获取
-    const cached = await CacheManager.get<User>(`user:${userId}`)
+    const cached = await CacheManager.get<User>(`user:${userId}`);
     if (cached) {
-      return cached
+      return cached;
     }
   } catch (error) {
-    console.warn('Cache error, falling back to database:', error)
+    console.warn('Cache error, falling back to database:', error);
   }
-  
+
   // 缓存失败或未命中，从数据库获取
   const user = await prisma.user.findUnique({
-    where: { id: userId }
-  })
-  
+    where: { id: userId },
+  });
+
   if (user) {
     // 尝试写入缓存，但不阻塞响应
     CacheManager.set(`user:${userId}`, user, { ex: 600 }).catch(error => {
-      console.warn('Failed to cache user data:', error)
-    })
+      console.warn('Failed to cache user data:', error);
+    });
   }
-  
-  return user
+
+  return user;
 }
 ```
 
@@ -729,6 +711,7 @@ export async function getUserWithFallback(userId: string) {
 ### Q: 什么时候应该使用缓存？
 
 A: 以下情况适合使用缓存：
+
 - 查询频繁但变化不频繁的数据
 - 计算复杂的结果
 - 外部 API 调用结果
@@ -738,6 +721,7 @@ A: 以下情况适合使用缓存：
 ### Q: 如何选择合适的 TTL？
 
 A: TTL 选择原则：
+
 - 数据更新频率：更新越频繁，TTL 越短
 - 数据重要性：重要数据可以设置较短 TTL
 - 业务容忍度：业务能容忍多久的数据延迟
@@ -748,8 +732,8 @@ A: TTL 选择原则：
 A: 使用互斥锁防止缓存击穿：
 
 ```typescript
-const lockKey = `lock:${cacheKey}`
-const lockTTL = 10 // 10秒锁超时
+const lockKey = `lock:${cacheKey}`;
+const lockTTL = 10; // 10秒锁超时
 
 export async function getWithLock<T>(
   cacheKey: string,
@@ -757,34 +741,34 @@ export async function getWithLock<T>(
   ttl: number = 300
 ): Promise<T> {
   // 尝试获取缓存
-  let cached = await CacheManager.get<T>(cacheKey)
+  let cached = await CacheManager.get<T>(cacheKey);
   if (cached !== null) {
-    return cached
+    return cached;
   }
-  
+
   // 尝试获取锁
-  const lockAcquired = await redis.set(lockKey, '1', { nx: true, ex: lockTTL })
-  
+  const lockAcquired = await redis.set(lockKey, '1', { nx: true, ex: lockTTL });
+
   if (lockAcquired) {
     try {
       // 获得锁，从数据库加载数据
-      const data = await fetcher()
-      await CacheManager.set(cacheKey, data, { ex: ttl })
-      return data
+      const data = await fetcher();
+      await CacheManager.set(cacheKey, data, { ex: ttl });
+      return data;
     } finally {
       // 释放锁
-      await CacheManager.del(lockKey)
+      await CacheManager.del(lockKey);
     }
   } else {
     // 未获得锁，等待一段时间后重试
-    await new Promise(resolve => setTimeout(resolve, 50))
-    cached = await CacheManager.get<T>(cacheKey)
+    await new Promise(resolve => setTimeout(resolve, 50));
+    cached = await CacheManager.get<T>(cacheKey);
     if (cached !== null) {
-      return cached
+      return cached;
     }
-    
+
     // 如果还是没有缓存，直接查询数据库
-    return await fetcher()
+    return await fetcher();
   }
 }
 ```
@@ -794,4 +778,3 @@ export async function getWithLock<T>(
 - 学习 [OSS 文件存储教程](/tutorials/oss) 了解文件上传和 CDN 缓存
 - 查看 [性能优化教程](/tutorials/performance) 学习更多优化技巧
 - 探索 [API 设计教程](/tutorials/api-design) 了解如何设计高性能 API
-

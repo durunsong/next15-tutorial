@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import { prisma } from '@/lib/prisma';
 
 /**
  * 获取单个用户信息
  * GET /api/users/[id]
  */
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: userId } = await params;
 
@@ -43,19 +41,13 @@ export async function GET(
     });
 
     if (!user) {
-      return NextResponse.json(
-        { error: '用户不存在' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: '用户不存在' }, { status: 404 });
     }
 
     return NextResponse.json(user);
   } catch (error) {
     console.error('获取用户信息失败:', error);
-    return NextResponse.json(
-      { error: '获取用户信息失败' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '获取用户信息失败' }, { status: 500 });
   }
 }
 
@@ -63,10 +55,7 @@ export async function GET(
  * 更新用户信息
  * PUT /api/users/[id]
  */
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: userId } = await params;
     const body = await req.json();
@@ -77,10 +66,7 @@ export async function PUT(
     });
 
     if (!existingUser) {
-      return NextResponse.json(
-        { error: '用户不存在' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: '用户不存在' }, { status: 404 });
     }
 
     // 检查是否有用户名或邮箱冲突
@@ -101,10 +87,7 @@ export async function PUT(
 
       if (conflictUser) {
         const conflictField = conflictUser.username === body.username ? '用户名' : '邮箱';
-        return NextResponse.json(
-          { error: `${conflictField}已被其他用户使用` },
-          { status: 409 }
-        );
+        return NextResponse.json({ error: `${conflictField}已被其他用户使用` }, { status: 409 });
       }
     }
 
@@ -134,10 +117,7 @@ export async function PUT(
     return NextResponse.json(updatedUser);
   } catch (error) {
     console.error('更新用户失败:', error);
-    return NextResponse.json(
-      { error: '更新用户失败' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '更新用户失败' }, { status: 500 });
   }
 }
 
@@ -145,10 +125,7 @@ export async function PUT(
  * 删除用户
  * DELETE /api/users/[id]
  */
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: userId } = await params;
 
@@ -168,10 +145,7 @@ export async function DELETE(
     });
 
     if (!existingUser) {
-      return NextResponse.json(
-        { error: '用户不存在' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: '用户不存在' }, { status: 404 });
     }
 
     // 删除用户（由于设置了 onDelete: Cascade，关联的文章和评论会自动删除）
@@ -192,10 +166,6 @@ export async function DELETE(
     });
   } catch (error) {
     console.error('删除用户失败:', error);
-    return NextResponse.json(
-      { error: '删除用户失败' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '删除用户失败' }, { status: 500 });
   }
 }
-

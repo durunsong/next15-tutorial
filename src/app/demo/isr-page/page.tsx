@@ -1,10 +1,10 @@
-import { Clock, TrendingUp, Calendar, RefreshCw } from 'lucide-react';
+import { Calendar, Clock, RefreshCw, TrendingUp } from 'lucide-react';
 
 // 模拟新闻数据获取
 async function getNewsData() {
   // 模拟 API 调用延迟
   await new Promise(resolve => setTimeout(resolve, 200));
-  
+
   return {
     news: [
       {
@@ -15,7 +15,7 @@ async function getNewsData() {
         author: '技术团队',
         views: 8500,
         category: '技术新闻',
-        trending: true
+        trending: true,
       },
       {
         id: 2,
@@ -25,7 +25,7 @@ async function getNewsData() {
         author: 'React 团队',
         views: 6200,
         category: '技术新闻',
-        trending: false
+        trending: false,
       },
       {
         id: 3,
@@ -35,7 +35,7 @@ async function getNewsData() {
         author: 'TypeScript 团队',
         views: 4800,
         category: '技术新闻',
-        trending: true
+        trending: true,
       },
       {
         id: 4,
@@ -45,37 +45,33 @@ async function getNewsData() {
         author: '行业分析师',
         views: 3200,
         category: '行业动态',
-        trending: false
-      }
+        trending: false,
+      },
     ],
     lastUpdated: new Date().toISOString(),
     stats: {
       totalNews: 1250,
       todayPublished: 18,
-      totalViews: 156000
-    }
+      totalViews: 156000,
+    },
   };
 }
 
 export default async function ISRPage() {
   const data = await getNewsData();
-  
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            ISR 演示页面
-          </h1>
-          <p className="text-gray-600">
-            这个页面使用增量静态再生 (ISR)，静态生成 + 定期更新内容
-          </p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">ISR 演示页面</h1>
+          <p className="text-gray-600">这个页面使用增量静态再生 (ISR)，静态生成 + 定期更新内容</p>
           <div className="mt-4 inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">
             <RefreshCw className="h-4 w-4 mr-1" />
             增量静态再生模式
           </div>
         </div>
-        
+
         <div className="space-y-6">
           {/* 更新信息 */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -90,7 +86,7 @@ export default async function ISRPage() {
               此页面每 5 分钟自动更新一次，确保显示最新的新闻内容
             </p>
           </div>
-          
+
           {/* 统计信息 */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-white p-6 rounded-lg shadow-sm border">
@@ -98,9 +94,11 @@ export default async function ISRPage() {
                 <Calendar className="h-5 w-5 text-green-600" />
                 <h3 className="font-semibold text-gray-900">总新闻数</h3>
               </div>
-              <p className="text-3xl font-bold text-green-600 mt-2">{data.stats.totalNews.toLocaleString()}</p>
+              <p className="text-3xl font-bold text-green-600 mt-2">
+                {data.stats.totalNews.toLocaleString()}
+              </p>
             </div>
-            
+
             <div className="bg-white p-6 rounded-lg shadow-sm border">
               <div className="flex items-center space-x-2">
                 <TrendingUp className="h-5 w-5 text-blue-600" />
@@ -108,45 +106,44 @@ export default async function ISRPage() {
               </div>
               <p className="text-3xl font-bold text-blue-600 mt-2">{data.stats.todayPublished}</p>
             </div>
-            
+
             <div className="bg-white p-6 rounded-lg shadow-sm border">
               <div className="flex items-center space-x-2">
                 <TrendingUp className="h-5 w-5 text-purple-600" />
                 <h3 className="font-semibold text-gray-900">总浏览量</h3>
               </div>
-              <p className="text-3xl font-bold text-purple-600 mt-2">{data.stats.totalViews.toLocaleString()}</p>
+              <p className="text-3xl font-bold text-purple-600 mt-2">
+                {data.stats.totalViews.toLocaleString()}
+              </p>
             </div>
           </div>
-          
+
           {/* 新闻列表 */}
           <div className="bg-white rounded-lg shadow-sm border p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-gray-900">最新技术新闻</h2>
-              <div className="text-sm text-gray-500">
-                实时更新 • ISR 自动更新
-              </div>
+              <div className="text-sm text-gray-500">实时更新 • ISR 自动更新</div>
             </div>
-            
+
             <div className="space-y-6">
               {data.news.map(article => (
-                <div key={article.id} className="border-b border-gray-200 last:border-b-0 pb-6 last:pb-0">
+                <div
+                  key={article.id}
+                  className="border-b border-gray-200 last:border-b-0 pb-6 last:pb-0"
+                >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-2">
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          {article.title}
-                        </h3>
+                        <h3 className="text-lg font-semibold text-gray-900">{article.title}</h3>
                         {article.trending && (
                           <span className="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">
                             🔥 热门
                           </span>
                         )}
                       </div>
-                      
-                      <p className="text-gray-600 mb-3 leading-relaxed">
-                        {article.summary}
-                      </p>
-                      
+
+                      <p className="text-gray-600 mb-3 leading-relaxed">{article.summary}</p>
+
                       <div className="flex items-center space-x-4 text-sm text-gray-500">
                         <span className="flex items-center space-x-1">
                           <Calendar className="h-4 w-4" />
@@ -164,7 +161,7 @@ export default async function ISRPage() {
               ))}
             </div>
           </div>
-          
+
           {/* ISR 说明 */}
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
             <h4 className="font-semibold text-yellow-900 mb-2">ISR 工作原理</h4>
@@ -176,7 +173,7 @@ export default async function ISRPage() {
               <li>• 结合了 SSG 的性能和 SSR 的数据新鲜度</li>
             </ul>
           </div>
-          
+
           <div className="text-center text-sm text-gray-500">
             页面生成时间: {new Date(data.lastUpdated).toLocaleString('zh-CN')}
           </div>
@@ -188,4 +185,3 @@ export default async function ISRPage() {
 
 // ISR 配置：每 300 秒（5分钟）重新验证
 export const revalidate = 300;
-

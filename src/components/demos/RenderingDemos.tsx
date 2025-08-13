@@ -1,14 +1,15 @@
 'use client';
 
+import { Globe, Monitor, Server, Zap } from 'lucide-react';
+
 import { useState } from 'react';
-import { Server, Globe, Monitor, Zap } from 'lucide-react';
 
 // 渲染模式对比演示
 export function RenderingModesDemo() {
   const [selectedMode, setSelectedMode] = useState('ssr');
   const [simulationStep, setSimulationStep] = useState(0);
   const [isSimulating, setIsSimulating] = useState(false);
-  
+
   const renderingModes = [
     {
       id: 'ssr',
@@ -17,7 +18,7 @@ export function RenderingModesDemo() {
       description: '每次请求时在服务器渲染页面',
       pros: ['SEO 友好', '首屏加载快', '实时数据'],
       cons: ['服务器负载高', 'TTFB 较慢', '缓存困难'],
-      useCase: '动态内容、用户个性化页面'
+      useCase: '动态内容、用户个性化页面',
     },
     {
       id: 'ssg',
@@ -26,7 +27,7 @@ export function RenderingModesDemo() {
       description: '构建时预生成静态页面',
       pros: ['性能最佳', 'CDN 友好', '安全性高'],
       cons: ['数据可能过时', '构建时间长', '动态性差'],
-      useCase: '博客文章、文档、营销页面'
+      useCase: '博客文章、文档、营销页面',
     },
     {
       id: 'isr',
@@ -35,7 +36,7 @@ export function RenderingModesDemo() {
       description: '静态生成 + 按需更新',
       pros: ['性能好', '数据新鲜', '可扩展'],
       cons: ['复杂性高', '缓存策略复杂'],
-      useCase: '电商产品页、新闻网站'
+      useCase: '电商产品页、新闻网站',
     },
     {
       id: 'csr',
@@ -44,59 +45,59 @@ export function RenderingModesDemo() {
       description: '在浏览器中渲染页面',
       pros: ['交互性强', '服务器负载低', '开发简单'],
       cons: ['SEO 困难', '首屏加载慢', '依赖 JavaScript'],
-      useCase: '管理后台、SPA 应用'
-    }
+      useCase: '管理后台、SPA 应用',
+    },
   ];
-  
+
   const simulationSteps = {
     ssr: [
       { step: 1, title: '用户请求页面', desc: '浏览器向服务器发送请求', time: '0ms' },
       { step: 2, title: '服务器获取数据', desc: '从数据库或 API 获取最新数据', time: '50ms' },
       { step: 3, title: '服务器渲染 HTML', desc: '在服务器上执行 React 组件', time: '100ms' },
       { step: 4, title: '返回完整 HTML', desc: '发送渲染好的 HTML 到浏览器', time: '150ms' },
-      { step: 5, title: '客户端激活', desc: '下载 JavaScript 并激活交互', time: '300ms' }
+      { step: 5, title: '客户端激活', desc: '下载 JavaScript 并激活交互', time: '300ms' },
     ],
     ssg: [
       { step: 1, title: '构建时预渲染', desc: '在构建阶段生成静态 HTML', time: '构建时' },
       { step: 2, title: '用户请求页面', desc: '浏览器请求预生成的页面', time: '0ms' },
       { step: 3, title: 'CDN 返回静态文件', desc: '从 CDN 快速返回 HTML', time: '20ms' },
-      { step: 4, title: '客户端激活', desc: '下载 JavaScript 并激活交互', time: '100ms' }
+      { step: 4, title: '客户端激活', desc: '下载 JavaScript 并激活交互', time: '100ms' },
     ],
     isr: [
       { step: 1, title: '首次构建', desc: '生成初始静态页面', time: '构建时' },
       { step: 2, title: '用户请求', desc: '返回缓存的静态页面', time: '20ms' },
       { step: 3, title: '后台重新生成', desc: '检查是否需要更新页面', time: '后台' },
-      { step: 4, title: '增量更新', desc: '更新过期的页面内容', time: '按需' }
+      { step: 4, title: '增量更新', desc: '更新过期的页面内容', time: '按需' },
     ],
     csr: [
       { step: 1, title: '返回空 HTML', desc: '服务器返回基础 HTML 壳', time: '20ms' },
       { step: 2, title: '下载 JavaScript', desc: '浏览器下载应用 bundle', time: '200ms' },
       { step: 3, title: '客户端获取数据', desc: '通过 API 获取页面数据', time: '300ms' },
-      { step: 4, title: '渲染页面内容', desc: '在浏览器中渲染组件', time: '350ms' }
-    ]
+      { step: 4, title: '渲染页面内容', desc: '在浏览器中渲染组件', time: '350ms' },
+    ],
   };
-  
+
   const startSimulation = () => {
     setIsSimulating(true);
     setSimulationStep(0);
-    
+
     const steps = simulationSteps[selectedMode as keyof typeof simulationSteps];
     let currentStep = 0;
-    
+
     const timer = setInterval(() => {
       currentStep++;
       setSimulationStep(currentStep);
-      
+
       if (currentStep >= steps.length) {
         clearInterval(timer);
         setIsSimulating(false);
       }
     }, 800);
   };
-  
+
   const currentMode = renderingModes.find(mode => mode.id === selectedMode)!;
   const currentSteps = simulationSteps[selectedMode as keyof typeof simulationSteps];
-  
+
   return (
     <div className="space-y-6">
       {/* 渲染模式选择 */}
@@ -119,7 +120,7 @@ export function RenderingModesDemo() {
           </button>
         ))}
       </div>
-      
+
       {/* 当前模式详情 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-4">
@@ -131,25 +132,31 @@ export function RenderingModesDemo() {
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
               {currentMode.description}
             </p>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <h4 className="text-sm font-medium text-green-600 mb-2">优势</h4>
                 <ul className="space-y-1">
                   {currentMode.pros.map((pro, index) => (
-                    <li key={index} className="text-xs text-gray-600 dark:text-gray-400 flex items-center space-x-1">
+                    <li
+                      key={index}
+                      className="text-xs text-gray-600 dark:text-gray-400 flex items-center space-x-1"
+                    >
                       <span className="text-green-500">✓</span>
                       <span>{pro}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-              
+
               <div>
                 <h4 className="text-sm font-medium text-orange-600 mb-2">劣势</h4>
                 <ul className="space-y-1">
                   {currentMode.cons.map((con, index) => (
-                    <li key={index} className="text-xs text-gray-600 dark:text-gray-400 flex items-center space-x-1">
+                    <li
+                      key={index}
+                      className="text-xs text-gray-600 dark:text-gray-400 flex items-center space-x-1"
+                    >
                       <span className="text-orange-500">⚠</span>
                       <span>{con}</span>
                     </li>
@@ -157,14 +164,15 @@ export function RenderingModesDemo() {
                 </ul>
               </div>
             </div>
-            
+
             <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded">
               <div className="text-sm">
-                <strong>适用场景：</strong>{currentMode.useCase}
+                <strong>适用场景：</strong>
+                {currentMode.useCase}
               </div>
             </div>
           </div>
-          
+
           <button
             onClick={startSimulation}
             disabled={isSimulating}
@@ -173,7 +181,7 @@ export function RenderingModesDemo() {
             {isSimulating ? '模拟中...' : '开始渲染流程模拟'}
           </button>
         </div>
-        
+
         {/* 渲染流程可视化 */}
         <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
           <h4 className="font-semibold mb-4">渲染流程</h4>
@@ -187,17 +195,21 @@ export function RenderingModesDemo() {
                     : 'bg-gray-100 dark:bg-gray-700'
                 }`}
               >
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
-                  simulationStep >= step.step
-                    ? 'bg-green-600 text-white'
-                    : 'bg-gray-400 text-white'
-                }`}>
+                <div
+                  className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
+                    simulationStep >= step.step
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gray-400 text-white'
+                  }`}
+                >
                   {step.step}
                 </div>
                 <div className="flex-1">
                   <div className="font-medium text-sm">{step.title}</div>
                   <div className="text-xs text-gray-600 dark:text-gray-400">{step.desc}</div>
-                  <div className="text-xs text-blue-600 dark:text-blue-400 font-mono">{step.time}</div>
+                  <div className="text-xs text-blue-600 dark:text-blue-400 font-mono">
+                    {step.time}
+                  </div>
                 </div>
               </div>
             ))}
@@ -215,36 +227,36 @@ export function APICallDemo() {
     method: 'GET',
     endpoint: '/api/users',
     body: '',
-    headers: '{"Content-Type": "application/json"}'
+    headers: '{"Content-Type": "application/json"}',
   });
   // 使用变量避免 lint 错误
   void requestData;
   const [response, setResponse] = useState<unknown>(null);
   const [loading, setLoading] = useState(false);
-  
+
   const apiPatterns = [
     {
       id: 'rest',
       name: 'REST API',
-      description: '传统的 RESTful API 调用模式'
+      description: '传统的 RESTful API 调用模式',
     },
     {
       id: 'graphql',
       name: 'GraphQL',
-      description: '灵活的查询语言和运行时'
+      description: '灵活的查询语言和运行时',
     },
     {
       id: 'trpc',
       name: 'tRPC',
-      description: '类型安全的 RPC 框架'
+      description: '类型安全的 RPC 框架',
     },
     {
       id: 'swr',
       name: 'SWR',
-      description: '数据获取库，支持缓存和重新验证'
-    }
+      description: '数据获取库，支持缓存和重新验证',
+    },
   ];
-  
+
   const codeExamples = {
     rest: {
       server: `// app/api/users/route.ts
@@ -368,7 +380,7 @@ function UsersPage() {
       ))}
     </div>
   );
-}`
+}`,
     },
     graphql: {
       server: `// app/api/graphql/route.ts
@@ -524,7 +536,7 @@ function UsersComponent() {
       ))}
     </div>
   );
-}`
+}`,
     },
     trpc: {
       server: `// lib/trpc.ts
@@ -654,7 +666,7 @@ function UsersPage() {
   );
 }
 
-export default trpc.withTRPC(UsersPage);`
+export default trpc.withTRPC(UsersPage);`,
     },
     swr: {
       server: `// SWR 使用相同的 REST API
@@ -755,61 +767,59 @@ function MyApp({ Component, pageProps }: { Component: React.ComponentType; pageP
       <Component {...pageProps} />
     </SWRConfig>
   );
-}`
-    }
+}`,
+    },
   };
-  
+
   const simulateAPICall = async () => {
     setLoading(true);
     setResponse(null);
-    
+
     // 模拟 API 延迟
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     // 模拟响应数据
     const mockResponses = {
       rest: {
         users: [
           { id: 1, name: '张三', email: 'zhangsan@example.com', createdAt: '2024-01-15T10:30:00Z' },
-          { id: 2, name: '李四', email: 'lisi@example.com', createdAt: '2024-01-14T15:20:00Z' }
+          { id: 2, name: '李四', email: 'lisi@example.com', createdAt: '2024-01-14T15:20:00Z' },
         ],
-        pagination: { page: 1, limit: 10, total: 2, pages: 1 }
+        pagination: { page: 1, limit: 10, total: 2, pages: 1 },
       },
       graphql: {
         data: {
           users: [
-            { 
-              id: '1', 
-              name: '张三', 
+            {
+              id: '1',
+              name: '张三',
               email: 'zhangsan@example.com',
               posts: [{ id: '1', title: 'GraphQL 入门', published: true }],
-              createdAt: '2024-01-15T10:30:00Z'
-            }
-          ]
-        }
+              createdAt: '2024-01-15T10:30:00Z',
+            },
+          ],
+        },
       },
       trpc: {
-        users: [
-          { id: '1', name: '张三', email: 'zhangsan@example.com', posts: [] }
-        ],
+        users: [{ id: '1', name: '张三', email: 'zhangsan@example.com', posts: [] }],
         total: 1,
-        hasMore: false
+        hasMore: false,
       },
       swr: {
         users: [
-          { id: 1, name: '张三', email: 'zhangsan@example.com', createdAt: '2024-01-15T10:30:00Z' }
+          { id: 1, name: '张三', email: 'zhangsan@example.com', createdAt: '2024-01-15T10:30:00Z' },
         ],
-        pagination: { page: 1, limit: 10, total: 1, pages: 1 }
-      }
+        pagination: { page: 1, limit: 10, total: 1, pages: 1 },
+      },
     };
-    
+
     setResponse(mockResponses[selectedPattern as keyof typeof mockResponses]);
     setLoading(false);
   };
-  
+
   const currentPattern = apiPatterns.find(p => p.id === selectedPattern)!;
   const currentCode = codeExamples[selectedPattern as keyof typeof codeExamples];
-  
+
   return (
     <div className="space-y-6">
       {/* API 模式选择 */}
@@ -829,7 +839,7 @@ function MyApp({ Component, pageProps }: { Component: React.ComponentType; pageP
           </button>
         ))}
       </div>
-      
+
       {/* API 调用界面 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="space-y-4">
@@ -838,7 +848,7 @@ function MyApp({ Component, pageProps }: { Component: React.ComponentType; pageP
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
               {currentPattern.description}
             </p>
-            
+
             <button
               onClick={simulateAPICall}
               disabled={loading}
@@ -847,7 +857,7 @@ function MyApp({ Component, pageProps }: { Component: React.ComponentType; pageP
               {loading ? '请求中...' : `模拟 ${currentPattern.name} 调用`}
             </button>
           </div>
-          
+
           {/* 响应结果 */}
           {!!response && (
             <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
@@ -858,7 +868,7 @@ function MyApp({ Component, pageProps }: { Component: React.ComponentType; pageP
             </div>
           )}
         </div>
-        
+
         {/* 代码示例 */}
         <div className="space-y-4">
           <div>
@@ -867,7 +877,7 @@ function MyApp({ Component, pageProps }: { Component: React.ComponentType; pageP
               <pre>{currentCode.server}</pre>
             </div>
           </div>
-          
+
           <div>
             <h5 className="font-semibold mb-2">客户端代码:</h5>
             <div className="bg-gray-900 text-gray-100 p-3 rounded font-mono text-xs overflow-x-auto max-h-64 overflow-y-auto">
@@ -879,4 +889,3 @@ function MyApp({ Component, pageProps }: { Component: React.ComponentType; pageP
     </div>
   );
 }
-

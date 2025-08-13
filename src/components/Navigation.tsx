@@ -1,12 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Avatar, Button, Dropdown, message } from 'antd';
+import type { MenuProps } from 'antd';
+import { LogIn, LogOut, Menu, Moon, Sun, User, UserCircle, X } from 'lucide-react';
+
+import { useEffect, useState } from 'react';
+
+import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useTheme } from 'next-themes';
-import { Moon, Sun, Menu, X, User, LogIn, LogOut, UserCircle } from 'lucide-react';
-import { Button, Dropdown, Avatar, message } from 'antd';
-import type { MenuProps } from 'antd';
+
 import AuthModal from '@/components/AuthModal';
 import { useAuthStore } from '@/store/authStore';
 
@@ -34,8 +37,6 @@ export function Navigation() {
   useEffect(() => {
     setMounted(true);
   }, []);
-
-
 
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
@@ -77,19 +78,32 @@ export function Navigation() {
     {
       key: 'profile',
       label: (
-        <Link href="/profile" className="flex items-center space-x-3 px-2 py-2 text-gray-700 hover:text-gray-900">
+        <Link
+          href="/profile"
+          className="flex items-center space-x-3 px-2 py-2 text-gray-700 hover:text-gray-900"
+        >
           <UserCircle className="h-5 w-5" />
           <span>个人中心</span>
         </Link>
       ),
     },
     {
-      key: 'settings', 
+      key: 'settings',
       label: (
         <div className="flex items-center space-x-3 px-2 py-2 text-gray-700 hover:text-gray-900 cursor-pointer">
           <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+            />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
           </svg>
           <span>设置</span>
         </div>
@@ -100,7 +114,12 @@ export function Navigation() {
       label: (
         <div className="flex items-center space-x-3 px-2 py-2 text-gray-700 hover:text-gray-900 cursor-pointer">
           <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+            />
           </svg>
           <span>登出</span>
         </div>
@@ -123,7 +142,7 @@ export function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-2">
-            {navigationItems.map((item) => (
+            {navigationItems.map(item => (
               <Link
                 key={item.name}
                 href={item.href}
@@ -136,31 +155,43 @@ export function Navigation() {
                 {item.name}
               </Link>
             ))}
-            
+
             {/* 用户区域 */}
             <div className="flex items-center space-x-2 ml-4 pl-4 border-l border-gray-200 dark:border-gray-700">
               {isAuthenticated && user ? (
                 <>
                   {/* 已登录状态 - 显示欢迎信息（非按钮形式） */}
                   <div className="flex items-center space-x-4">
-                    <span className="flex items-center text-sm font-medium">欢迎，{user.username}!</span>
+                    <span className="flex items-center text-sm font-medium">
+                      欢迎，{user.username}!
+                    </span>
 
-                    <Dropdown 
-                      menu={{ items: userMenuItems }} 
-                      placement="bottomRight" 
+                    <Dropdown
+                      menu={{ items: userMenuItems }}
+                      placement="bottomRight"
                       trigger={['click']}
                       overlayClassName="user-dropdown"
                       arrow={false}
                     >
                       <div className="flex items-center space-x-2 px-2 py-1 cursor-pointer rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                        <Avatar 
+                        <Avatar
                           size={32}
-                          src={user.avatar} 
+                          src={user.avatar}
                           icon={<User className="h-4 w-4" />}
                           className="border-2 border-gray-200"
                         />
-                        <svg className="h-4 w-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        <svg
+                          className="h-4 w-4 text-gray-500"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
                         </svg>
                       </div>
                     </Dropdown>
@@ -178,14 +209,18 @@ export function Navigation() {
                   </Button>
                 </>
               )}
-              
+
               <button
                 onClick={toggleTheme}
                 className="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 aria-label="切换主题"
               >
                 {mounted ? (
-                  theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />
+                  theme === 'dark' ? (
+                    <Sun className="h-5 w-5" />
+                  ) : (
+                    <Moon className="h-5 w-5" />
+                  )
                 ) : (
                   <div className="h-5 w-5" />
                 )}
@@ -201,7 +236,11 @@ export function Navigation() {
               aria-label="切换主题"
             >
               {mounted ? (
-                theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />
+                theme === 'dark' ? (
+                  <Sun className="h-5 w-5" />
+                ) : (
+                  <Moon className="h-5 w-5" />
+                )
               ) : (
                 <div className="h-5 w-5" />
               )}
@@ -221,7 +260,7 @@ export function Navigation() {
       {isOpen && (
         <div className="md:hidden border-t border-gray-200 dark:border-gray-700">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-gray-900">
-            {navigationItems.map((item) => (
+            {navigationItems.map(item => (
               <Link
                 key={item.name}
                 href={item.href}
@@ -235,12 +274,14 @@ export function Navigation() {
                 {item.name}
               </Link>
             ))}
-            
+
             {/* 移动端用户链接 */}
             <div className="pt-2 mt-2 border-t border-gray-200 dark:border-gray-700">
               {isAuthenticated && user ? (
                 <>
-                  <span className="flex items-center text-sm font-medium">欢迎，{user.username}!</span>
+                  <span className="flex items-center text-sm font-medium">
+                    欢迎，{user.username}!
+                  </span>
                   <Link
                     href="/profile"
                     className="flex items-center space-x-2 px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
@@ -278,7 +319,7 @@ export function Navigation() {
           </div>
         </div>
       )}
-      
+
       {/* 认证模态框 */}
       <AuthModal
         open={authModalOpen}

@@ -1,12 +1,16 @@
 import { Redis } from '@upstash/redis';
 
 // 检查 Redis 环境变量是否可用
-const isRedisAvailable = !!(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN);
+const isRedisAvailable = !!(
+  process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
+);
 
-export const redis = isRedisAvailable ? new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-}) : null;
+export const redis = isRedisAvailable
+  ? new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL!,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+    })
+  : null;
 
 // 类型安全的缓存工具类
 export class CacheManager {
@@ -25,8 +29,8 @@ export class CacheManager {
   }
 
   static async set<T>(
-    key: string, 
-    value: T, 
+    key: string,
+    value: T,
     options?: { ex?: number; px?: number }
   ): Promise<boolean> {
     if (!redis) {

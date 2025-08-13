@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
+    "preview": "next build && next start",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "type-check": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -17,12 +19,18 @@
     "db:push": "prisma db push",
     "db:pull": "prisma db pull",
     "db:migrate": "prisma migrate dev",
+    "db:migrate:prod": "prisma migrate deploy",
     "db:studio": "prisma studio",
     "db:seed": "prisma db seed",
     "db:sync": "prisma db pull && prisma generate",
     "db:dev-push": "prisma db push && prisma generate",
+    "db:reset": "prisma migrate reset --force",
+    "clean": "rimraf .next",
+    "clean:all": "rimraf .next node_modules pnpm-lock.yaml && pnpm install",
+    "clean:cache": "rimraf .next/cache",
     "prepare": "husky",
-    "clean": "rimraf .next"
+    "ci": "pnpm lint && pnpm type-check && pnpm format:check",
+    "validate": "pnpm ci && pnpm build"
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
@@ -66,12 +74,22 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "eslint --fix",
-      "prettier --write"
+      "prettier --write",
+      "git add"
     ],
-    "*.{json,md,css,scss}": [
-      "prettier --write"
+    "*.{json,md,css,scss,yaml,yml}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.{ts,tsx}": [
+      "tsc --noEmit"
     ]
   },
+  "engines": {
+    "node": ">=18.17.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@9.0.0",
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@next/eslint-plugin-next": "^15.3.4",

@@ -1,31 +1,33 @@
 'use client';
 
-import { 
-  MailOutlined, 
-  SaveOutlined, 
-  UserOutlined, 
-  EditOutlined,
+import {
   CameraOutlined,
-  UploadOutlined 
+  EditOutlined,
+  MailOutlined,
+  SaveOutlined,
+  UploadOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
-import { 
-  Button, 
-  Card, 
-  Col, 
-  Form, 
-  Input, 
-  Row, 
-  Spin, 
-  Typography, 
-  message,
+import {
   Avatar,
+  Button,
+  Card,
+  Col,
+  Form,
+  Input,
   Modal,
+  Row,
+  Spin,
+  Tabs,
+  Typography,
   Upload,
-  Tabs
+  message,
 } from 'antd';
 
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+
 import { useRouter } from 'next/navigation';
+
 import { useAuthStore } from '@/store/authStore';
 
 const { Title, Text } = Typography;
@@ -45,8 +47,6 @@ interface UserProfile {
   };
 }
 
-
-
 export default function ProfilePage() {
   const [form] = Form.useForm();
   const [avatarForm] = Form.useForm();
@@ -65,7 +65,7 @@ export default function ProfilePage() {
       const headers: HeadersInit = {
         'Content-Type': 'application/json',
       };
-      
+
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
       }
@@ -79,7 +79,7 @@ export default function ProfilePage() {
       if (response.ok) {
         const data = await response.json();
         setUserInfo(data.user);
-        
+
         // 设置表单初始值 - 使用setTimeout确保Form组件已完全渲染
         setTimeout(() => {
           form.setFieldsValue({
@@ -108,13 +108,13 @@ export default function ProfilePage() {
   useEffect(() => {
     // 等待认证状态检查完成
     if (authLoading) return;
-    
+
     if (!isAuthenticated) {
       message.error('请先登录');
       router.push('/tech-stack');
       return;
     }
-    
+
     // 使用ref确保只初始化一次
     if (!dataInitialized.current) {
       dataInitialized.current = true;
@@ -130,7 +130,7 @@ export default function ProfilePage() {
       const headers: HeadersInit = {
         'Content-Type': 'application/json',
       };
-      
+
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
       }
@@ -152,10 +152,10 @@ export default function ProfilePage() {
         message.success('个人信息更新成功！');
         setUserInfo(data.user);
         // 同步更新全局认证状态
-        updateUser({ 
-          username: data.user.username, 
-          email: data.user.email, 
-          phone: data.user.phone 
+        updateUser({
+          username: data.user.username,
+          email: data.user.email,
+          phone: data.user.phone,
         });
       } else {
         if (response.status === 409) {
@@ -181,7 +181,7 @@ export default function ProfilePage() {
       const headers: HeadersInit = {
         'Content-Type': 'application/json',
       };
-      
+
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
       }
@@ -220,7 +220,7 @@ export default function ProfilePage() {
 
     try {
       const headers: HeadersInit = {};
-      
+
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
       }
@@ -239,7 +239,7 @@ export default function ProfilePage() {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
-            ...(token && { 'Authorization': `Bearer ${token}` }),
+            ...(token && { Authorization: `Bearer ${token}` }),
           },
           credentials: 'include',
           body: JSON.stringify({
@@ -268,8 +268,6 @@ export default function ProfilePage() {
 
     return false; // 阻止默认上传行为
   };
-
-
 
   if (loading) {
     return (
@@ -310,12 +308,7 @@ export default function ProfilePage() {
           <Col xs={24} lg={8}>
             <Card title="头像" className="mb-6">
               <div className="text-center">
-                <Avatar
-                  size={120}
-                  src={userInfo.avatar}
-                  icon={<UserOutlined />}
-                  className="mb-4"
-                />
+                <Avatar size={120} src={userInfo.avatar} icon={<UserOutlined />} className="mb-4" />
                 <div>
                   <Button
                     type="primary"
@@ -326,7 +319,8 @@ export default function ProfilePage() {
                     更换头像
                   </Button>
                   <div className="text-xs text-gray-500">
-                    支持 JPEG、PNG、GIF、WebP 格式<br />
+                    支持 JPEG、PNG、GIF、WebP 格式
+                    <br />
                     文件大小不超过 5MB
                   </div>
                 </div>
@@ -361,10 +355,9 @@ export default function ProfilePage() {
                 <div className="flex justify-between items-center">
                   <Text type="secondary">最后登录时间:</Text>
                   <Text>
-                    {userInfo.lastLoginAt 
+                    {userInfo.lastLoginAt
                       ? new Date(userInfo.lastLoginAt).toLocaleString('zh-CN')
-                      : '暂无记录'
-                    }
+                      : '暂无记录'}
                   </Text>
                 </div>
               </div>
@@ -374,11 +367,7 @@ export default function ProfilePage() {
           {/* 右侧：个人信息表单 */}
           <Col xs={24} lg={16}>
             <Card title="个人信息" className="mb-6">
-              <Form
-                form={form}
-                layout="vertical"
-                onFinish={handleSubmit}
-              >
+              <Form form={form} layout="vertical" onFinish={handleSubmit}>
                 <Form.Item
                   label="用户名"
                   name="username"
@@ -397,7 +386,9 @@ export default function ProfilePage() {
                   />
                 </Form.Item>
 
-                <Text type="secondary" className="block mb-4">用户名不可修改</Text>
+                <Text type="secondary" className="block mb-4">
+                  用户名不可修改
+                </Text>
 
                 <Form.Item
                   label="邮箱地址"
@@ -407,11 +398,7 @@ export default function ProfilePage() {
                     { type: 'email', message: '请输入有效的邮箱地址' },
                   ]}
                 >
-                  <Input
-                    prefix={<MailOutlined />}
-                    placeholder="请输入邮箱地址"
-                    size="large"
-                  />
+                  <Input prefix={<MailOutlined />} placeholder="请输入邮箱地址" size="large" />
                 </Form.Item>
 
                 <Form.Item
@@ -421,14 +408,26 @@ export default function ProfilePage() {
                     { required: true, message: '请输入手机号' },
                     {
                       pattern: /^1[3-9]\d{9}$/,
-                      message: '请输入有效的手机号（11位数字，以1开头）'
+                      message: '请输入有效的手机号（11位数字，以1开头）',
                     },
                   ]}
                 >
                   <Input
-                    prefix={<svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                    </svg>}
+                    prefix={
+                      <svg
+                        className="h-4 w-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
+                        />
+                      </svg>
+                    }
                     placeholder="手机号码"
                     size="large"
                   />
@@ -488,7 +487,8 @@ export default function ProfilePage() {
                       </Button>
                     </Upload>
                     <div className="text-sm text-gray-500 mt-2">
-                      支持 JPEG、PNG、GIF、WebP 格式<br />
+                      支持 JPEG、PNG、GIF、WebP 格式
+                      <br />
                       文件大小不超过 5MB
                     </div>
                   </div>
@@ -503,11 +503,7 @@ export default function ProfilePage() {
                   </span>
                 ),
                 children: (
-                  <Form
-                    form={avatarForm}
-                    layout="vertical"
-                    onFinish={handleAvatarUrlSubmit}
-                  >
+                  <Form form={avatarForm} layout="vertical" onFinish={handleAvatarUrlSubmit}>
                     <Form.Item
                       label="头像URL"
                       name="avatar"
@@ -518,7 +514,7 @@ export default function ProfilePage() {
                     >
                       <Input placeholder="请输入头像图片URL" />
                     </Form.Item>
-                    
+
                     <Form.Item>
                       <Button type="primary" htmlType="submit" className="w-full">
                         确认更新

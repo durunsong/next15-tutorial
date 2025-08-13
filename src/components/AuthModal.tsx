@@ -1,11 +1,19 @@
 'use client';
 
+import {
+  EyeInvisibleOutlined,
+  EyeTwoTone,
+  LockOutlined,
+  MailOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import { Alert, Button, Checkbox, Form, Input, Modal, Tabs, message } from 'antd';
+
 import React, { useState } from 'react';
-import { Modal, Tabs, Form, Input, Button, Alert, Checkbox, message } from 'antd';
-import { UserOutlined, LockOutlined, MailOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+
 import PasswordStrengthIndicator from '@/components/PasswordStrengthIndicator';
-import { checkPasswordStrength } from '@/utils/passwordValidation';
 import { useAuthStore } from '@/store/authStore';
+import { checkPasswordStrength } from '@/utils/passwordValidation';
 
 const { TabPane } = Tabs;
 
@@ -16,7 +24,12 @@ interface AuthModalProps {
   defaultTab?: 'login' | 'register';
 }
 
-export default function AuthModal({ open, onClose, onSuccess, defaultTab = 'login' }: AuthModalProps) {
+export default function AuthModal({
+  open,
+  onClose,
+  onSuccess,
+  defaultTab = 'login',
+}: AuthModalProps) {
   const [loginForm] = Form.useForm();
   const [registerForm] = Form.useForm();
   const [activeTab, setActiveTab] = useState(defaultTab);
@@ -27,7 +40,7 @@ export default function AuthModal({ open, onClose, onSuccess, defaultTab = 'logi
     canRegister: boolean;
     resetTime?: number;
   }>({ canRegister: true });
-  
+
   const { login } = useAuthStore();
 
   // 登录处理
@@ -52,7 +65,7 @@ export default function AuthModal({ open, onClose, onSuccess, defaultTab = 'logi
 
       if (response.ok) {
         message.success('登录成功！');
-        
+
         // 使用useAuth hook更新状态
         login(data.user, data.token);
 
@@ -105,7 +118,7 @@ export default function AuthModal({ open, onClose, onSuccess, defaultTab = 'logi
 
       if (response.ok) {
         message.success('注册成功！请登录您的账户');
-        
+
         // 切换到登录选项卡并预填登录信息
         setActiveTab('login');
         loginForm.setFieldsValue({ loginId: values.email });
@@ -156,17 +169,17 @@ export default function AuthModal({ open, onClose, onSuccess, defaultTab = 'logi
   // 倒计时显示
   const getRateLimitMessage = () => {
     if (!rateLimitInfo.resetTime) return '';
-    
+
     const now = Date.now();
     const resetTime = rateLimitInfo.resetTime;
     const remaining = Math.max(0, Math.ceil((resetTime - now) / 1000));
-    
+
     if (remaining > 0) {
       const minutes = Math.floor(remaining / 60);
       const seconds = remaining % 60;
       return `请等待 ${minutes}分${seconds}秒 后再试`;
     }
-    
+
     return '';
   };
 
@@ -209,9 +222,9 @@ export default function AuthModal({ open, onClose, onSuccess, defaultTab = 'logi
           />
         )}
 
-        <Tabs 
-          activeKey={activeTab} 
-          onChange={(key) => setActiveTab(key as 'login' | 'register')}
+        <Tabs
+          activeKey={activeTab}
+          onChange={key => setActiveTab(key as 'login' | 'register')}
           centered
           className="auth-tabs"
         >
@@ -225,9 +238,7 @@ export default function AuthModal({ open, onClose, onSuccess, defaultTab = 'logi
             >
               <Form.Item
                 name="loginId"
-                rules={[
-                  { required: true, message: '请输入用户名/邮箱/手机号' },
-                ]}
+                rules={[{ required: true, message: '请输入用户名/邮箱/手机号' }]}
               >
                 <Input
                   prefix={<UserOutlined />}
@@ -237,17 +248,12 @@ export default function AuthModal({ open, onClose, onSuccess, defaultTab = 'logi
                 />
               </Form.Item>
 
-              <Form.Item
-                name="password"
-                rules={[
-                  { required: true, message: '请输入密码' },
-                ]}
-              >
+              <Form.Item name="password" rules={[{ required: true, message: '请输入密码' }]}>
                 <Input.Password
                   prefix={<LockOutlined />}
                   placeholder="密码"
                   size="large"
-                  iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                  iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                   autoComplete="current-password"
                 />
               </Form.Item>
@@ -264,13 +270,7 @@ export default function AuthModal({ open, onClose, onSuccess, defaultTab = 'logi
               </Form.Item>
 
               <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  loading={loading}
-                  block
-                  size="large"
-                >
+                <Button type="primary" htmlType="submit" loading={loading} block size="large">
                   登录
                 </Button>
               </Form.Item>
@@ -292,9 +292,9 @@ export default function AuthModal({ open, onClose, onSuccess, defaultTab = 'logi
                   { required: true, message: '请输入用户名' },
                   { min: 3, message: '用户名至少3个字符' },
                   { max: 20, message: '用户名最多20个字符' },
-                  { 
-                    pattern: /^[a-zA-Z0-9_]+$/, 
-                    message: '用户名只能包含字母、数字和下划线' 
+                  {
+                    pattern: /^[a-zA-Z0-9_]+$/,
+                    message: '用户名只能包含字母、数字和下划线',
                   },
                 ]}
               >
@@ -325,16 +325,23 @@ export default function AuthModal({ open, onClose, onSuccess, defaultTab = 'logi
                 name="phone"
                 rules={[
                   { required: true, message: '请输入手机号' },
-                  { 
-                    pattern: /^1[3-9]\d{9}$/, 
-                    message: '请输入有效的手机号（11位数字，以1开头）' 
+                  {
+                    pattern: /^1[3-9]\d{9}$/,
+                    message: '请输入有效的手机号（11位数字，以1开头）',
                   },
                 ]}
               >
                 <Input
-                  prefix={<svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                  </svg>}
+                  prefix={
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
+                      />
+                    </svg>
+                  }
                   placeholder="手机号"
                   size="large"
                   autoComplete="tel"
@@ -362,9 +369,9 @@ export default function AuthModal({ open, onClose, onSuccess, defaultTab = 'logi
                   prefix={<LockOutlined />}
                   placeholder="密码"
                   size="large"
-                  iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                  iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                   autoComplete="new-password"
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={e => setPassword(e.target.value)}
                 />
               </Form.Item>
 
@@ -394,7 +401,7 @@ export default function AuthModal({ open, onClose, onSuccess, defaultTab = 'logi
                   prefix={<LockOutlined />}
                   placeholder="确认密码"
                   size="large"
-                  iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                  iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                   autoComplete="new-password"
                 />
               </Form.Item>
@@ -418,12 +425,8 @@ export default function AuthModal({ open, onClose, onSuccess, defaultTab = 'logi
         {/* 演示账户提示 */}
         <div className="mt-4 p-3 bg-blue-50 rounded-lg">
           <div className="text-center">
-            <h4 className="text-sm font-medium text-blue-800 mb-1">
-              💡 演示账户
-            </h4>
-            <p className="text-xs text-blue-600">
-              邮箱: demo@example.com，密码: Demo123!
-            </p>
+            <h4 className="text-sm font-medium text-blue-800 mb-1">💡 演示账户</h4>
+            <p className="text-xs text-blue-600">邮箱: demo@example.com，密码: Demo123!</p>
           </div>
         </div>
       </div>

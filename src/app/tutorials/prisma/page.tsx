@@ -1,13 +1,16 @@
 'use client';
 
-import { TutorialLayout } from '@/components/TutorialLayout';
-import { DemoSection } from '@/components/DemoSection';
+import { ArrowRight, Database, Edit, FileText, Plus, Settings, Trash2, Users } from 'lucide-react';
+
+import { useState } from 'react';
+
+import Link from 'next/link';
+
 import { CodeBlock } from '@/components/CodeBlock';
 import { CodeEditor } from '@/components/CodeEditor';
-import { PrismaSchemaDemo, PrismaQueryDemo } from '@/components/demos/PrismaDemos';
-import { useState } from 'react';
-import Link from 'next/link';
-import { ArrowRight, Database, Users, FileText, Settings, Plus, Edit, Trash2 } from 'lucide-react';
+import { DemoSection } from '@/components/DemoSection';
+import { TutorialLayout } from '@/components/TutorialLayout';
+import { PrismaQueryDemo, PrismaSchemaDemo } from '@/components/demos/PrismaDemos';
 
 // 模拟数据库操作的演示组件
 function PrismaDemo() {
@@ -38,7 +41,7 @@ function PrismaDemo() {
         id: Date.now(),
         title: newPost.title,
         authorId: newPost.authorId,
-        published: false
+        published: false,
       };
       setPosts([...posts, post]);
       setNewPost({ title: '', authorId: 1 });
@@ -46,9 +49,9 @@ function PrismaDemo() {
   };
 
   const togglePublished = (postId: number) => {
-    setPosts(posts.map(post => 
-      post.id === postId ? { ...post, published: !post.published } : post
-    ));
+    setPosts(
+      posts.map(post => (post.id === postId ? { ...post, published: !post.published } : post))
+    );
   };
 
   const deletePost = (postId: number) => {
@@ -64,21 +67,19 @@ function PrismaDemo() {
           用户列表 (User Model)
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {users.map((user) => (
-            <div 
+          {users.map(user => (
+            <div
               key={user.id}
               className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                selectedUser === user.id 
-                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
+                selectedUser === user.id
+                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
                   : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
               }`}
               onClick={() => setSelectedUser(selectedUser === user.id ? null : user.id)}
             >
               <h5 className="font-medium text-gray-900 dark:text-white">{user.name}</h5>
               <p className="text-sm text-gray-600 dark:text-gray-300">{user.email}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                {user.posts} 篇文章
-              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{user.posts} 篇文章</p>
             </div>
           ))}
         </div>
@@ -90,7 +91,7 @@ function PrismaDemo() {
           <FileText className="h-4 w-4 mr-2 text-green-600" />
           文章管理 (Post Model)
         </h4>
-        
+
         {/* 添加文章 */}
         <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
           <div className="flex gap-2">
@@ -98,16 +99,18 @@ function PrismaDemo() {
               type="text"
               placeholder="文章标题"
               value={newPost.title}
-              onChange={(e) => setNewPost({...newPost, title: e.target.value})}
+              onChange={e => setNewPost({ ...newPost, title: e.target.value })}
               className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
             />
             <select
               value={newPost.authorId}
-              onChange={(e) => setNewPost({...newPost, authorId: Number(e.target.value)})}
+              onChange={e => setNewPost({ ...newPost, authorId: Number(e.target.value) })}
               className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
             >
               {users.map(user => (
-                <option key={user.id} value={user.id}>{user.name}</option>
+                <option key={user.id} value={user.id}>
+                  {user.name}
+                </option>
               ))}
             </select>
             <button
@@ -121,16 +124,21 @@ function PrismaDemo() {
 
         {/* 文章列表 */}
         <div className="space-y-2">
-          {(selectedUser ? getUserPosts(selectedUser) : posts).map((post) => {
+          {(selectedUser ? getUserPosts(selectedUser) : posts).map(post => {
             const author = users.find(u => u.id === post.authorId);
             return (
-              <div key={post.id} className="p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+              <div
+                key={post.id}
+                className="p-3 border border-gray-200 dark:border-gray-700 rounded-lg"
+              >
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <h5 className="font-medium text-gray-900 dark:text-white">{post.title}</h5>
                     <p className="text-sm text-gray-600 dark:text-gray-300">
-                      作者: {author?.name} | 状态: 
-                      <span className={`ml-1 ${post.published ? 'text-green-600' : 'text-yellow-600'}`}>
+                      作者: {author?.name} | 状态:
+                      <span
+                        className={`ml-1 ${post.published ? 'text-green-600' : 'text-yellow-600'}`}
+                      >
                         {post.published ? '已发布' : '草稿'}
                       </span>
                     </p>
@@ -139,8 +147,8 @@ function PrismaDemo() {
                     <button
                       onClick={() => togglePublished(post.id)}
                       className={`p-1 rounded ${
-                        post.published 
-                          ? 'text-yellow-600 hover:bg-yellow-50 dark:hover:bg-yellow-900/20' 
+                        post.published
+                          ? 'text-yellow-600 hover:bg-yellow-50 dark:hover:bg-yellow-900/20'
                           : 'text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20'
                       }`}
                       title={post.published ? '设为草稿' : '发布'}
@@ -173,7 +181,9 @@ function PrismaDemo() {
 
 // 数据库查询演示
 function QueryDemo() {
-  const [queryType, setQueryType] = useState<'findMany' | 'findUnique' | 'create' | 'update' | 'delete'>('findMany');
+  const [queryType, setQueryType] = useState<
+    'findMany' | 'findUnique' | 'create' | 'update' | 'delete'
+  >('findMany');
   const [result, setResult] = useState<string>('');
 
   const executeQuery = () => {
@@ -223,7 +233,7 @@ function QueryDemo() {
   "id": 3,
   "name": "王五",
   "email": "wangwu@example.com"
-}`
+}`,
     };
 
     setResult(results[queryType]);
@@ -253,13 +263,13 @@ function QueryDemo() {
 });`,
     delete: `const deletedUser = await prisma.user.delete({
   where: { id: 3 }
-});`
+});`,
   };
 
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-2">
-        {Object.keys(queryExamples).map((type) => (
+        {Object.keys(queryExamples).map(type => (
           <button
             key={type}
             onClick={() => setQueryType(type as keyof typeof queryExamples)}
@@ -276,9 +286,7 @@ function QueryDemo() {
 
       <div className="bg-gray-900 rounded-lg p-4">
         <h4 className="text-white font-medium mb-2">Prisma 查询代码:</h4>
-        <pre className="text-green-400 text-sm font-mono">
-          {queryExamples[queryType]}
-        </pre>
+        <pre className="text-green-400 text-sm font-mono">{queryExamples[queryType]}</pre>
       </div>
 
       <button
@@ -291,9 +299,7 @@ function QueryDemo() {
       {result && (
         <div className="bg-gray-900 rounded-lg p-4">
           <h4 className="text-white font-medium mb-2">查询结果:</h4>
-          <pre className="text-yellow-400 text-sm font-mono overflow-x-auto">
-            {result}
-          </pre>
+          <pre className="text-yellow-400 text-sm font-mono overflow-x-auto">{result}</pre>
         </div>
       )}
     </div>
@@ -541,12 +547,12 @@ npx prisma db pull`;
       title="Prisma ORM 教程"
       description="学习使用 Prisma ORM 与 Neon PostgreSQL 数据库进行类型安全的数据库操作"
       prevTutorial={{
-        title: "TypeScript 集成",
-        href: "/tutorials/typescript"
+        title: 'TypeScript 集成',
+        href: '/tutorials/typescript',
       }}
       nextTutorial={{
-        title: "Redis 缓存",
-        href: "/tutorials/redis"
+        title: 'Redis 缓存',
+        href: '/tutorials/redis',
       }}
     >
       <div className="space-y-12">
@@ -560,7 +566,7 @@ npx prisma db pull`;
               Prisma 是一个现代化的 TypeScript ORM，提供类型安全的数据库访问、
               自动生成的查询构建器和强大的数据库迁移工具。它与 Neon PostgreSQL 完美集成。
             </p>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 my-6">
               <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <Database className="h-8 w-8 text-blue-600 mb-2" />
@@ -572,16 +578,12 @@ npx prisma db pull`;
               <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <Settings className="h-8 w-8 text-green-600 mb-2" />
                 <h3 className="font-semibold text-gray-900 dark:text-white">数据库迁移</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  声明式数据库架构管理
-                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-300">声明式数据库架构管理</p>
               </div>
               <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <FileText className="h-8 w-8 text-purple-600 mb-2" />
                 <h3 className="font-semibold text-gray-900 dark:text-white">直观的 API</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  简洁易读的查询语法
-                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-300">简洁易读的查询语法</p>
               </div>
             </div>
           </div>
@@ -594,16 +596,12 @@ npx prisma db pull`;
           </h2>
           <div className="prose prose-lg max-w-none dark:prose-invert mb-6">
             <p>
-              Prisma Schema 是定义数据模型、数据库连接和生成器的配置文件。
-              它使用简洁的 DSL 语法描述数据库结构。
+              Prisma Schema 是定义数据模型、数据库连接和生成器的配置文件。 它使用简洁的 DSL
+              语法描述数据库结构。
             </p>
           </div>
-          
-          <CodeBlock
-            code={schemaCode}
-            language="prisma"
-            filename="prisma/schema.prisma"
-          />
+
+          <CodeBlock code={schemaCode} language="prisma" filename="prisma/schema.prisma" />
         </section>
 
         {/* Prisma Client 设置 */}
@@ -613,16 +611,12 @@ npx prisma db pull`;
           </h2>
           <div className="prose prose-lg max-w-none dark:prose-invert mb-6">
             <p>
-              Prisma Client 是自动生成的类型安全数据库客户端。
-              在 Next.js 中需要特殊的设置来避免开发环境中的连接池问题。
+              Prisma Client 是自动生成的类型安全数据库客户端。 在 Next.js
+              中需要特殊的设置来避免开发环境中的连接池问题。
             </p>
           </div>
-          
-          <CodeBlock
-            code={clientCode}
-            language="typescript"
-            filename="lib/prisma.ts"
-          />
+
+          <CodeBlock code={clientCode} language="typescript" filename="lib/prisma.ts" />
         </section>
 
         {/* CRUD 操作演示 */}
@@ -753,11 +747,7 @@ const popularPosts = await prisma.$queryRaw\`
           description="体验 Prisma 的增删改查操作，包括关联查询和复杂条件"
           demoComponent={<PrismaDemo />}
           codeComponent={
-            <CodeBlock
-              code={crudCode}
-              language="typescript"
-              filename="数据库操作函数"
-            />
+            <CodeBlock code={crudCode} language="typescript" filename="数据库操作函数" />
           }
         />
 
@@ -822,17 +812,10 @@ const postsByUser = await prisma.post.groupBy({
             Next.js API 路由集成
           </h2>
           <div className="prose prose-lg max-w-none dark:prose-invert mb-6">
-            <p>
-              在 Next.js 的 API 路由中使用 Prisma 进行数据库操作，
-              实现 RESTful API 端点。
-            </p>
+            <p>在 Next.js 的 API 路由中使用 Prisma 进行数据库操作， 实现 RESTful API 端点。</p>
           </div>
-          
-          <CodeBlock
-            code={apiRouteCode}
-            language="typescript"
-            filename="API 路由示例"
-          />
+
+          <CodeBlock code={apiRouteCode} language="typescript" filename="API 路由示例" />
         </section>
 
         {/* 数据库迁移 */}
@@ -841,24 +824,15 @@ const postsByUser = await prisma.post.groupBy({
             数据库迁移和管理
           </h2>
           <div className="prose prose-lg max-w-none dark:prose-invert mb-6">
-            <p>
-              Prisma 提供了强大的迁移工具来管理数据库架构变更。
-              以下是常用的 Prisma CLI 命令：
-            </p>
+            <p>Prisma 提供了强大的迁移工具来管理数据库架构变更。 以下是常用的 Prisma CLI 命令：</p>
           </div>
-          
-          <CodeBlock
-            code={migrationCode}
-            language="bash"
-            filename="Prisma CLI 命令"
-          />
+
+          <CodeBlock code={migrationCode} language="bash" filename="Prisma CLI 命令" />
         </section>
 
         {/* 环境配置 */}
         <section className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            环境配置
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">环境配置</h2>
           <div className="space-y-4">
             <div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
@@ -874,7 +848,7 @@ DATABASE_URL="postgresql://kilyicmsDB_owner:FpaRmb1EM7jV@ep-calm-snow-a5ss0pnq-p
                 filename=".env"
               />
             </div>
-            
+
             <div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 package.json 脚本
@@ -898,13 +872,11 @@ DATABASE_URL="postgresql://kilyicmsDB_owner:FpaRmb1EM7jV@ep-calm-snow-a5ss0pnq-p
 
         {/* 互动编辑器 */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Prisma 查询练习
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Prisma 查询练习</h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6">
             尝试编写 Prisma 查询，体验类型安全的数据库操作：
           </p>
-          
+
           <CodeEditor
             title="Prisma 查询练习场"
             defaultCode={`// 练习 Prisma 查询
@@ -980,16 +952,14 @@ async function getPublishedPostsWithAuthors() {
 console.log('Prisma 查询示例已准备就绪！');`}
             language="typescript"
             height="500px"
-            onRun={(code) => console.log('执行 Prisma 查询:', code)}
+            onRun={code => console.log('执行 Prisma 查询:', code)}
             showConsole={true}
           />
         </section>
 
         {/* 最佳实践 */}
         <section className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Prisma 最佳实践
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Prisma 最佳实践</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <h3 className="text-lg font-semibold text-green-600 mb-2 flex items-center">
@@ -1044,9 +1014,7 @@ console.log('Prisma 查询示例已准备就绪！');`}
 
         {/* 下一步 */}
         <section className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            准备好了吗？
-          </h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">准备好了吗？</h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6">
             现在你已经掌握了 Prisma ORM 的核心概念，让我们继续学习 Redis 缓存来优化应用性能。
           </p>

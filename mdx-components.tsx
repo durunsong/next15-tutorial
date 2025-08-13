@@ -1,30 +1,48 @@
+import { CodeBlock } from './src/components/CodeBlock';
+import { DemoBlock } from './src/components/DemoBlock';
+
 // MDX Components 类型定义
 type MDXComponents = {
   [key: string]: React.ComponentType<any>;
 };
-import { CodeBlock } from './src/components/CodeBlock';
-import { DemoBlock } from './src/components/DemoBlock';
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     // 自定义代码块组件
-    code: ({ children, className, ...props }: { children?: React.ReactNode; className?: string; [key: string]: unknown }) => {
+    code: ({
+      children,
+      className,
+      ...props
+    }: {
+      children?: React.ReactNode;
+      className?: string;
+      [key: string]: unknown;
+    }) => {
       const match = /language-(\w+)/.exec(className || '');
       const language = match ? match[1] : '';
-      
+
       if (language) {
-        return <CodeBlock language={language} code={String(children).replace(/\n$/, '')} {...props} />;
+        return (
+          <CodeBlock language={language} code={String(children).replace(/\n$/, '')} {...props} />
+        );
       }
-      
-      return <code className={className} {...props}>{children}</code>;
+
+      return (
+        <code className={className} {...props}>
+          {children}
+        </code>
+      );
     },
-    
+
     // 自定义演示块组件
     DemoBlock: DemoBlock,
-    
+
     // 自定义标题样式
     h1: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
-      <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-6 border-b pb-4" {...props}>
+      <h1
+        className="text-4xl font-bold text-gray-900 dark:text-white mb-6 border-b pb-4"
+        {...props}
+      >
         {children}
       </h1>
     ),
@@ -38,14 +56,14 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         {children}
       </h3>
     ),
-    
+
     // 自定义段落样式
     p: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
       <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4" {...props}>
         {children}
       </p>
     ),
-    
+
     // 自定义列表样式
     ul: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
       <ul className="list-disc pl-6 mb-4 text-gray-600 dark:text-gray-300" {...props}>
@@ -57,11 +75,19 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         {children}
       </ol>
     ),
-    
+
     // 自定义链接样式
-    a: ({ children, href, ...props }: { children?: React.ReactNode; href?: string; [key: string]: unknown }) => (
-      <a 
-        href={href} 
+    a: ({
+      children,
+      href,
+      ...props
+    }: {
+      children?: React.ReactNode;
+      href?: string;
+      [key: string]: unknown;
+    }) => (
+      <a
+        href={href}
         className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
         target={href?.startsWith('http') ? '_blank' : undefined}
         rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
@@ -70,7 +96,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         {children}
       </a>
     ),
-    
+
     // 自定义表格样式
     table: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
       <div className="overflow-x-auto mb-6">
@@ -80,23 +106,38 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       </div>
     ),
     th: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
-      <th className="px-4 py-2 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-left font-medium text-gray-900 dark:text-gray-100" {...props}>
+      <th
+        className="px-4 py-2 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-left font-medium text-gray-900 dark:text-gray-100"
+        {...props}
+      >
         {children}
       </th>
     ),
     td: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
-      <td className="px-4 py-2 border-b border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300" {...props}>
+      <td
+        className="px-4 py-2 border-b border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300"
+        {...props}
+      >
         {children}
       </td>
     ),
-    
+
     // 自定义引用块样式
-    blockquote: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => (
-      <blockquote className="border-l-4 border-blue-500 pl-4 italic text-gray-600 dark:text-gray-300 my-4 bg-blue-50 dark:bg-blue-900/20 py-2" {...props}>
+    blockquote: ({
+      children,
+      ...props
+    }: {
+      children?: React.ReactNode;
+      [key: string]: unknown;
+    }) => (
+      <blockquote
+        className="border-l-4 border-blue-500 pl-4 italic text-gray-600 dark:text-gray-300 my-4 bg-blue-50 dark:bg-blue-900/20 py-2"
+        {...props}
+      >
         {children}
       </blockquote>
     ),
-    
+
     ...components,
   };
 }

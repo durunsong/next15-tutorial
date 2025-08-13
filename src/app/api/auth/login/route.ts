@@ -1,9 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { CacheManager } from '@/lib/redis';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
+
+import { NextRequest, NextResponse } from 'next/server';
+
+import { prisma } from '@/lib/prisma';
+import { CacheManager } from '@/lib/redis';
 
 // 登录验证schema
 const loginSchema = z.object({
@@ -23,30 +25,30 @@ async function checkLoginRateLimit(identifier: string): Promise<{
   const window = 15 * 60; // 15分钟窗口
 
   try {
-    const current = await CacheManager.get<number>(key) || 0;
-    
+    const current = (await CacheManager.get<number>(key)) || 0;
+
     if (current >= limit) {
       const ttl = await CacheManager.ttl(key);
-      const resetTime = Date.now() + (ttl * 1000);
+      const resetTime = Date.now() + ttl * 1000;
       return {
         allowed: false,
         remaining: 0,
-        resetTime
+        resetTime,
       };
     }
 
-    const resetTime = Date.now() + (window * 1000);
+    const resetTime = Date.now() + window * 1000;
     return {
       allowed: true,
       remaining: Math.max(0, limit - current - 1),
-      resetTime
+      resetTime,
     };
   } catch (error) {
     console.error('Rate limit check failed:', error);
     return {
       allowed: true,
       remaining: limit - 1,
-      resetTime: Date.now() + window * 1000
+      resetTime: Date.now() + window * 1000,
     };
   }
 }
@@ -58,7 +60,7 @@ async function recordLoginFailure(identifier: string): Promise<void> {
 
   try {
     const newCount = await CacheManager.increment(key);
-    
+
     if (newCount === 1) {
       await CacheManager.expire(key, window);
     }
@@ -91,14 +93,14 @@ function generateToken(user: { id: string; email: string; username: string }, re
   }
 
   const expiresIn = rememberMe ? '30d' : '7d';
-  
+
   return jwt.sign(payload, secret, { expiresIn });
 }
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    
+
     // 验证输入数据
     const validationResult = loginSchema.safeParse(body);
     if (!validationResult.success) {
@@ -121,15 +123,15 @@ export async function POST(req: NextRequest) {
         {
           error: '登录尝试过于频繁',
           message: `请在 ${resetDate.toLocaleTimeString('zh-CN')} 后再试`,
-          resetTime: rateLimit.resetTime
+          resetTime: rateLimit.resetTime,
         },
-        { 
+        {
           status: 429,
           headers: {
             'X-RateLimit-Limit': '5',
             'X-RateLimit-Remaining': rateLimit.remaining.toString(),
             'X-RateLimit-Reset': Math.ceil(rateLimit.resetTime / 1000).toString(),
-          }
+          },
         }
       );
     }
@@ -137,7 +139,7 @@ export async function POST(req: NextRequest) {
     // 判断登录ID类型：邮箱、手机号或用户名
     const isEmail = loginId.includes('@');
     const isPhone = /^1[3-9]\d{9}$/.test(loginId);
-    
+
     // 查找用户
     let whereCondition;
     if (isEmail) {
@@ -147,7 +149,7 @@ export async function POST(req: NextRequest) {
     } else {
       whereCondition = { username: loginId };
     }
-    
+
     const user = await prisma.user.findFirst({
       where: whereCondition,
       select: {
@@ -164,9 +166,9 @@ export async function POST(req: NextRequest) {
     if (!user) {
       await recordLoginFailure(loginId);
       return NextResponse.json(
-        { 
+        {
           error: '用户名/邮箱/手机号或密码错误',
-          field: 'loginId'
+          field: 'loginId',
         },
         { status: 401 }
       );
@@ -177,9 +179,9 @@ export async function POST(req: NextRequest) {
     if (!isPasswordValid) {
       await recordLoginFailure(loginId);
       return NextResponse.json(
-        { 
+        {
           error: '用户名/邮箱/手机号或密码错误',
-          field: 'password'
+          field: 'password',
         },
         { status: 401 }
       );
@@ -207,9 +209,9 @@ export async function POST(req: NextRequest) {
     // 更新最后登录时间
     await prisma.user.update({
       where: { id: user.id },
-      data: { 
+      data: {
         lastLoginAt: new Date(),
-        updatedAt: new Date() 
+        updatedAt: new Date(),
       },
     });
 
@@ -223,15 +225,15 @@ export async function POST(req: NextRequest) {
         message: '登录成功',
         user: userWithoutPassword,
         token,
-        expiresIn: rememberMe ? '30天' : '7天'
+        expiresIn: rememberMe ? '30天' : '7天',
       },
-      { 
+      {
         status: 200,
         headers: {
           'X-RateLimit-Limit': '5',
           'X-RateLimit-Remaining': rateLimit.remaining.toString(),
           'X-RateLimit-Reset': Math.ceil(rateLimit.resetTime / 1000).toString(),
-        }
+        },
       }
     );
 
@@ -242,7 +244,7 @@ export async function POST(req: NextRequest) {
       'Secure',
       'SameSite=Strict',
       `Max-Age=${sessionTTL}`,
-      'Path=/'
+      'Path=/',
     ].join('; ');
 
     response.headers.set('Set-Cookie', cookieOptions);
@@ -251,9 +253,9 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error('登录失败:', error);
     return NextResponse.json(
-      { 
+      {
         error: '登录失败',
-        message: '服务器内部错误，请稍后重试'
+        message: '服务器内部错误，请稍后重试',
       },
       { status: 500 }
     );

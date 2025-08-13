@@ -1,17 +1,18 @@
 'use client';
 
-import { useState } from 'react';
-import { Copy, Check, Play } from 'lucide-react';
+import { Check, Copy, Play } from 'lucide-react';
 import Prism from 'prismjs';
-import 'prismjs/themes/prism-tomorrow.css';
-import 'prismjs/components/prism-javascript';
-import 'prismjs/components/prism-typescript';
-import 'prismjs/components/prism-jsx';
-import 'prismjs/components/prism-tsx';
 import 'prismjs/components/prism-bash';
-import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-css';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-json';
+import 'prismjs/components/prism-jsx';
 import 'prismjs/components/prism-sql';
+import 'prismjs/components/prism-tsx';
+import 'prismjs/components/prism-typescript';
+import 'prismjs/themes/prism-tomorrow.css';
+
+import { useState } from 'react';
 
 interface CodeBlockProps {
   code: string;
@@ -42,7 +43,11 @@ export function CodeBlock({
     }
   };
 
-  const highlightedCode = Prism.highlight(code, Prism.languages[language] || Prism.languages.plaintext, language);
+  const highlightedCode = Prism.highlight(
+    code,
+    Prism.languages[language] || Prism.languages.plaintext,
+    language
+  );
 
   return (
     <div className="relative group">
@@ -52,16 +57,18 @@ export function CodeBlock({
           {filename}
         </div>
       )}
-      
+
       {/* 代码块 */}
       <div className="relative">
-        <pre className={`bg-gray-900 text-gray-100 p-4 overflow-x-auto text-sm ${filename ? 'rounded-t-none' : 'rounded-t-lg'} rounded-b-lg`}>
+        <pre
+          className={`bg-gray-900 text-gray-100 p-4 overflow-x-auto text-sm ${filename ? 'rounded-t-none' : 'rounded-t-lg'} rounded-b-lg`}
+        >
           <code
             className={`language-${language}`}
             dangerouslySetInnerHTML={{ __html: highlightedCode }}
           />
         </pre>
-        
+
         {/* 操作按钮 */}
         <div className="absolute top-2 right-2 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
           {showRun && onRun && (

@@ -1,0 +1,44 @@
+{
+  "recommendations": [
+    // 核心开发工具
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "ms-vscode.vscode-typescript-next",
+
+    // React 和 Next.js
+    "ms-vscode.vscode-react-javascript-snippets",
+    "burkeholland.simple-react-snippets",
+
+    // Tailwind CSS
+    "bradlc.vscode-tailwindcss",
+    "heybourn.headwind",
+
+    // 数据库和 Prisma
+    "prisma.prisma",
+
+    // 代码质量
+    "streetsidesoftware.code-spell-checker",
+    "usernamehw.errorlens",
+    "gruntfuggly.todo-tree",
+
+    // Git 工具
+    "eamodio.gitlens",
+    "github.vscode-pull-request-github",
+
+    // 文件管理
+    "ms-vscode.vscode-json",
+    "redhat.vscode-yaml",
+    "editorconfig.editorconfig",
+
+    // 开发体验
+    "christian-kohler.path-intellisense",
+    "christian-kohler.npm-intellisense",
+    "formulahendry.auto-rename-tag",
+    "bradgashler.htmltagwrap",
+
+    // 主题和图标
+    "pkief.material-icon-theme",
+    "github.github-vscode-theme"
+  ],
+  "unwantedRecommendations": ["ms-vscode.vscode-typescript"]
+}

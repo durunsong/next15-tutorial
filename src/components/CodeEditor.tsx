@@ -1,8 +1,10 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { Download, Play, RotateCcw } from 'lucide-react';
+
+import { useRef, useState } from 'react';
+
 import dynamic from 'next/dynamic';
-import { Play, RotateCcw, Download } from 'lucide-react';
 
 // 动态导入 Monaco Editor 以避免 SSR 问题
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), {
@@ -46,35 +48,35 @@ export function CodeEditor({
 
   const handleRun = async () => {
     if (!onRun) return;
-    
+
     setIsRunning(true);
     setOutput([]);
-    
+
     try {
       // 模拟代码执行
       onRun(code);
-      
+
       // 这里可以集成实际的代码执行逻辑
       if (language === 'javascript' || language === 'typescript') {
         try {
           // 创建一个安全的执行环境
           const originalConsoleLog = console.log;
           const logs: string[] = [];
-          
+
           console.log = (...args) => {
             logs.push(args.map(arg => String(arg)).join(' '));
           };
-          
+
           // 使用 Function 构造器执行代码（相对安全）
           const func = new Function(code);
           const result = func();
-          
+
           console.log = originalConsoleLog;
-          
+
           if (result !== undefined) {
             logs.push(`返回值: ${result}`);
           }
-          
+
           setOutput(logs);
         } catch (error) {
           setOutput([`错误: ${error instanceof Error ? error.message : String(error)}`]);
@@ -138,7 +140,7 @@ export function CodeEditor({
           </div>
         </div>
       )}
-      
+
       {/* 编辑器 */}
       <div className="relative">
         <MonacoEditor
@@ -146,7 +148,7 @@ export function CodeEditor({
           language={language}
           theme={theme === 'dark' ? 'vs-dark' : 'light'}
           value={code}
-          onChange={(value) => setCode(value || '')}
+          onChange={value => setCode(value || '')}
           onMount={handleEditorDidMount}
           options={{
             readOnly,
@@ -163,7 +165,7 @@ export function CodeEditor({
           }}
         />
       </div>
-      
+
       {/* 控制台输出 */}
       {showConsole && output.length > 0 && (
         <div className="border-t border-gray-200 dark:border-gray-700 bg-gray-900 text-green-400">
