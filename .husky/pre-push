@@ -1,0 +1,106 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🚀 Starting pre-push checks..."
+
+# 获取当前分支
+current_branch=$(git branch --show-current)
+echo "📋 Current branch: $current_branch"
+
+# 检查是否为保护分支（main, master, develop）
+protected_branches="main master develop"
+for branch in $protected_branches; do
+    if [ "$current_branch" = "$branch" ]; then
+        echo "⚠️  Pushing to protected branch '$branch'"
+        echo "🔒 Running enhanced checks..."
+        enhanced_checks=true
+        break
+    fi
+done
+
+# 1. 运行完整的 lint 检查
+echo "📝 Running full ESLint check..."
+pnpm lint
+
+if [ $? -ne 0 ]; then
+    echo "❌ ESLint checks failed!"
+    echo "💡 Run 'pnpm lint:fix' to auto-fix issues"
+    exit 1
+fi
+
+# 2. 运行类型检查
+echo "🔍 Running TypeScript type check..."
+pnpm type-check
+
+if [ $? -ne 0 ]; then
+    echo "❌ TypeScript type check failed!"
+    exit 1
+fi
+
+# 3. 检查代码格式
+echo "✨ Checking code formatting..."
+pnpm format:check
+
+if [ $? -ne 0 ]; then
+    echo "❌ Code formatting check failed!"
+    echo "💡 Run 'pnpm format' to fix formatting issues"
+    exit 1
+fi
+
+# 4. 运行完整构建
+echo "🔧 Running full build..."
+pnpm build
+
+if [ $? -ne 0 ]; then
+    echo "❌ Build failed!"
+    echo "💡 Fix build errors before pushing"
+    exit 1
+fi
+
+# 5. 对于保护分支，运行额外检查
+if [ "$enhanced_checks" = true ]; then
+    echo "🔒 Running enhanced checks for protected branch..."
+
+    # 运行完整的验证脚本
+    if grep -q '"validate"' package.json; then
+        echo "✅ Running validation script..."
+        pnpm validate
+
+        if [ $? -ne 0 ]; then
+            echo "❌ Validation failed!"
+            exit 1
+        fi
+    fi
+
+    # 检查是否有未提交的更改
+    if ! git diff --quiet || ! git diff --cached --quiet; then
+        echo "❌ There are uncommitted changes!"
+        echo "💡 Please commit or stash all changes before pushing"
+        exit 1
+    fi
+fi
+
+# 6. 运行测试（如果存在）
+if [ -f "jest.config.js" ] || [ -f "vitest.config.ts" ] || grep -q '"test"' package.json; then
+    echo "🧪 Running tests..."
+    if [ "$enhanced_checks" = true ]; then
+        # 对保护分支运行完整测试
+        pnpm test --run
+    else
+        # 对功能分支运行快速测试
+        pnpm test --run --passWithNoTests 2>/dev/null || true
+    fi
+
+    if [ $? -ne 0 ] && [ "$enhanced_checks" = true ]; then
+        echo "❌ Tests failed!"
+        exit 1
+    fi
+fi
+
+# 清理构建产物（可选）
+echo "🧹 Cleaning up build artifacts..."
+pnpm clean:cache 2>/dev/null || true
+
+echo "✅ All pre-push checks passed!"
+echo "🎉 Ready to push to $current_branch!"
+

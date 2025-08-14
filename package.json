@@ -14,6 +14,15 @@
     "format:check": "prettier --check .",
     "pre-commit": "lint-staged",
     "pre-deploy": "pnpm lint && pnpm type-check && pnpm format:check && pnpm build",
+    "pre-commit-check": "pnpm lint:fix && pnpm type-check && pnpm format",
+    "pre-push-check": "pnpm lint && pnpm type-check && pnpm format:check && pnpm build",
+    "quick-check": "pnpm lint && pnpm type-check",
+    "full-check": "pnpm lint && pnpm type-check && pnpm format:check && pnpm build && pnpm test --run --passWithNoTests",
+    "commit-ready": "pnpm pre-commit-check && echo '✅ Ready to commit!'",
+    "push-ready": "pnpm pre-push-check && echo '✅ Ready to push!'",
+    "commit": "cz",
+    "commit:retry": "cz --retry",
+    "setup-hooks": "node setup-git-hooks.js",
     "postinstall": "prisma generate",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
@@ -101,6 +110,8 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
     "eslint-plugin-react-hooks": "^5.2.0",
@@ -111,5 +122,10 @@
     "tailwindcss": "^4",
     "tsx": "^4.20.3",
     "typescript": "^5"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   }
 }

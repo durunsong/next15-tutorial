@@ -743,7 +743,7 @@ export default function DatabasePage() {
           form.resetFields();
         }}
         footer={null}
-        destroyOnClose
+        destroyOnHidden
       >
         <Form form={form} layout="vertical" onFinish={handleCreateUser} preserve={false}>
           <Form.Item
@@ -816,7 +816,7 @@ export default function DatabasePage() {
           postForm.resetFields();
         }}
         footer={null}
-        destroyOnClose
+        destroyOnHidden
         width={800}
       >
         <Form form={postForm} layout="vertical" onFinish={handleCreatePost} preserve={false}>
