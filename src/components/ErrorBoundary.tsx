@@ -19,6 +19,11 @@ import { Component, type ErrorInfo, type ReactNode } from 'react';
  * 捕获并处理 React 组件树中的错误
  */
 
+/**
+ * 错误边界组件
+ * 捕获并处理 React 组件树中的错误
+ */
+
 interface Props {
   children: ReactNode;
   fallback?: ReactNode;
@@ -49,12 +54,14 @@ class ErrorBoundary extends Component<Props, State> {
     if (process.env.NODE_ENV === 'production') {
       this.logErrorToService(error, errorInfo);
     } else {
+      // eslint-disable-next-line no-console
       console.error('ErrorBoundary caught an error:', error, errorInfo);
     }
   }
 
   private logErrorToService(error: Error, errorInfo: ErrorInfo) {
     // 这里可以集成错误监控服务，如 Sentry、LogRocket 等
+    // eslint-disable-next-line no-console
     console.error('Production error logged:', {
       error: {
         name: error.name,

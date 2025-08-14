@@ -17,6 +17,11 @@ import { useEffect, useState } from 'react';
  * 避免 SSR 水合不匹配问题
  */
 
+/**
+ * 仅客户端渲染组件
+ * 避免 SSR 水合不匹配问题
+ */
+
 interface ClientOnlyProps {
   children: React.ReactNode;
   fallback?: React.ReactNode;

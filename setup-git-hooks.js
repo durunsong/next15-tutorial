@@ -5,8 +5,11 @@
  * 自动安装和配置项目的 Git hooks
  */
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { execSync } = require('child_process');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const fs = require('fs');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const path = require('path');
 
 console.log('🚀 开始设置 Git Hooks...\n');
@@ -21,7 +24,7 @@ if (!fs.existsSync('package.json')) {
 console.log('📦 检查依赖...');
 try {
   execSync('pnpm --version', { stdio: 'ignore' });
-} catch (error) {
+} catch {
   console.error('❌ 错误：请先安装 pnpm');
   console.error('安装命令：npm install -g pnpm');
   process.exit(1);
@@ -41,7 +44,7 @@ try {
 console.log('🐕 设置 Husky...');
 try {
   execSync('npx husky install', { stdio: 'inherit' });
-} catch (error) {
+} catch {
   console.warn('⚠️  Husky 初始化可能失败，但这通常不是问题');
 }
 
@@ -71,7 +74,7 @@ const requiredScripts = [
   'format:check',
   'commit',
   'commit-ready',
-  'push-ready'
+  'push-ready',
 ];
 
 console.log('📋 检查 package.json 脚本...');
@@ -96,7 +99,7 @@ try {
   console.log('测试 lint...');
   execSync('pnpm lint --max-warnings 0', { stdio: 'pipe' });
   console.log('✅ Lint 测试通过');
-} catch (error) {
+} catch {
   console.warn('⚠️  Lint 测试有警告或错误，请检查');
 }
 
@@ -104,7 +107,7 @@ try {
   console.log('测试 type-check...');
   execSync('pnpm type-check', { stdio: 'pipe' });
   console.log('✅ 类型检查通过');
-} catch (error) {
+} catch {
   console.warn('⚠️  类型检查有错误，请修复');
 }
 
