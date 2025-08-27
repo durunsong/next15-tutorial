@@ -53,35 +53,122 @@ export function SandboxRenderer({ code, language }: SandboxRendererProps) {
 
   const createSandboxHtml = (userCode: string, lang: string): string => {
     // 处理不同语言类型的代码
-    let processedCode = userCode;
+    let processedCode = userCode.trim();
 
     if (lang === 'tsx' || lang === 'jsx') {
+      // 移除 'use client' 指令，在沙箱中不需要
+      processedCode = processedCode.replace(/['"]use client['"];?\s*/g, '');
+
+      // 处理 React imports - 转换为全局变量引用
+      processedCode = processedCode.replace(
+        /import\s+\{\s*([^}]+)\s*\}\s+from\s+['"]react['"];?/g,
+        (match, imports) => {
+          // 提取导入的项目并清理空格
+          const importItems = imports.split(',').map(item => item.trim());
+          return `// React imports converted to global variables: ${importItems.join(', ')}`;
+        }
+      );
+
+      // 移除其他不支持的 import 语句
+      processedCode = processedCode.replace(
+        /import\s+.*?from\s+['"][^'"]*['"];?/g,
+        '// Import removed for sandbox'
+      );
+
       // 如果是 React 组件，包装成可执行的代码
-      if (userCode.includes('export default')) {
+      if (processedCode.includes('export default')) {
         // 提取默认导出的组件
-        processedCode = userCode.replace('export default', 'const Component =');
+        processedCode = processedCode.replace(/export\s+default\s+/, 'const MainComponent = ');
         processedCode += `
+
+        // 错误边界组件
+        class ErrorBoundary extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = { hasError: false, error: null };
+          }
+
+          static getDerivedStateFromError(error) {
+            return { hasError: true, error: error.toString() };
+          }
+
+          componentDidCatch(error, errorInfo) {
+            console.error('组件渲染错误:', error, errorInfo);
+            parent.postMessage({
+              type: 'sandbox-error',
+              error: error.toString()
+            }, '*');
+          }
+
+          render() {
+            if (this.state.hasError) {
+              return React.createElement('div', {
+                style: { padding: '20px', color: '#ef4444', fontSize: '14px' }
+              }, [
+                React.createElement('strong', { key: 'title' }, '渲染错误: '),
+                React.createElement('br', { key: 'br' }),
+                this.state.error
+              ]);
+            }
+            return this.props.children;
+          }
+        }
 
         // 渲染组件
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(React.createElement(Component));
+        root.render(React.createElement(ErrorBoundary, null, React.createElement(MainComponent)));
         `;
-      } else if (
-        userCode.includes('function ') ||
-        userCode.includes('const ') ||
-        userCode.includes('class ')
-      ) {
-        // 如果包含组件定义，自动渲染
+      } else {
+        // 如果包含组件定义，但没有默认导出，尝试自动检测和渲染
+        const componentMatch = processedCode.match(/(?:function|const|class)\s+(\w+)/);
+        const componentName = componentMatch ? componentMatch[1] : 'MyComponent';
+
         processedCode += `
 
-        // 自动渲染第一个找到的组件
-        const componentNames = ['MyComponent', 'Component', 'App'];
-        for (const name of componentNames) {
-          if (typeof window[name] !== 'undefined') {
-            const root = ReactDOM.createRoot(document.getElementById('root'));
-            root.render(React.createElement(window[name]));
-            break;
+        // 错误边界组件
+        class ErrorBoundary extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = { hasError: false, error: null };
           }
+
+          static getDerivedStateFromError(error) {
+            return { hasError: true, error: error.toString() };
+          }
+
+          componentDidCatch(error, errorInfo) {
+            console.error('组件渲染错误:', error, errorInfo);
+            parent.postMessage({
+              type: 'sandbox-error',
+              error: error.toString()
+            }, '*');
+          }
+
+          render() {
+            if (this.state.hasError) {
+              return React.createElement('div', {
+                style: { padding: '20px', color: '#ef4444', fontSize: '14px' }
+              }, [
+                React.createElement('strong', { key: 'title' }, '渲染错误: '),
+                React.createElement('br', { key: 'br' }),
+                this.state.error
+              ]);
+            }
+            return this.props.children;
+          }
+        }
+
+        // 尝试渲染组件
+        try {
+          const ComponentToRender = ${componentName} || MyComponent || Component || App;
+          if (ComponentToRender) {
+            const root = ReactDOM.createRoot(document.getElementById('root'));
+            root.render(React.createElement(ErrorBoundary, null, React.createElement(ComponentToRender)));
+          } else {
+            document.getElementById('root').innerHTML = '<div style="padding: 20px; color: #6b7280;">未找到可渲染的 React 组件</div>';
+          }
+        } catch (e) {
+          document.getElementById('root').innerHTML = '<div style="padding: 20px; color: #ef4444;">组件渲染失败: ' + e.message + '</div>';
         }
         `;
       }
@@ -128,11 +215,58 @@ export function SandboxRenderer({ code, language }: SandboxRendererProps) {
     <div id="root"></div>
 
     <script>
-        // 错误处理
+        // 设置全局 React 和 ReactDOM 以及 hooks
+        window.React = React;
+        window.ReactDOM = ReactDOM;
+
+        // 导出所有 React hooks 到全局作用域
+        const {
+          useState,
+          useEffect,
+          useContext,
+          useReducer,
+          useCallback,
+          useMemo,
+          useRef,
+          useImperativeHandle,
+          useLayoutEffect,
+          useDebugValue,
+          useDeferredValue,
+          useTransition,
+          useId,
+          useSyncExternalStore,
+          useInsertionEffect
+        } = React;
+
+        // 将 hooks 添加到全局作用域
+        window.useState = useState;
+        window.useEffect = useEffect;
+        window.useContext = useContext;
+        window.useReducer = useReducer;
+        window.useCallback = useCallback;
+        window.useMemo = useMemo;
+        window.useRef = useRef;
+        window.useImperativeHandle = useImperativeHandle;
+        window.useLayoutEffect = useLayoutEffect;
+        window.useDebugValue = useDebugValue;
+        window.useDeferredValue = useDeferredValue;
+        window.useTransition = useTransition;
+        window.useId = useId;
+        window.useSyncExternalStore = useSyncExternalStore;
+        window.useInsertionEffect = useInsertionEffect;
+    </script>
+
+    <script>
+        // 增强的错误处理
         window.addEventListener('error', (event) => {
+            const errorMsg = event.error ?
+                (event.error.stack || event.error.message) :
+                event.message;
             parent.postMessage({
                 type: 'sandbox-error',
-                error: event.error ? event.error.message : event.message
+                error: errorMsg,
+                filename: event.filename,
+                lineno: event.lineno
             }, '*');
         });
 
@@ -143,30 +277,59 @@ export function SandboxRenderer({ code, language }: SandboxRendererProps) {
             }, '*');
         });
 
+        // 重写 console 方法，捕获日志
+        const originalLog = console.log;
+        const originalError = console.error;
+        console.log = (...args) => {
+            originalLog.apply(console, args);
+            parent.postMessage({
+                type: 'sandbox-log',
+                message: args.join(' ')
+            }, '*');
+        };
+        console.error = (...args) => {
+            originalError.apply(console, args);
+            parent.postMessage({
+                type: 'sandbox-error',
+                error: args.join(' ')
+            }, '*');
+        };
+
         try {
             // 转译并执行用户代码
             ${
               lang === 'tsx' || lang === 'jsx'
                 ? `
-            const transformedCode = Babel.transform(\`${processedCode.replace(/`/g, '\\`')}\`, {
-                presets: ['react', 'env'],
-                plugins: ['transform-modules-umd']
+            const transformedCode = Babel.transform(\`${processedCode.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`, {
+                presets: [
+                  ['react', { runtime: 'classic' }],
+                  ['env', { modules: false }]
+                ],
+                plugins: [
+                  ['transform-react-jsx', { pragma: 'React.createElement' }]
+                ]
             }).code;
 
-            eval(transformedCode);
+            // 在安全的上下文中执行代码
+            (function() {
+                eval(transformedCode);
+            })();
             `
                 : `
             // 普通 JavaScript
-            eval(\`${processedCode.replace(/`/g, '\\`')}\`);
+            (function() {
+                eval(\`${processedCode.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`);
+            })();
             `
             }
 
             // 通知父窗口渲染完成
             parent.postMessage({ type: 'sandbox-ready' }, '*');
         } catch (error) {
+            console.error('执行错误:', error);
             parent.postMessage({
                 type: 'sandbox-error',
-                error: error.message
+                error: error.message + (error.stack ? '\\n' + error.stack : '')
             }, '*');
         }
     </script>
@@ -204,7 +367,7 @@ export function SandboxRenderer({ code, language }: SandboxRendererProps) {
             ref={iframeRef}
             className="w-full h-full border-0"
             style={{ minHeight: '200px' }}
-            sandbox="allow-scripts"
+            sandbox="allow-scripts allow-same-origin"
             title="代码预览"
           />
         )}

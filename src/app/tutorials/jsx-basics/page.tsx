@@ -7,9 +7,9 @@ import {
   ExperimentOutlined,
   PlayCircleOutlined,
 } from '@ant-design/icons';
-import { Alert, Button, Card, Input, Tabs, Tag } from 'antd';
+import { Alert, Button, Card, Input, InputRef, Tabs, Tag } from 'antd';
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { CodeBlock } from '@/components/CodeBlock';
 
@@ -92,20 +92,158 @@ const ListRenderingExample = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-        {items.map((item, index) => (
-          <div
-            key={index}
-            className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border"
-          >
-            <span className="font-medium">{item}</span>
-            <Button size="small" danger onClick={() => removeItem(index)}>
-              删除
-            </Button>
-          </div>
-        ))}
+        {items.map((item, index) => {
+          const itemId = `${item.toLowerCase().replace(/[^a-z0-9]/g, '')}_${Date.now()}_${index}`;
+          return (
+            <div
+              key={itemId}
+              className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border"
+            >
+              <span className="font-medium">{item}</span>
+              <Button size="small" danger onClick={() => removeItem(index)}>
+                删除
+              </Button>
+            </div>
+          );
+        })}
       </div>
 
       {items.length === 0 && <p className="text-gray-500 text-center py-4">暂无数据</p>}
+    </div>
+  );
+};
+
+// Fragment 演示
+const FragmentExample = () => {
+  const [showDetails, setShowDetails] = useState(false);
+  const users = [
+    { id: 1, name: 'Alice', email: 'alice@example.com' },
+    { id: 2, name: 'Bob', email: 'bob@example.com' },
+  ];
+
+  return (
+    <div className="space-y-4">
+      <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border">
+        <h4 className="font-semibold mb-2">Fragment 示例</h4>
+        <Button onClick={() => setShowDetails(!showDetails)} className="mb-3">
+          {showDetails ? '隐藏' : '显示'}详细信息
+        </Button>
+
+        <div className="space-y-2">
+          <h5>用户列表 (使用Fragment避免额外DOM节点):</h5>
+          {showDetails && (
+            <>
+              <p className="text-gray-600 dark:text-gray-400">详细信息1</p>
+              <p className="text-gray-600 dark:text-gray-400">详细信息2</p>
+            </>
+          )}
+
+          <ul className="mt-2">
+            {users.map(user => (
+              <React.Fragment key={user.id}>
+                <li className="font-medium">{user.name}</li>
+                <li className="text-sm text-gray-600 dark:text-gray-400 mb-2">{user.email}</li>
+              </React.Fragment>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// 样式演示
+const StylingExample = () => {
+  const [isActive, setIsActive] = useState(false);
+  const [size, setSize] = useState('medium');
+
+  const dynamicStyle = {
+    backgroundColor: isActive ? '#10b981' : '#6b7280',
+    color: 'white',
+    padding: size === 'large' ? '12px 24px' : '8px 16px',
+    fontSize: size === 'large' ? '18px' : '14px',
+    border: 'none',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    margin: '4px',
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border">
+        <h4 className="font-semibold mb-3">动态样式演示</h4>
+
+        <div className="space-x-2 mb-4">
+          <Button onClick={() => setIsActive(!isActive)}>{isActive ? '激活' : '未激活'}</Button>
+          <Button onClick={() => setSize(size === 'large' ? 'medium' : 'large')}>
+            大小: {size}
+          </Button>
+        </div>
+
+        <div className="space-y-2">
+          <button style={dynamicStyle}>动态样式按钮</button>
+
+          <div className="mt-3">
+            <div
+              style={{
+                padding: '10px',
+                backgroundColor: '#f3f4f6',
+                borderRadius: '4px',
+                border: `2px solid ${isActive ? '#10b981' : '#d1d5db'}`,
+              }}
+            >
+              内联样式容器 (状态: {isActive ? '激活' : '未激活'})
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Ref 演示
+const RefExample = () => {
+  const inputRef = useRef<InputRef>(null);
+  const [message, setMessage] = useState('');
+
+  const focusInput = () => {
+    inputRef.current?.focus();
+  };
+
+  const clearAndFocus = () => {
+    if (inputRef.current) {
+      inputRef.current.input!.value = '';
+      inputRef.current.focus();
+      setMessage('输入框已清空并聚焦');
+      setTimeout(() => setMessage(''), 2000);
+    }
+  };
+
+  const getValue = () => {
+    const value = inputRef.current?.input?.value || '';
+    setMessage(`当前输入值: ${value}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border">
+        <h4 className="font-semibold mb-3">Ref 使用演示</h4>
+
+        <div className="space-y-3">
+          <Input ref={inputRef} placeholder="这是一个使用 ref 的输入框" />
+
+          <div className="flex space-x-2">
+            <Button onClick={focusInput} type="primary">
+              聚焦输入框
+            </Button>
+            <Button onClick={clearAndFocus}>清空并聚焦</Button>
+            <Button onClick={getValue}>获取值</Button>
+          </div>
+
+          {message && <Alert message={message} type="info" showIcon className="mt-2" />}
+        </div>
+      </div>
     </div>
   );
 };
@@ -336,6 +474,388 @@ function Card({ children, title }) {
 <Card title="用户信息">
   <UserInfo user={user} />
 </Card>`,
+
+    fragments: `// JSX Fragments - 避免额外的 DOM 节点
+
+// 1. 使用 React.Fragment
+import React from 'react';
+
+function UserProfile() {
+  return (
+    <React.Fragment>
+      <h1>用户信息</h1>
+      <p>这里不会产生额外的包装元素</p>
+    </React.Fragment>
+  );
+}
+
+// 2. 使用短语法 <>
+function UserProfile() {
+  return (
+    <>
+      <h1>用户信息</h1>
+      <p>更简洁的写法</p>
+    </>
+  );
+}
+
+// 3. 带 key 的 Fragment (循环中使用)
+function UserList({ users }) {
+  return (
+    <ul>
+      {users.map(user => (
+        <React.Fragment key={user.id}>
+          <li>{user.name}</li>
+          <li>{user.email}</li>
+        </React.Fragment>
+      ))}
+    </ul>
+  );
+}
+
+// 4. 条件渲染中的 Fragment
+function ConditionalContent({ showDetails }) {
+  return (
+    <div>
+      <h1>标题</h1>
+      {showDetails && (
+        <>
+          <p>详细信息1</p>
+          <p>详细信息2</p>
+        </>
+      )}
+    </div>
+  );
+}`,
+
+    styling: `// JSX 中的样式处理
+
+// 1. 内联样式 (使用对象)
+function StyledComponent() {
+  const divStyle = {
+    color: 'blue',
+    backgroundColor: 'lightgray',
+    padding: '10px',
+    borderRadius: '5px'
+  };
+
+  return (
+    <div style={divStyle}>
+      <p style={{ fontSize: '16px', fontWeight: 'bold' }}>
+        内联样式示例
+      </p>
+    </div>
+  );
+}
+
+// 2. 动态样式
+function DynamicStyles({ isActive, size }) {
+  return (
+    <button
+      style={{
+        backgroundColor: isActive ? '#007bff' : '#6c757d',
+        fontSize: size === 'large' ? '18px' : '14px',
+        padding: size === 'large' ? '12px 24px' : '8px 16px',
+        border: 'none',
+        borderRadius: '4px',
+        color: 'white',
+        cursor: 'pointer',
+        transition: 'all 0.3s ease'
+      }}
+    >
+      动态样式按钮
+    </button>
+  );
+}
+
+// 3. CSS 类名处理
+function ClassNameExamples({ isActive, size, type }) {
+  // 基础类名拼接
+  const baseClass = 'btn';
+  const className = \`\${baseClass} \${isActive ? 'active' : ''} \${size}\`;
+
+  // 条件类名
+  const classes = [
+    'button',
+    isActive && 'button--active',
+    \`button--\${type}\`,
+    \`button--\${size}\`
+  ].filter(Boolean).join(' ');
+
+  return (
+    <>
+      <button className={className}>基础类名拼接</button>
+      <button className={classes}>条件类名</button>
+    </>
+  );
+}
+
+// 4. CSS 模块 (假设有 styles.module.css)
+import styles from './styles.module.css';
+
+function CSSModules() {
+  return (
+    <div className={styles.container}>
+      <h1 className={styles.title}>CSS 模块示例</h1>
+      <p className={\`\${styles.text} \${styles.highlight}\`}>
+        组合多个 CSS 模块类
+      </p>
+    </div>
+  );
+}`,
+
+    propsAdvanced: `// Props 高级用法
+
+// 1. Props 解构
+function UserCard({ name, age, email, avatar, ...restProps }) {
+  return (
+    <div {...restProps} className="user-card">
+      <img src={avatar} alt={name} />
+      <h3>{name}</h3>
+      <p>年龄: {age}</p>
+      <p>邮箱: {email}</p>
+    </div>
+  );
+}
+
+// 2. 默认 Props
+function Button({ children, type = 'button', size = 'medium', onClick }) {
+  return (
+    <button
+      type={type}
+      className={\`btn btn--\${size}\`}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+}
+
+// 3. Props 传播 (Spread)
+function EnhancedInput(props) {
+  return (
+    <div className="input-wrapper">
+      <input
+        {...props}
+        className={\`input \${props.className || ''}\`}
+      />
+    </div>
+  );
+}
+
+// 使用
+<EnhancedInput
+  type="text"
+  placeholder="请输入内容"
+  onChange={handleChange}
+  className="custom-input"
+/>
+
+// 4. 条件 Props
+function ConditionalProps({ isDisabled, isLoading, children }) {
+  const buttonProps = {
+    className: 'btn',
+    ...(isDisabled && { disabled: true }),
+    ...(isLoading && { 'aria-busy': true }),
+    ...(isLoading && { disabled: true })
+  };
+
+  return <button {...buttonProps}>{children}</button>;
+}
+
+// 5. Props 验证 (TypeScript)
+interface ProductProps {
+  name: string;
+  price: number;
+  category?: string;
+  onBuy?: (id: string) => void;
+}
+
+function Product({ name, price, category = '未分类', onBuy }: ProductProps) {
+  return (
+    <div className="product">
+      <h3>{name}</h3>
+      <p>价格: ¥{price}</p>
+      <p>分类: {category}</p>
+      {onBuy && (
+        <button onClick={() => onBuy('product-id')}>
+          购买
+        </button>
+      )}
+    </div>
+  );
+}`,
+
+    escapeChars: `// JSX 中的特殊字符和转义
+
+// 1. HTML 实体
+function HTMLEntities() {
+  return (
+    <div>
+      <p>版权符号: &copy; 2024</p>
+      <p>小于号: &lt;</p>
+      <p>大于号: &gt;</p>
+      <p>空格: &nbsp;&nbsp;&nbsp;</p>
+      <p>引号: &quot;Hello&quot;</p>
+      <p>撇号: &apos;World&apos;</p>
+    </div>
+  );
+}
+
+// 2. Unicode 字符
+function UnicodeChars() {
+  return (
+    <div>
+      <p>心形: ♥ (\\u2665)</p>
+      <p>星星: ★ (\\u2605)</p>
+      <p>箭头: → (\\u2192)</p>
+      <p>表情: 😀 (\\u{1F600})</p>
+    </div>
+  );
+}
+
+// 3. 危险的 HTML (谨慎使用)
+function DangerousHTML({ htmlContent }) {
+  return (
+    <div
+      dangerouslySetInnerHTML={{
+        __html: htmlContent // 确保内容是安全的!
+      }}
+    />
+  );
+}
+
+// 4. 转义用户输入
+function EscapeUserInput({ userInput }) {
+  // React 默认会转义文本内容
+  return (
+    <div>
+      <p>用户输入: {userInput}</p>
+      {/* 如果 userInput 包含 <script>，会被自动转义 */}
+    </div>
+  );
+}
+
+// 5. 换行处理
+function LineBreaks({ text }) {
+  return (
+    <div>
+      {/* 方法1: 使用 \\n 配合 CSS white-space */}
+      <pre style={{ whiteSpace: 'pre-wrap' }}>{text}</pre>
+
+      {/* 方法2: 手动替换换行符 */}
+      <div>
+        {text.split('\\n').map((line, index) => (
+          <React.Fragment key={index}>
+            {line}
+            {index < text.split('\\n').length - 1 && <br />}
+          </React.Fragment>
+        ))}
+      </div>
+    </div>
+  );
+}`,
+
+    refs: `// JSX 中使用 Refs
+
+// 1. 基本 ref 使用
+import { useRef, useEffect } from 'react';
+
+function FocusInput() {
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    // 组件挂载后自动聚焦
+    inputRef.current?.focus();
+  }, []);
+
+  const handleReset = () => {
+    if (inputRef.current) {
+      inputRef.current.value = '';
+      inputRef.current.focus();
+    }
+  };
+
+  return (
+    <div>
+      <input
+        ref={inputRef}
+        type="text"
+        placeholder="自动聚焦的输入框"
+      />
+      <button onClick={handleReset}>重置并聚焦</button>
+    </div>
+  );
+}
+
+// 2. 多个 refs
+function MultipleRefs() {
+  const firstNameRef = useRef(null);
+  const lastNameRef = useRef(null);
+  const emailRef = useRef(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = {
+      firstName: firstNameRef.current?.value,
+      lastName: lastNameRef.current?.value,
+      email: emailRef.current?.value
+    };
+    console.log('表单数据:', formData);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input ref={firstNameRef} placeholder="名字" />
+      <input ref={lastNameRef} placeholder="姓氏" />
+      <input ref={emailRef} type="email" placeholder="邮箱" />
+      <button type="submit">提交</button>
+    </form>
+  );
+}
+
+// 3. Ref 回调
+function RefCallback() {
+  const [height, setHeight] = useState(0);
+
+  const measureRef = useCallback((node) => {
+    if (node !== null) {
+      setHeight(node.getBoundingClientRect().height);
+    }
+  }, []);
+
+  return (
+    <div>
+      <div ref={measureRef} style={{ padding: '20px', background: '#f0f0f0' }}>
+        这个元素的高度是: {height}px
+      </div>
+    </div>
+  );
+}
+
+// 4. forwardRef (传递 ref 给子组件)
+const CustomInput = React.forwardRef((props, ref) => {
+  return (
+    <div className="custom-input-wrapper">
+      <input ref={ref} {...props} className="custom-input" />
+    </div>
+  );
+});
+
+function ParentComponent() {
+  const inputRef = useRef(null);
+
+  const focusInput = () => {
+    inputRef.current?.focus();
+  };
+
+  return (
+    <div>
+      <CustomInput ref={inputRef} placeholder="自定义输入组件" />
+      <button onClick={focusInput}>聚焦输入框</button>
+    </div>
+  );
+}`,
   };
 
   return (
@@ -353,12 +873,14 @@ function Card({ children, title }) {
         </div>
 
         {/* 快速导航 */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
           {[
             { key: 'greeting', title: '基础语法', icon: <CodeOutlined /> },
             { key: 'conditional', title: '条件渲染', icon: <BulbOutlined /> },
             { key: 'lists', title: '列表渲染', icon: <ExperimentOutlined /> },
             { key: 'events', title: '事件处理', icon: <PlayCircleOutlined /> },
+            { key: 'fragments', title: 'Fragments', icon: <CodeOutlined /> },
+            { key: 'styling', title: '样式处理', icon: <BulbOutlined /> },
           ].map(item => (
             <div
               key={item.key}
@@ -458,6 +980,31 @@ function Card({ children, title }) {
                     label: '组件',
                     children: <CodeBlock language="jsx" code={jsxExamples.components} />,
                   },
+                  {
+                    key: 'fragments',
+                    label: 'Fragments',
+                    children: <CodeBlock language="jsx" code={jsxExamples.fragments} />,
+                  },
+                  {
+                    key: 'styling',
+                    label: '样式处理',
+                    children: <CodeBlock language="jsx" code={jsxExamples.styling} />,
+                  },
+                  {
+                    key: 'propsAdvanced',
+                    label: 'Props高级',
+                    children: <CodeBlock language="jsx" code={jsxExamples.propsAdvanced} />,
+                  },
+                  {
+                    key: 'escapeChars',
+                    label: '特殊字符',
+                    children: <CodeBlock language="jsx" code={jsxExamples.escapeChars} />,
+                  },
+                  {
+                    key: 'refs',
+                    label: 'Refs',
+                    children: <CodeBlock language="jsx" code={jsxExamples.refs} />,
+                  },
                 ]}
               />
             </Card>
@@ -522,6 +1069,45 @@ function Card({ children, title }) {
                       </div>
                     ),
                   },
+                  {
+                    key: 'fragments',
+                    label: 'Fragment',
+                    children: (
+                      <div className="space-y-4">
+                        <h4 className="font-semibold">Fragment 演示</h4>
+                        <FragmentExample />
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          使用 Fragment 避免额外的 DOM 节点
+                        </p>
+                      </div>
+                    ),
+                  },
+                  {
+                    key: 'styling',
+                    label: '样式处理',
+                    children: (
+                      <div className="space-y-4">
+                        <h4 className="font-semibold">样式处理演示</h4>
+                        <StylingExample />
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          JSX 中的内联样式和动态样式处理
+                        </p>
+                      </div>
+                    ),
+                  },
+                  {
+                    key: 'refs',
+                    label: 'Refs',
+                    children: (
+                      <div className="space-y-4">
+                        <h4 className="font-semibold">Ref 使用演示</h4>
+                        <RefExample />
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          直接访问和操作 DOM 元素
+                        </p>
+                      </div>
+                    ),
+                  },
                 ]}
               />
             </Card>
@@ -559,6 +1145,46 @@ function Card({ children, title }) {
                       单一职责原则，保持组件简单易维护
                     </p>
                   </div>
+
+                  <div className="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border-l-4 border-orange-500">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <CodeOutlined className="text-orange-500" />
+                      <span className="font-medium">优先使用 Fragment</span>
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      避免不必要的包装元素，使用 &lt;&gt; 或 React.Fragment
+                    </p>
+                  </div>
+
+                  <div className="p-3 bg-cyan-50 dark:bg-cyan-900/20 rounded-lg border-l-4 border-cyan-500">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <BulbOutlined className="text-cyan-500" />
+                      <span className="font-medium">样式管理</span>
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      避免大量内联样式，优先使用CSS类和CSS模块
+                    </p>
+                  </div>
+
+                  <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border-l-4 border-red-500">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <ExperimentOutlined className="text-red-500" />
+                      <span className="font-medium">谨慎使用 Refs</span>
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      只在必要时使用ref，优先考虑声明式编程
+                    </p>
+                  </div>
+
+                  <div className="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border-l-4 border-emerald-500">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <CheckCircleOutlined className="text-emerald-500" />
+                      <span className="font-medium">转义和安全</span>
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      React自动转义内容，避免使用dangerouslySetInnerHTML
+                    </p>
+                  </div>
                 </div>
               </div>
             </Card>
@@ -569,27 +1195,105 @@ function Card({ children, title }) {
         <Card title="🔨 动手练习" className="mt-8 shadow-lg">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border">
-              <h4 className="font-semibold mb-2">练习 1: 创建个人名片</h4>
+              <h4 className="font-semibold mb-2">练习 1: Fragment 优化</h4>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                创建一个显示姓名、头像和简介的个人名片组件
+                重构现有组件，使用Fragment减少不必要的DOM嵌套
               </p>
               <Tag color="orange">初级</Tag>
             </div>
 
             <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border">
-              <h4 className="font-semibold mb-2">练习 2: 待办事项列表</h4>
+              <h4 className="font-semibold mb-2">练习 2: 动态样式系统</h4>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                实现添加、删除、标记完成的待办事项功能
+                创建一个主题切换组件，支持多种样式配置
               </p>
               <Tag color="blue">中级</Tag>
             </div>
 
             <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border">
-              <h4 className="font-semibold mb-2">练习 3: 动态表单</h4>
+              <h4 className="font-semibold mb-2">练习 3: Ref 实战应用</h4>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                创建包含验证和动态字段的复杂表单
+                实现一个富文本编辑器，使用ref控制光标和选择
               </p>
               <Tag color="green">高级</Tag>
+            </div>
+
+            <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border">
+              <h4 className="font-semibold mb-2">练习 4: Props 高级处理</h4>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                创建通用组件，支持props解构、传播和条件属性
+              </p>
+              <Tag color="purple">中级</Tag>
+            </div>
+
+            <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border">
+              <h4 className="font-semibold mb-2">练习 5: 安全内容渲染</h4>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                处理用户输入，实现安全的HTML内容渲染机制
+              </p>
+              <Tag color="red">高级</Tag>
+            </div>
+
+            <div className="p-4 bg-cyan-50 dark:bg-cyan-900/20 rounded-lg border">
+              <h4 className="font-semibold mb-2">练习 6: 综合应用</h4>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                构建一个完整的组件库，应用所有JSX高级技术
+              </p>
+              <Tag color="cyan">专家级</Tag>
+            </div>
+          </div>
+        </Card>
+
+        {/* 性能优化提示 */}
+        <Card title="⚡ 性能优化提示" className="mt-8 shadow-lg">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <h4 className="font-semibold text-lg flex items-center space-x-2">
+                <ExperimentOutlined className="text-blue-500" />
+                <span>JSX 优化技巧</span>
+              </h4>
+              <ul className="space-y-2 text-gray-600 dark:text-gray-300">
+                <li className="flex items-start space-x-2">
+                  <CheckCircleOutlined className="text-green-500 mt-1 flex-shrink-0" />
+                  <span>避免在render中创建对象和函数</span>
+                </li>
+                <li className="flex items-start space-x-2">
+                  <CheckCircleOutlined className="text-green-500 mt-1 flex-shrink-0" />
+                  <span>使用React.memo包装纯组件</span>
+                </li>
+                <li className="flex items-start space-x-2">
+                  <CheckCircleOutlined className="text-green-500 mt-1 flex-shrink-0" />
+                  <span>合理使用key属性，避免不必要的重渲染</span>
+                </li>
+                <li className="flex items-start space-x-2">
+                  <CheckCircleOutlined className="text-green-500 mt-1 flex-shrink-0" />
+                  <span>条件渲染时考虑性能影响</span>
+                </li>
+              </ul>
+            </div>
+            <div className="space-y-4">
+              <h4 className="font-semibold text-lg flex items-center space-x-2">
+                <BulbOutlined className="text-yellow-500" />
+                <span>常见陷阱</span>
+              </h4>
+              <ul className="space-y-2 text-gray-600 dark:text-gray-300">
+                <li className="flex items-start space-x-2">
+                  <span className="text-red-500 mt-1 flex-shrink-0">⚠️</span>
+                  <span>避免使用数组索引作为key</span>
+                </li>
+                <li className="flex items-start space-x-2">
+                  <span className="text-red-500 mt-1 flex-shrink-0">⚠️</span>
+                  <span>不要在循环中使用内联对象样式</span>
+                </li>
+                <li className="flex items-start space-x-2">
+                  <span className="text-red-500 mt-1 flex-shrink-0">⚠️</span>
+                  <span>避免深层条件嵌套，影响可读性</span>
+                </li>
+                <li className="flex items-start space-x-2">
+                  <span className="text-red-500 mt-1 flex-shrink-0">⚠️</span>
+                  <span>谨慎使用dangerouslySetInnerHTML</span>
+                </li>
+              </ul>
             </div>
           </div>
         </Card>

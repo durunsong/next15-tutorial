@@ -1,35 +1,15 @@
-// Bundle分析配置
-import bundleAnalyzer from '@next/bundle-analyzer';
-
 import type { NextConfig } from 'next';
 
-const withBundleAnalyzer = bundleAnalyzer({
-  enabled: process.env.ANALYZE === 'true',
-});
-
 const nextConfig: NextConfig = {
-  // 性能优化
+  // 实验性功能
   experimental: {
-    // 启用 React 编译器（React 19+）
-    // reactCompiler: true,
-
-    // 优化字体加载
+    // 优化包导入
     optimizePackageImports: ['antd', 'lucide-react'],
-  },
-
-  // Turbopack 配置（现在是稳定功能）
-  turbopack: {
-    rules: {
-      '*.svg': {
-        loaders: ['@svgr/webpack'],
-        as: '*.js',
-      },
-    },
   },
 
   // 编译优化
   compiler: {
-    // 移除 console.log（生产环境）
+    // 生产环境移除 console.log
     removeConsole:
       process.env.NODE_ENV === 'production'
         ? {
@@ -38,12 +18,12 @@ const nextConfig: NextConfig = {
         : false,
   },
 
-  // 跳过构建阶段的 ESLint（先保证可打包，后续再逐步修复规则）
+  // 跳过构建阶段的 ESLint
   eslint: {
     ignoreDuringBuilds: true,
   },
 
-  // 图片优化配置（使用 remotePatterns 取代 domains）
+  // 图片优化配置
   images: {
     remotePatterns: [
       { protocol: 'http', hostname: 'localhost' },
@@ -52,18 +32,18 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'api.dicebear.com' },
     ],
     formats: ['image/webp', 'image/avif'],
-    minimumCacheTTL: 86400, // 24 小时缓存
+    minimumCacheTTL: 86400,
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 
-  // 压缩配置
+  // 启用压缩
   compress: true,
 
-  // PWA 配置
-  poweredByHeader: false, // 移除 X-Powered-By 头
+  // 移除 X-Powered-By 头
+  poweredByHeader: false,
 
-  // 环境变量配置
+  // 环境变量
   env: {
     APP_TITLE: process.env.APP_TITLE || 'Next.js 15 教程项目',
     APP_DESCRIPTION: process.env.APP_DESCRIPTION || '一个完整的Next.js 15全栈教程项目',
@@ -80,13 +60,13 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // 头部配置
+  // 基本的头部配置
   async headers() {
     return [
       {
         source: '/(.*)',
         headers: [
-          // 安全头部
+          // 基本安全头部
           {
             key: 'X-Content-Type-Options',
             value: 'nosniff',
@@ -99,60 +79,19 @@ const nextConfig: NextConfig = {
             key: 'X-XSS-Protection',
             value: '1; mode=block',
           },
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
-          },
         ],
       },
       {
         source: '/api/(.*)',
         headers: [
-          // API 缓存控制
           {
             key: 'Cache-Control',
             value: 'no-store, must-revalidate',
           },
         ],
       },
-      {
-        source: '/_next/static/(.*)',
-        headers: [
-          // 静态资源长期缓存
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
     ];
-  },
-
-  // Webpack 配置优化
-  webpack: (config, { dev, isServer }) => {
-    // 生产环境优化
-    if (!dev && !isServer) {
-      // 代码分割优化
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
-          },
-          common: {
-            name: 'common',
-            minChunks: 2,
-            chunks: 'all',
-            enforce: true,
-          },
-        },
-      };
-    }
-
-    return config;
   },
 };
 
-export default withBundleAnalyzer(nextConfig);
+export default nextConfig;

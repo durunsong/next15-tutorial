@@ -12,7 +12,7 @@ import {
   Users,
 } from 'lucide-react';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import NextImage from 'next/image';
 import Link from 'next/link';
@@ -48,8 +48,8 @@ interface CartItem {
 function SimpleStateDemo() {
   const [count, setCount] = useState(0);
   const [todos, setTodos] = useState<TodoItem[]>([
-    { id: 1, text: '学习 Zustand', completed: false, createdAt: new Date() },
-    { id: 2, text: '构建状态管理', completed: true, createdAt: new Date() },
+    { id: 1, text: '学习 Zustand', completed: false, createdAt: new Date('2024-01-20T09:00:00') },
+    { id: 2, text: '构建状态管理', completed: true, createdAt: new Date('2024-01-20T08:30:00') },
   ]);
   const [newTodo, setNewTodo] = useState('');
 
@@ -172,6 +172,8 @@ function SimpleStateDemo() {
 
 // 复杂状态管理演示
 function ComplexStateDemo() {
+  const [isClient, setIsClient] = useState(false);
+
   const [user, setUser] = useState<User>({
     id: 1,
     name: '张三',
@@ -179,14 +181,24 @@ function ComplexStateDemo() {
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=zhangsan',
   });
 
+  // 确保在客户端渲染时间
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const [cart, setCart] = useState<CartItem[]>([
     { id: 1, name: 'MacBook Pro', price: 12999, quantity: 1 },
     { id: 2, name: 'iPhone 15', price: 5999, quantity: 2 },
   ]);
 
   const [notifications, setNotifications] = useState([
-    { id: 1, message: '欢迎使用 Zustand！', type: 'info', timestamp: new Date() },
-    { id: 2, message: '购物车已更新', type: 'success', timestamp: new Date() },
+    {
+      id: 1,
+      message: '欢迎使用 Zustand！',
+      type: 'info',
+      timestamp: new Date('2024-01-20T10:30:00'),
+    },
+    { id: 2, message: '购物车已更新', type: 'success', timestamp: new Date('2024-01-20T10:25:00') },
   ]);
 
   const updateQuantity = (id: number, delta: number) => {
@@ -269,7 +281,10 @@ function ComplexStateDemo() {
               <div>
                 <p className="font-medium text-gray-900 dark:text-white">{item.name}</p>
                 <p className="text-sm text-gray-600 dark:text-gray-300">
-                  ¥{item.price.toLocaleString()}
+                  ¥
+                  {isClient
+                    ? item.price.toLocaleString()
+                    : item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                 </p>
               </div>
               <div className="flex items-center space-x-2">
@@ -305,7 +320,10 @@ function ComplexStateDemo() {
               <div className="flex justify-between items-center">
                 <span className="font-semibold text-gray-900 dark:text-white">总计:</span>
                 <span className="font-bold text-lg text-green-600">
-                  ¥{totalAmount.toLocaleString()}
+                  ¥
+                  {isClient
+                    ? totalAmount.toLocaleString()
+                    : totalAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                 </span>
               </div>
             </div>
@@ -352,7 +370,9 @@ function ComplexStateDemo() {
             >
               <p className="text-gray-900 dark:text-white">{notification.message}</p>
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                {notification.timestamp.toLocaleTimeString()}
+                {isClient
+                  ? notification.timestamp.toLocaleTimeString()
+                  : notification.timestamp.toISOString().split('T')[1].slice(0, 8)}
               </p>
             </div>
           ))}
@@ -1268,7 +1288,10 @@ blogApp.actions.addPost();
 console.log('添加文章后的统计:', useBlogStore.getState().stats);`}
             language="typescript"
             height="700px"
-            onRun={code => console.log('执行 Zustand 代码:', code)}
+            onRun={code => {
+              // 执行 Zustand 代码演示
+              void code;
+            }}
             showConsole
           />
         </section>
