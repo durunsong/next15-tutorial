@@ -6,6 +6,8 @@ import { useRef, useState } from 'react';
 
 import dynamic from 'next/dynamic';
 
+import { SandboxRenderer } from './SandboxRenderer';
+
 // 动态导入 Monaco Editor 以避免 SSR 问题
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), {
   ssr: false,
@@ -21,10 +23,11 @@ interface CodeEditorProps {
   language: string;
   title?: string;
   height?: string;
-  theme?: 'light' | 'dark';
+
   readOnly?: boolean;
   onRun?: (code: string) => void;
   showConsole?: boolean;
+  renderMode?: 'console' | 'sandbox';
 }
 
 export function CodeEditor({
@@ -32,10 +35,11 @@ export function CodeEditor({
   language,
   title,
   height = '400px',
-  theme = 'dark',
+
   readOnly = false,
   onRun,
   showConsole = false,
+  renderMode = 'console',
 }: CodeEditorProps) {
   const [code, setCode] = useState(defaultCode);
   const [output, setOutput] = useState<string[]>([]);
@@ -146,7 +150,7 @@ export function CodeEditor({
         <MonacoEditor
           height={height}
           language={language}
-          theme={theme === 'dark' ? 'vs-dark' : 'light'}
+          theme="vs-dark"
           value={code}
           onChange={value => setCode(value || '')}
           onMount={handleEditorDidMount}
@@ -167,7 +171,7 @@ export function CodeEditor({
       </div>
 
       {/* 控制台输出 */}
-      {showConsole && output.length > 0 && (
+      {renderMode === 'console' && showConsole && output.length > 0 && (
         <div className="border-t border-gray-200 dark:border-gray-700 bg-gray-900 text-green-400">
           <div className="px-4 py-2 text-xs font-mono border-b border-gray-700">
             <span className="text-gray-400">控制台输出:</span>
@@ -179,6 +183,13 @@ export function CodeEditor({
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* 沙箱渲染器 */}
+      {renderMode === 'sandbox' && (
+        <div className="border-t border-gray-200 dark:border-gray-700">
+          <SandboxRenderer code={code} language={language} />
         </div>
       )}
     </div>

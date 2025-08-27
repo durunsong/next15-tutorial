@@ -1,11 +1,21 @@
 'use client';
 
-import { ArrowRight, Copy, Download, Eye, FileText, Image, Trash2, Upload } from 'lucide-react';
+import {
+  ArrowRight,
+  Copy,
+  Download,
+  Eye,
+  FileText,
+  Image as ImageIcon,
+  Trash2,
+  Upload,
+} from 'lucide-react';
 
 import { useCallback, useState } from 'react';
 
 import NextImage from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { CodeBlock } from '@/components/CodeBlock';
 import { CodeEditor } from '@/components/CodeEditor';
@@ -14,6 +24,7 @@ import { TutorialLayout } from '@/components/TutorialLayout';
 
 // 文件上传演示组件
 function FileUploadDemo() {
+  const router = useRouter();
   const [files, setFiles] = useState([
     {
       id: 1,
@@ -53,8 +64,7 @@ function FileUploadDemo() {
   };
 
   const getFileIcon = (type: string) => {
-    // eslint-disable-next-line jsx-a11y/alt-text
-    if (type.startsWith('image/')) return <Image className="h-5 w-5 text-blue-600" />;
+    if (type.startsWith('image/')) return <ImageIcon className="h-5 w-5 text-blue-600" />;
     if (type === 'application/pdf') return <FileText className="h-5 w-5 text-red-600" />;
     return <FileText className="h-5 w-5 text-gray-600" />;
   };
@@ -219,12 +229,6 @@ function FileUploadDemo() {
 
 // 图片处理演示组件
 function ImageProcessingDemo() {
-  const [selectedImage, setSelectedImage] = useState(
-    'https://next-static-oss.oss-rg-china-mainland.aliyuncs.com/sample-image.jpg'
-  );
-  // 使用变量避免 lint 错误
-  void selectedImage;
-  void setSelectedImage;
   const [processing, setProcessing] = useState({
     resize: { width: 400, height: 300 },
     quality: 80,
@@ -478,7 +482,7 @@ export function generateUniqueFilename(originalName: string): string {
 export class OSSManager {
   // 上传文件
   static async uploadFile(
-    file: File | Buffer, 
+    file: File | Buffer,
     filename: string,
     options?: {
       folder?: string;
@@ -488,14 +492,14 @@ export class OSSManager {
     try {
       const { folder = '', metadata = {} } = options || {};
       const fullPath = folder ? \`\${folder}/\${filename}\` : filename;
-      
+
       const result = await ossClient.put(fullPath, file, {
         meta: {
           ...metadata,
           uploadTime: new Date().toISOString(),
         }
       });
-      
+
       return {
         url: result.url,
         filename: fullPath
@@ -562,7 +566,7 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const folder = formData.get('folder') as string || 'uploads';
-    
+
     if (!file) {
       return NextResponse.json(
         { error: '未选择文件' },
@@ -590,7 +594,7 @@ export async function POST(request: NextRequest) {
 
     // 生成唯一文件名
     const filename = generateUniqueFilename(file.name);
-    
+
     // 转换 File 为 Buffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
@@ -622,37 +626,6 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-// app/api/upload/delete/route.ts
-export async function DELETE(request: NextRequest) {
-  try {
-    const { filename } = await request.json();
-    
-    if (!filename) {
-      return NextResponse.json(
-        { error: '文件名不能为空' },
-        { status: 400 }
-      );
-    }
-
-    const success = await OSSManager.deleteFile(filename);
-    
-    if (success) {
-      return NextResponse.json({ success: true });
-    } else {
-      return NextResponse.json(
-        { error: '删除失败' },
-        { status: 500 }
-      );
-    }
-  } catch (error) {
-    console.error('Delete error:', error);
-    return NextResponse.json(
-      { error: '删除失败' },
-      { status: 500 }
-    );
-  }
 }`;
 
   const clientUploadCode = `// components/FileUpload.tsx
@@ -669,8 +642,8 @@ interface UploadedFile {
   type: string;
 }
 
-export function FileUpload({ onUploadComplete }: { 
-  onUploadComplete?: (files: UploadedFile[]) => void 
+export function FileUpload({ onUploadComplete }: {
+  onUploadComplete?: (files: UploadedFile[]) => void
 }) {
   const [uploading, setUploading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
@@ -711,7 +684,7 @@ export function FileUpload({ onUploadComplete }: {
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setDragOver(false);
-    
+
     const files = e.dataTransfer.files;
     if (files.length > 0) {
       uploadFiles(files);
@@ -725,31 +698,13 @@ export function FileUpload({ onUploadComplete }: {
     }
   };
 
-  const removeFile = async (filename: string) => {
-    try {
-      const response = await fetch('/api/upload/delete', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ filename }),
-      });
-
-      if (response.ok) {
-        setUploadedFiles(prev => 
-          prev.filter(file => file.filename !== filename)
-        );
-      }
-    } catch (error) {
-      console.error('Delete error:', error);
-    }
-  };
-
   return (
     <div className="space-y-4">
       {/* 上传区域 */}
       <div
         className={\`border-2 border-dashed rounded-lg p-8 text-center transition-colors \${
-          dragOver 
-            ? 'border-blue-500 bg-blue-50' 
+          dragOver
+            ? 'border-blue-500 bg-blue-50'
             : 'border-gray-300 hover:border-gray-400'
         }\`}
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
@@ -795,174 +750,18 @@ export function FileUpload({ onUploadComplete }: {
                   </p>
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <a
-                  href={file.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-700"
-                >
-                  查看
-                </a>
-                <button
-                  onClick={() => removeFile(file.filename)}
-                  className="text-red-600 hover:text-red-700"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
+              <button
+                onClick={() => router.push(file.url)}
+                className="text-blue-600 hover:text-blue-700"
+              >
+                查看
+              </button>
             </div>
           ))}
         </div>
       )}
     </div>
   );
-}`;
-
-  const imageProcessingCode = `// lib/imageProcessing.ts
-// 阿里云 OSS 图片处理参数构建
-
-export interface ImageProcessOptions {
-  resize?: {
-    width?: number;
-    height?: number;
-    mode?: 'lfit' | 'mfit' | 'fill' | 'pad' | 'fixed';
-  };
-  crop?: {
-    width: number;
-    height: number;
-    x?: number;
-    y?: number;
-    gravity?: 'nw' | 'north' | 'ne' | 'west' | 'center' | 'east' | 'sw' | 'south' | 'se';
-  };
-  rotate?: number;
-  quality?: number;
-  format?: 'jpg' | 'png' | 'webp' | 'gif' | 'bmp';
-  watermark?: {
-    text?: string;
-    image?: string;
-    position?: 'tl' | 't' | 'tr' | 'l' | 'c' | 'r' | 'bl' | 'b' | 'br';
-    opacity?: number;
-  };
-  blur?: number;
-  brightness?: number;
-  contrast?: number;
-}
-
-export function buildImageProcessUrl(
-  originalUrl: string, 
-  options: ImageProcessOptions
-): string {
-  const processes: string[] = [];
-
-  // 尺寸调整
-  if (options.resize) {
-    const { width, height, mode = 'lfit' } = options.resize;
-    let resizeParam = \`resize,m_\${mode}\`;
-    if (width) resizeParam += \`,w_\${width}\`;
-    if (height) resizeParam += \`,h_\${height}\`;
-    processes.push(resizeParam);
-  }
-
-  // 裁剪
-  if (options.crop) {
-    const { width, height, x, y, gravity } = options.crop;
-    let cropParam = \`crop,w_\${width},h_\${height}\`;
-    if (gravity) cropParam += \`,g_\${gravity}\`;
-    if (x !== undefined) cropParam += \`,x_\${x}\`;
-    if (y !== undefined) cropParam += \`,y_\${y}\`;
-    processes.push(cropParam);
-  }
-
-  // 旋转
-  if (options.rotate) {
-    processes.push(\`rotate,\${options.rotate}\`);
-  }
-
-  // 质量
-  if (options.quality !== undefined) {
-    processes.push(\`quality,q_\${options.quality}\`);
-  }
-
-  // 格式转换
-  if (options.format) {
-    processes.push(\`format,\${options.format}\`);
-  }
-
-  // 水印
-  if (options.watermark) {
-    const { text, image, position = 'br', opacity = 100 } = options.watermark;
-    if (text) {
-      processes.push(\`watermark,text_\${encodeURIComponent(text)},g_\${position},t_\${opacity}\`);
-    } else if (image) {
-      processes.push(\`watermark,image_\${encodeURIComponent(image)},g_\${position},t_\${opacity}\`);
-    }
-  }
-
-  // 模糊
-  if (options.blur) {
-    processes.push(\`blur,r_\${options.blur}\`);
-  }
-
-  // 亮度
-  if (options.brightness) {
-    processes.push(\`bright,\${options.brightness}\`);
-  }
-
-  // 对比度
-  if (options.contrast) {
-    processes.push(\`contrast,\${options.contrast}\`);
-  }
-
-  if (processes.length === 0) {
-    return originalUrl;
-  }
-
-  const processParam = processes.join('/');
-  const separator = originalUrl.includes('?') ? '&' : '?';
-  return \`\${originalUrl}\${separator}x-oss-process=image/\${processParam}\`;
-}
-
-// 预设的图片处理配置
-export const ImagePresets = {
-  thumbnail: (width = 200, height = 200): ImageProcessOptions => ({
-    resize: { width, height, mode: 'fill' },
-    quality: 80,
-    format: 'webp'
-  }),
-
-  avatar: (size = 100): ImageProcessOptions => ({
-    resize: { width: size, height: size, mode: 'fill' },
-    crop: { width: size, height: size, gravity: 'center' },
-    quality: 85,
-    format: 'webp'
-  }),
-
-  banner: (width = 1200, height = 400): ImageProcessOptions => ({
-    resize: { width, height, mode: 'fill' },
-    quality: 90,
-    format: 'webp'
-  }),
-
-  watermarked: (text: string): ImageProcessOptions => ({
-    quality: 90,
-    watermark: {
-      text,
-      position: 'br',
-      opacity: 60
-    }
-  })
-};
-
-// 使用示例
-export function generateResponsiveImageUrls(originalUrl: string) {
-  return {
-    thumbnail: buildImageProcessUrl(originalUrl, ImagePresets.thumbnail()),
-    small: buildImageProcessUrl(originalUrl, ImagePresets.thumbnail(400, 300)),
-    medium: buildImageProcessUrl(originalUrl, ImagePresets.thumbnail(800, 600)),
-    large: buildImageProcessUrl(originalUrl, { quality: 90, format: 'webp' }),
-    original: originalUrl
-  };
 }`;
 
   return (
@@ -999,8 +798,7 @@ export function generateResponsiveImageUrls(originalUrl: string) {
                 </p>
               </div>
               <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                {/* eslint-disable-next-line jsx-a11y/alt-text */}
-                <Image className="h-8 w-8 text-green-600 mb-2" />
+                <ImageIcon className="h-8 w-8 text-green-600 mb-2" />
                 <h3 className="font-semibold text-gray-900 dark:text-white">图片处理</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-300">
                   实时图片缩放、裁剪、水印等处理
@@ -1072,7 +870,7 @@ BASE_OSS_URL="https://your-bucket-name.oss-rg-china-mainland.aliyuncs.com"`}
           description="利用 OSS 的图片处理服务实现实时的图片缩放、压缩、格式转换等"
           demoComponent={<ImageProcessingDemo />}
           codeComponent={
-            <CodeBlock code={imageProcessingCode} language="typescript" filename="图片处理工具" />
+            <CodeBlock code="// 图片处理功能演示" language="typescript" filename="图片处理" />
           }
         />
 
@@ -1137,132 +935,49 @@ BASE_OSS_URL="https://your-bucket-name.oss-rg-china-mainland.aliyuncs.com"`}
           <CodeEditor
             title="OSS 操作练习场"
             defaultCode={`// OSS 文件操作练习
-import { OSSManager, buildImageProcessUrl } from '@/lib/oss';
+import { OSSManager } from '@/lib/oss';
 
-// 练习 1: 批量上传文件
-async function batchUploadFiles(files: File[]) {
-  const uploadPromises = files.map(async (file, index) => {
-    const filename = \`batch-\${Date.now()}-\${index}-\${file.name}\`;
-    
-    try {
-      const result = await OSSManager.uploadFile(file, filename, {
-        folder: 'batch-uploads',
-        metadata: {
-          batchId: \`batch-\${Date.now()}\`,
-          originalName: file.name,
-          uploadedBy: 'user-123'
-        }
-      });
-      
-      console.log(\`上传成功: \${file.name} -> \${result.url}\`);
-      return result;
-    } catch (error) {
-      console.error(\`上传失败: \${file.name}\`, error);
-      return null;
-    }
-  });
-  
-  const results = await Promise.allSettled(uploadPromises);
-  const successful = results
-    .filter(result => result.status === 'fulfilled' && result.value)
-    .map(result => result.value);
-    
-  console.log(\`批量上传完成: \${successful.length}/\${files.length} 成功\`);
-  return successful;
-}
-
-// 练习 2: 生成不同尺寸的图片 URL
-function generateResponsiveImageUrls(originalUrl: string) {
-  const sizes = [
-    { name: 'thumbnail', width: 150, height: 150 },
-    { name: 'small', width: 300, height: 200 },
-    { name: 'medium', width: 600, height: 400 },
-    { name: 'large', width: 1200, height: 800 }
-  ];
-  
-  const urls = sizes.reduce((acc, size) => {
-    acc[size.name] = buildImageProcessUrl(originalUrl, {
-      resize: { 
-        width: size.width, 
-        height: size.height, 
-        mode: 'fill' 
-      },
-      quality: 80,
-      format: 'webp'
+// 练习 1: 文件上传
+async function uploadFile(file: File) {
+  try {
+    const filename = \`upload-\${Date.now()}-\${file.name}\`;
+    const result = await OSSManager.uploadFile(file, filename, {
+      folder: 'user-uploads',
+      metadata: {
+        originalName: file.name,
+        uploadedBy: 'user-123'
+      }
     });
-    return acc;
-  }, {} as Record<string, string>);
-  
-  console.log('响应式图片 URLs:', urls);
-  return urls;
-}
 
-// 练习 3: 文件管理工具
-class FileManager {
-  static async cleanupOldFiles(folderPrefix: string, daysOld: number = 30) {
-    try {
-      // 这里模拟获取文件列表的逻辑
-      const oldFiles = [
-        'uploads/old-file-1.jpg',
-        'uploads/old-file-2.pdf',
-        'temp/cache-file.json'
-      ];
-      
-      console.log(\`发现 \${oldFiles.length} 个旧文件\`);
-      
-      // 批量删除
-      await OSSManager.deleteFiles(oldFiles);
-      console.log('旧文件清理完成');
-      
-      return oldFiles.length;
-    } catch (error) {
-      console.error('清理失败:', error);
-      return 0;
-    }
-  }
-  
-  static async generateSecureUrl(filename: string, expiresInMinutes: number = 60) {
-    // 模拟生成带签名的安全 URL
-    const baseUrl = \`https://your-bucket.oss-region.aliyuncs.com/\${filename}\`;
-    const expires = Math.floor(Date.now() / 1000) + (expiresInMinutes * 60);
-    const signature = 'simulated-signature-' + Math.random().toString(36);
-    
-    const secureUrl = \`\${baseUrl}?Expires=\${expires}&OSSAccessKeyId=your-key&Signature=\${signature}\`;
-    
-    console.log(\`安全URL (有效期\${expiresInMinutes}分钟):, secureUrl\`);
-    return secureUrl;
+    console.log('上传成功:', result.url);
+    return result;
+  } catch (error) {
+    console.error('上传失败:', error);
+    return null;
   }
 }
 
-// 运行练习
-async function runOSSExercises() {
-  // 模拟文件数据
-  const mockFiles = [
-    new File([''], 'image1.jpg', { type: 'image/jpeg' }),
-    new File([''], 'document.pdf', { type: 'application/pdf' })
-  ];
-  
-  console.log('=== OSS 操作练习开始 ===');
-  
-  // 批量上传
-  await batchUploadFiles(mockFiles);
-  
-  // 生成响应式图片
-  const imageUrl = 'https://example.com/sample-image.jpg';
-  generateResponsiveImageUrls(imageUrl);
-  
-  // 文件管理
-  await FileManager.cleanupOldFiles('uploads/');
-  await FileManager.generateSecureUrl('private/document.pdf', 30);
-  
-  console.log('=== 练习完成 ===');
+// 练习 2: 生成图片处理 URL
+function generateThumbnail(originalUrl: string) {
+  const processParams = [
+    'resize,w_200,h_200',
+    'quality,q_80',
+    'format,webp'
+  ].join('/');
+
+  const thumbnailUrl = \`\${originalUrl}?x-oss-process=image/\${processParams}\`;
+  console.log('缩略图 URL:', thumbnailUrl);
+  return thumbnailUrl;
 }
 
-runOSSExercises();`}
+// 运行示例
+console.log('OSS 操作练习开始');
+const imageUrl = 'https://example.com/sample-image.jpg';
+generateThumbnail(imageUrl);`}
             language="typescript"
-            height="600px"
+            height="400px"
             onRun={code => console.log('执行 OSS 代码:', code)}
-            showConsole={true}
+            showConsole
           />
         </section>
 

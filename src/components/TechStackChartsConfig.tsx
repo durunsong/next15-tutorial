@@ -1,7 +1,8 @@
-import * as echarts from 'echarts';
+// ECharts 配置文件 - 优化为按需导入配置
+// 注意：这里只导出配置对象，不导入 echarts 以减少包大小
 
 // 技术栈使用统计（柱状图）
-export const techUsageOption: echarts.EChartsOption = {
+export const techUsageOption = {
   title: {
     text: '🚀 技术栈使用频率',
     textStyle: {
@@ -28,77 +29,60 @@ export const techUsageOption: echarts.EChartsOption = {
   },
   xAxis: {
     type: 'category',
-    data: [
-      'React',
-      'Next.js',
-      'TypeScript',
-      'Tailwind',
-      'Prisma',
-      'Antd',
-      'ECharts',
-      'Zustand',
-      'Node.js',
-      'PostgreSQL',
-      'Redis',
-      'Three.js',
-    ],
+    data: ['React', 'TypeScript', 'Next.js', 'Node.js', 'PostgreSQL', 'Redis', 'Tailwind'],
+    axisLabel: {
+      color: '#64748b',
+    },
     axisLine: {
       lineStyle: {
-        color: '#06b6d4',
+        color: '#e2e8f0',
       },
-    },
-    axisLabel: {
-      color: '#666',
-      rotate: 45,
     },
   },
   yAxis: {
     type: 'value',
+    axisLabel: {
+      color: '#64748b',
+    },
     axisLine: {
       lineStyle: {
-        color: '#06b6d4',
+        color: '#e2e8f0',
       },
-    },
-    axisLabel: {
-      color: '#666',
     },
     splitLine: {
       lineStyle: {
-        color: '#f0f0f0',
+        color: '#f1f5f9',
       },
     },
   },
   series: [
     {
-      name: '使用频率',
+      data: [
+        { value: 95, itemStyle: { color: '#3b82f6' } },
+        { value: 90, itemStyle: { color: '#06b6d4' } },
+        { value: 88, itemStyle: { color: '#8b5cf6' } },
+        { value: 85, itemStyle: { color: '#10b981' } },
+        { value: 82, itemStyle: { color: '#f59e0b' } },
+        { value: 78, itemStyle: { color: '#ef4444' } },
+        { value: 92, itemStyle: { color: '#84cc16' } },
+      ],
       type: 'bar',
-      data: [95, 90, 88, 85, 80, 75, 70, 65, 82, 78, 68, 60],
-      itemStyle: {
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          { offset: 0, color: '#06b6d4' },
-          { offset: 1, color: '#0891b2' },
-        ]),
-        borderRadius: [4, 4, 0, 0],
+      barWidth: '60%',
+      label: {
+        show: true,
+        position: 'top',
+        color: '#64748b',
       },
-      emphasis: {
-        itemStyle: {
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: '#0891b2' },
-            { offset: 1, color: '#0e7490' },
-          ]),
-        },
-      },
-      animationDelay: (idx: number) => idx * 100,
     },
   ],
-  animationEasing: 'elasticOut',
-  animationDelayUpdate: (idx: number) => idx * 5,
+  animation: true,
+  animationDuration: 1000,
 };
 
-// 项目开发进度（折线图）
-export const projectProgressOption: echarts.EChartsOption = {
+// 学习路径进度（环形图）
+export const learningProgressOption = {
   title: {
-    text: '⚡ 项目开发进度',
+    text: '📚 学习路径进度',
     textStyle: {
       color: '#8b5cf6',
       fontSize: 18,
@@ -107,92 +91,63 @@ export const projectProgressOption: echarts.EChartsOption = {
     left: 'center',
   },
   tooltip: {
-    trigger: 'axis',
+    trigger: 'item',
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
     borderColor: '#8b5cf6',
     borderWidth: 2,
+    formatter: '{a} <br/>{b}: {c}% ({d}%)',
+  },
+  legend: {
+    orient: 'vertical',
+    left: 'left',
     textStyle: {
-      color: '#333',
-    },
-  },
-  grid: {
-    left: '3%',
-    right: '4%',
-    bottom: '3%',
-    containLabel: true,
-  },
-  xAxis: {
-    type: 'category',
-    data: ['第1周', '第2周', '第3周', '第4周', '第5周', '第6周', '第7周'],
-    axisLine: {
-      lineStyle: {
-        color: '#8b5cf6',
-      },
-    },
-    axisLabel: {
-      color: '#666',
-    },
-  },
-  yAxis: {
-    type: 'value',
-    name: '完成度(%)',
-    axisLine: {
-      lineStyle: {
-        color: '#8b5cf6',
-      },
-    },
-    axisLabel: {
-      color: '#666',
-    },
-    splitLine: {
-      lineStyle: {
-        color: '#f0f0f0',
-      },
+      color: '#64748b',
     },
   },
   series: [
     {
-      name: '开发进度',
-      type: 'line',
-      smooth: true,
-      data: [15, 28, 45, 62, 78, 88, 95],
-      lineStyle: {
-        width: 4,
-        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-          { offset: 0, color: '#8b5cf6' },
-          { offset: 1, color: '#7c3aed' },
-        ]),
-      },
-      areaStyle: {
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          { offset: 0, color: 'rgba(139, 92, 246, 0.6)' },
-          { offset: 1, color: 'rgba(139, 92, 246, 0.1)' },
-        ]),
-      },
-      symbol: 'circle',
-      symbolSize: 8,
+      name: '学习进度',
+      type: 'pie',
+      radius: ['40%', '70%'],
+      center: ['50%', '60%'],
+      avoidLabelOverlap: false,
       itemStyle: {
-        color: '#8b5cf6',
+        borderRadius: 10,
         borderColor: '#fff',
         borderWidth: 2,
       },
+      label: {
+        show: false,
+        position: 'center',
+      },
       emphasis: {
-        itemStyle: {
-          color: '#7c3aed',
-          borderColor: '#fff',
-          borderWidth: 3,
+        label: {
+          show: true,
+          fontSize: 20,
+          fontWeight: 'bold',
         },
       },
-      animationDelay: 300,
+      labelLine: {
+        show: false,
+      },
+      data: [
+        { value: 100, name: 'React 基础', itemStyle: { color: '#3b82f6' } },
+        { value: 90, name: 'TypeScript', itemStyle: { color: '#06b6d4' } },
+        { value: 85, name: 'Next.js', itemStyle: { color: '#8b5cf6' } },
+        { value: 75, name: 'Node.js', itemStyle: { color: '#10b981' } },
+        { value: 60, name: '数据库', itemStyle: { color: '#f59e0b' } },
+        { value: 45, name: '部署运维', itemStyle: { color: '#ef4444' } },
+      ],
     },
   ],
-  animationEasing: 'cubicOut',
+  animation: true,
+  animationDuration: 1500,
 };
 
-// 代码提交活跃度热力图
-export const commitHeatmapOption: echarts.EChartsOption = {
+// 技能雷达图
+export const skillRadarOption = {
   title: {
-    text: '📊 代码提交活跃度',
+    text: '🎯 技能雷达图',
     textStyle: {
       color: '#10b981',
       fontSize: 18,
@@ -201,254 +156,74 @@ export const commitHeatmapOption: echarts.EChartsOption = {
     left: 'center',
   },
   tooltip: {
-    position: 'top',
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
     borderColor: '#10b981',
     borderWidth: 2,
-    textStyle: {
-      color: '#333',
+  },
+  radar: {
+    indicator: [
+      { name: '前端开发', max: 100 },
+      { name: '后端开发', max: 100 },
+      { name: '数据库', max: 100 },
+      { name: 'DevOps', max: 100 },
+      { name: 'UI/UX', max: 100 },
+      { name: '性能优化', max: 100 },
+    ],
+    shape: 'polygon',
+    splitNumber: 4,
+    axisName: {
+      color: '#64748b',
     },
-  },
-  grid: {
-    height: '50%',
-    top: '15%',
-  },
-  xAxis: {
-    type: 'category',
-    data: ['00', '02', '04', '06', '08', '10', '12', '14', '16', '18', '20', '22'],
+    splitLine: {
+      lineStyle: {
+        color: '#e2e8f0',
+      },
+    },
     splitArea: {
       show: true,
-    },
-    axisLabel: {
-      color: '#666',
-    },
-  },
-  yAxis: {
-    type: 'category',
-    data: ['周日', '周六', '周五', '周四', '周三', '周二', '周一'],
-    splitArea: {
-      show: true,
-    },
-    axisLabel: {
-      color: '#666',
-    },
-  },
-  visualMap: {
-    min: 0,
-    max: 20,
-    calculable: true,
-    orient: 'horizontal',
-    left: 'center',
-    bottom: '5%',
-    inRange: {
-      color: ['#dcfce7', '#10b981', '#047857'],
-    },
-    textStyle: {
-      color: '#666',
+      areaStyle: {
+        color: ['rgba(16, 185, 129, 0.1)', 'rgba(16, 185, 129, 0.05)'],
+      },
     },
   },
   series: [
     {
-      name: '提交次数',
-      type: 'heatmap',
-      data: [
-        [0, 0, 2],
-        [1, 0, 5],
-        [2, 0, 3],
-        [3, 0, 1],
-        [4, 0, 0],
-        [5, 0, 2],
-        [6, 0, 8],
-        [7, 0, 12],
-        [8, 0, 15],
-        [9, 0, 10],
-        [10, 0, 8],
-        [11, 0, 3],
-        [0, 1, 3],
-        [1, 1, 6],
-        [2, 1, 4],
-        [3, 1, 2],
-        [4, 1, 1],
-        [5, 1, 3],
-        [6, 1, 10],
-        [7, 1, 15],
-        [8, 1, 18],
-        [9, 1, 12],
-        [10, 1, 9],
-        [11, 1, 4],
-        [0, 2, 1],
-        [1, 2, 4],
-        [2, 2, 2],
-        [3, 2, 1],
-        [4, 2, 0],
-        [5, 2, 2],
-        [6, 2, 7],
-        [7, 2, 11],
-        [8, 2, 14],
-        [9, 2, 9],
-        [10, 2, 7],
-        [11, 2, 2],
-        [0, 3, 0],
-        [1, 3, 2],
-        [2, 3, 1],
-        [3, 3, 0],
-        [4, 3, 0],
-        [5, 3, 1],
-        [6, 3, 5],
-        [7, 3, 8],
-        [8, 3, 12],
-        [9, 3, 8],
-        [10, 3, 6],
-        [11, 3, 1],
-        [0, 4, 1],
-        [1, 4, 3],
-        [2, 4, 2],
-        [3, 4, 1],
-        [4, 4, 0],
-        [5, 4, 2],
-        [6, 4, 6],
-        [7, 4, 9],
-        [8, 8, 13],
-        [9, 4, 9],
-        [10, 4, 7],
-        [11, 4, 2],
-        [0, 5, 4],
-        [1, 5, 8],
-        [2, 5, 6],
-        [3, 5, 3],
-        [4, 5, 2],
-        [5, 5, 5],
-        [6, 5, 12],
-        [7, 5, 16],
-        [8, 5, 20],
-        [9, 5, 15],
-        [10, 5, 11],
-        [11, 5, 6],
-        [0, 6, 3],
-        [1, 6, 7],
-        [2, 6, 5],
-        [3, 6, 2],
-        [4, 6, 1],
-        [5, 6, 4],
-        [6, 6, 11],
-        [7, 6, 14],
-        [8, 6, 18],
-        [9, 6, 13],
-        [10, 6, 10],
-        [11, 6, 5],
-      ],
-      emphasis: {
-        itemStyle: {
-          shadowBlur: 10,
-          shadowColor: 'rgba(0, 0, 0, 0.5)',
-        },
-      },
-    },
-  ],
-};
-
-// 性能指标仪表盘
-export const performanceOption: echarts.EChartsOption = {
-  title: {
-    text: '⚡ 应用性能指标',
-    textStyle: {
-      color: '#f59e0b',
-      fontSize: 18,
-      fontWeight: 'bold',
-    },
-    left: 'center',
-    top: '10%',
-  },
-  series: [
-    {
-      name: '性能得分',
-      type: 'gauge',
-      radius: '80%',
-      center: ['50%', '55%'],
-      startAngle: 200,
-      endAngle: -20,
-      min: 0,
-      max: 100,
-      splitNumber: 10,
-      itemStyle: {
-        color: '#f59e0b',
-      },
-      progress: {
-        show: true,
-        width: 15,
-        itemStyle: {
-          color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-            { offset: 0, color: '#fef3c7' },
-            { offset: 0.5, color: '#fbbf24' },
-            { offset: 1, color: '#f59e0b' },
-          ]),
-        },
-      },
-      pointer: {
-        show: true,
-        length: '60%',
-        width: 6,
-        itemStyle: {
-          color: '#f59e0b',
-        },
-      },
-      axisLine: {
-        lineStyle: {
-          width: 15,
-          color: [
-            [0.3, '#ef4444'],
-            [0.7, '#f59e0b'],
-            [1, '#10b981'],
-          ],
-        },
-      },
-      axisTick: {
-        distance: -30,
-        length: 8,
-        lineStyle: {
-          color: '#fff',
-          width: 2,
-        },
-      },
-      splitLine: {
-        distance: -30,
-        length: 15,
-        lineStyle: {
-          color: '#fff',
-          width: 4,
-        },
-      },
-      axisLabel: {
-        color: 'inherit',
-        distance: 15,
-        fontSize: 12,
-      },
-      detail: {
-        valueAnimation: true,
-        formatter: '{value}分\n🚀',
-        color: '#f59e0b',
-        fontSize: 20,
-        fontWeight: 'bold',
-        offsetCenter: [0, '70%'],
-      },
+      name: '技能水平',
+      type: 'radar',
       data: [
         {
-          value: 92,
-          name: '综合得分',
+          value: [90, 75, 80, 60, 85, 88],
+          name: '当前水平',
+          itemStyle: {
+            color: '#10b981',
+          },
+          areaStyle: {
+            color: 'rgba(16, 185, 129, 0.3)',
+          },
+        },
+        {
+          value: [95, 85, 90, 80, 90, 95],
+          name: '目标水平',
+          itemStyle: {
+            color: '#3b82f6',
+          },
+          areaStyle: {
+            color: 'rgba(59, 130, 246, 0.2)',
+          },
         },
       ],
-      animationDuration: 2000,
-      animationEasing: 'cubicInOut',
     },
   ],
+  animation: true,
+  animationDuration: 2000,
 };
 
-// 技术成长轨迹时间线
-export const techGrowthOption: echarts.EChartsOption = {
+// 月度活跃度（折线图）
+export const monthlyActivityOption = {
   title: {
-    text: '📈 技术成长轨迹',
+    text: '📈 月度学习活跃度',
     textStyle: {
-      color: '#3b82f6',
+      color: '#f59e0b',
       fontSize: 18,
       fontWeight: 'bold',
     },
@@ -457,11 +232,8 @@ export const techGrowthOption: echarts.EChartsOption = {
   tooltip: {
     trigger: 'axis',
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
-    borderColor: '#3b82f6',
+    borderColor: '#f59e0b',
     borderWidth: 2,
-    textStyle: {
-      color: '#333',
-    },
   },
   grid: {
     left: '3%',
@@ -471,95 +243,80 @@ export const techGrowthOption: echarts.EChartsOption = {
   },
   xAxis: {
     type: 'category',
-    data: [
-      '基础入门',
-      '框架学习',
-      '项目实践',
-      '架构理解',
-      '性能优化',
-      '工程化',
-      '全栈开发',
-      '技术深化',
-      '团队协作',
-    ],
+    boundaryGap: false,
+    data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+    axisLabel: {
+      color: '#64748b',
+    },
     axisLine: {
       lineStyle: {
-        color: '#3b82f6',
+        color: '#e2e8f0',
       },
-    },
-    axisLabel: {
-      color: '#666',
-      rotate: 45,
     },
   },
   yAxis: {
     type: 'value',
-    name: '技术水平',
+    axisLabel: {
+      color: '#64748b',
+    },
     axisLine: {
       lineStyle: {
-        color: '#3b82f6',
+        color: '#e2e8f0',
       },
-    },
-    axisLabel: {
-      color: '#666',
     },
     splitLine: {
       lineStyle: {
-        color: '#f0f0f0',
+        color: '#f1f5f9',
       },
     },
   },
   series: [
     {
-      name: '技术水平',
+      name: '学习时长(小时)',
       type: 'line',
+      stack: 'Total',
       smooth: true,
-      data: [20, 35, 50, 65, 75, 82, 88, 92, 95],
       lineStyle: {
-        width: 4,
-        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-          { offset: 0, color: '#3b82f6' },
-          { offset: 0.5, color: '#1d4ed8' },
-          { offset: 1, color: '#1e40af' },
-        ]),
+        color: '#f59e0b',
+        width: 3,
+      },
+      itemStyle: {
+        color: '#f59e0b',
       },
       areaStyle: {
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          { offset: 0, color: 'rgba(59, 130, 246, 0.3)' },
-          { offset: 1, color: 'rgba(59, 130, 246, 0.05)' },
-        ]),
+        color: 'rgba(245, 158, 11, 0.2)',
       },
-      symbol: 'diamond',
-      symbolSize: 10,
+      data: [45, 52, 38, 65, 72, 48, 55, 62, 58, 68, 75, 82],
+    },
+    {
+      name: '项目数量',
+      type: 'line',
+      stack: 'Total',
+      smooth: true,
+      lineStyle: {
+        color: '#06b6d4',
+        width: 3,
+      },
       itemStyle: {
-        color: '#3b82f6',
-        borderColor: '#fff',
-        borderWidth: 2,
+        color: '#06b6d4',
       },
-      emphasis: {
-        itemStyle: {
-          color: '#1d4ed8',
-          borderColor: '#fff',
-          borderWidth: 3,
-          shadowBlur: 10,
-          shadowColor: 'rgba(59, 130, 246, 0.5)',
-        },
+      areaStyle: {
+        color: 'rgba(6, 182, 212, 0.2)',
       },
-      markPoint: {
-        data: [
-          { type: 'max', name: '巅峰', symbol: 'pin', symbolSize: 60 },
-          { type: 'min', name: '起点', symbol: 'pin', symbolSize: 60 },
-        ],
-        itemStyle: {
-          color: '#16a34a',
-        },
-        label: {
-          color: '#fff',
-          fontWeight: 'bold',
-        },
-      },
-      animationDelay: 500,
+      data: [8, 12, 6, 15, 18, 10, 13, 16, 14, 17, 20, 22],
     },
   ],
-  animationEasing: 'elasticOut',
+  animation: true,
+  animationDuration: 1200,
 };
+
+/**
+ * 使用说明：
+ *
+ * 这些配置对象不直接导入 echarts，避免增加包大小。
+ * 在使用时通过 EChartsComponent 组件动态加载图表库。
+ *
+ * 使用示例：
+ * import { techUsageOption } from './TechStackChartsConfig';
+ * <EChartsComponent option={techUsageOption} />
+ */

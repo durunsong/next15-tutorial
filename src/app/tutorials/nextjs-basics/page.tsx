@@ -2,7 +2,7 @@
 
 import { ArrowRight, Database, FileText, Globe, Layers, Server, Settings, Zap } from 'lucide-react';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
@@ -72,6 +72,12 @@ function AppRouterDemo() {
 // 演示组件：Server Components vs Client Components
 function ComponentTypesDemo() {
   const [count, setCount] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  // 防止水合不匹配 - 只在客户端显示时间
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div className="space-y-4">
@@ -87,7 +93,7 @@ function ComponentTypesDemo() {
             <p>• 更小的客户端包体积</p>
             <p>• 无法使用浏览器 API</p>
             <div className="mt-2 p-2 bg-gray-50 dark:bg-gray-800 rounded text-xs">
-              当前时间: {new Date().toLocaleTimeString('zh-CN')}
+              当前时间: {mounted ? new Date().toLocaleTimeString('zh-CN') : '--:--:--'}
             </div>
           </div>
         </div>
@@ -224,7 +230,7 @@ import { getPosts } from '@/lib/database';
 export default async function PostsPage() {
   // 可以直接在服务端获取数据
   const posts = await getPosts();
-  
+
   return (
     <div>
       <h1>博客文章</h1>
@@ -244,12 +250,12 @@ import { useState, useEffect } from 'react';
 
 export default function InteractiveCounter() {
   const [count, setCount] = useState(0);
-  
+
   useEffect(() => {
     // 可以使用浏览器 API
     document.title = \`计数器: \${count}\`;
   }, [count]);
-  
+
   return (
     <div>
       <p>当前计数: {count}</p>
@@ -284,7 +290,7 @@ export default function Error({
     <div className="text-center p-4">
       <h2 className="text-red-600 font-bold mb-2">出现错误！</h2>
       <p className="text-gray-600 mb-4">{error.message}</p>
-      <button 
+      <button
         onClick={reset}
         className="px-4 py-2 bg-blue-600 text-white rounded"
       >
@@ -306,11 +312,11 @@ export default function StreamingPage() {
   return (
     <div>
       <h1>页面标题 (立即显示)</h1>
-      
+
       <Suspense fallback={<div>加载中...</div>}>
         <SlowComponent />
       </Suspense>
-      
+
       <p>其他内容 (立即显示)</p>
     </div>
   );
@@ -484,9 +490,9 @@ export default function StreamingPage() {
           codeComponent={
             <CodeBlock
               code={`// app/blog/[slug]/page.tsx
-export default function BlogPost({ 
+export default function BlogPost({
   params,
-  searchParams 
+  searchParams
 }: {
   params: { slug: string };
   searchParams: { [key: string]: string | string[] | undefined };
@@ -516,7 +522,7 @@ export default function UserPost({
 // 生成静态参数（SSG）
 export async function generateStaticParams() {
   const posts = await fetch('https://api.example.com/posts').then(r => r.json());
-  
+
   return posts.map((post: any) => ({
     slug: post.slug,
   }));
@@ -558,10 +564,10 @@ export default async function PostsPage() {
       next: { revalidate: 3600 }, // 1小时重新验证
     })
   ]);
-  
+
   const postsData = await posts.json();
   const categoriesData = await categories.json();
-  
+
   return (
     <div>
       <h1>文章列表</h1>
@@ -576,11 +582,11 @@ export default async function PostsPage() {
 
 import { use } from 'react';
 
-function PostsClient({ postsPromise }: { 
-  postsPromise: Promise<Post[]> 
+function PostsClient({ postsPromise }: {
+  postsPromise: Promise<Post[]>
 }) {
   const posts = use(postsPromise); // React 18+ use 钩子
-  
+
   return (
     <ul>
       {posts.map(post => (
@@ -626,37 +632,37 @@ import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  
+
   // 检查是否为受保护的路由
   const protectedRoutes = ['/dashboard', '/admin', '/profile'];
-  const isProtectedRoute = protectedRoutes.some(route => 
+  const isProtectedRoute = protectedRoutes.some(route =>
     pathname.startsWith(route)
   );
-  
+
   if (isProtectedRoute) {
     // 检查认证状态
     const token = request.cookies.get('auth-token');
-    
+
     if (!token) {
       // 未认证，重定向到登录页
       return NextResponse.redirect(new URL('/login', request.url));
     }
-    
+
     // 管理员路由权限检查
     if (pathname.startsWith('/admin')) {
       const userRole = request.cookies.get('user-role')?.value;
-      
+
       if (userRole !== 'admin') {
         return NextResponse.redirect(new URL('/dashboard', request.url));
       }
     }
   }
-  
+
   // 添加自定义响应头
   const response = NextResponse.next();
   response.headers.set('X-Pathname', pathname);
   response.headers.set('X-Timestamp', new Date().toISOString());
-  
+
   return response;
 }
 
@@ -674,14 +680,14 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   // 验证 API 密钥
   const apiKey = request.headers.get('X-API-Key');
-  
+
   if (!apiKey || apiKey !== process.env.API_SECRET) {
     return NextResponse.json(
       { error: 'Unauthorized' },
       { status: 401 }
     );
   }
-  
+
   // 处理请求
   return NextResponse.json({ message: 'Success' });
 }`}
@@ -849,7 +855,7 @@ export default async function SSRPage() {
     cache: 'no-store' // 不缓存，每次都重新获取
   });
   const posts = await response.json();
-  
+
   return (
     <div>
       <h1>最新文章 (SSR)</h1>
@@ -868,7 +874,7 @@ export default async function SSRPage() {
 export default async function SSGPage() {
   const response = await fetch('https://api.example.com/posts');
   const posts = await response.json();
-  
+
   return (
     <div>
       <h1>文章列表 (SSG)</h1>
@@ -885,7 +891,7 @@ export default async function SSGPage() {
 // 动态路由的静态生成
 export async function generateStaticParams() {
   const posts = await fetch('https://api.example.com/posts').then(r => r.json());
-  
+
   return posts.map((post) => ({
     slug: post.slug,
   }));
@@ -897,7 +903,7 @@ export default async function ISRPage() {
     next: { revalidate: 3600 } // 1小时后重新验证
   });
   const posts = await response.json();
-  
+
   return (
     <div>
       <h1>新闻文章 (ISR)</h1>
@@ -921,7 +927,7 @@ import { useState, useEffect } from 'react';
 export default function CSRPage() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
     fetch('/api/posts')
       .then(res => res.json())
@@ -930,9 +936,9 @@ export default function CSRPage() {
         setLoading(false);
       });
   }, []);
-  
+
   if (loading) return <div>加载中...</div>;
-  
+
   return (
     <div>
       <h1>用户动态 (CSR)</h1>
@@ -1054,7 +1060,7 @@ export default function CSRPage() {
 export default async function ProductPage({ params }: { params: { id: string } }) {
   // 每次请求时获取数据
   const product = await getProduct(params.id);
-  
+
   return <ProductDetails product={product} />;
 }
 
@@ -1069,14 +1075,14 @@ export async function generateStaticParams() {
 export default async function StaticProductPage({ params }: { params: { id: string } }) {
   // 构建时生成静态页面
   const product = await getProduct(params.id);
-  
+
   return <ProductDetails product={product} />;
 }
 
 // ISR 示例 (Pages Router)
 export async function getStaticProps() {
   const data = await fetchData();
-  
+
   return {
     props: { data },
     revalidate: 60, // 60秒后重新生成
@@ -1161,7 +1167,7 @@ export default async function PostsPage() {
     fetch('https://api.example.com/posts').then(res => res.json()),
     fetch('https://api.example.com/categories').then(res => res.json())
   ]);
-  
+
   return (
     <div>
       <h1>博客文章</h1>
@@ -1178,7 +1184,7 @@ async function getPosts() {
     // cache: 'no-store', // 不缓存
     // next: { revalidate: 60 } // 60秒重新验证
   });
-  
+
   return res.json();
 }
 
@@ -1189,7 +1195,7 @@ import { use } from 'react';
 
 function ClientPosts({ postsPromise }: { postsPromise: Promise<Post[]> }) {
   const posts = use(postsPromise); // React 18+ use 钩子
-  
+
   return (
     <ul>
       {posts.map(post => (
@@ -1227,22 +1233,22 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const page = parseInt(searchParams.get('page') || '1');
-  
+
   const users = await prisma.user.findMany({
     skip: (page - 1) * 10,
     take: 10
   });
-  
+
   return NextResponse.json({ users, page });
 }
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  
+
   const user = await prisma.user.create({
     data: { name: body.name, email: body.email }
   });
-  
+
   return NextResponse.json(user, { status: 201 });
 }
 
@@ -1262,7 +1268,7 @@ const typeDefs = \`
     name: String!
     email: String!
   }
-  
+
   type Query {
     users: [User!]!
   }
@@ -1299,10 +1305,10 @@ import useSWR from 'swr';
 
 function UsersComponent() {
   const { data, error } = useSWR('/api/users', fetcher);
-  
+
   if (error) return <div>Failed to load</div>;
   if (!data) return <div>Loading...</div>;
-  
+
   return <div>{data.users.map(user => ...)}</div>;
 }`}
               language="tsx"
@@ -1380,7 +1386,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
-    
+
     const users = await prisma.user.findMany({
       skip: (page - 1) * limit,
       take: limit,
@@ -1391,7 +1397,7 @@ export async function GET(request: NextRequest) {
         createdAt: true,
       },
     });
-    
+
     return NextResponse.json({
       success: true,
       data: users,
@@ -1414,7 +1420,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { name, email } = body;
-    
+
     // 验证输入
     if (!name || !email) {
       return NextResponse.json(
@@ -1422,12 +1428,12 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    
+
     // 创建用户
     const user = await prisma.user.create({
       data: { name, email },
     });
-    
+
     return NextResponse.json(
       { success: true, data: user },
       { status: 201 }
@@ -1456,14 +1462,14 @@ export async function GET(
         },
       },
     });
-    
+
     if (!user) {
       return NextResponse.json(
         { success: false, error: '用户不存在' },
         { status: 404 }
       );
     }
-    
+
     return NextResponse.json({ success: true, data: user });
   } catch (error) {
     return NextResponse.json(
@@ -1482,14 +1488,14 @@ export function middleware(request: NextRequest) {
   // API 路由的 CORS 处理
   if (request.nextUrl.pathname.startsWith('/api/')) {
     const response = NextResponse.next();
-    
+
     response.headers.set('Access-Control-Allow-Origin', '*');
     response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    
+
     return response;
   }
-  
+
   return NextResponse.next();
 }
 
@@ -1513,27 +1519,27 @@ export const config = {
 function measurePerformance() {
   // 获取导航时序
   const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-  
+
   const metrics = {
     // DNS 解析时间
     dnsLookup: navigation.domainLookupEnd - navigation.domainLookupStart,
-    
+
     // TCP 连接时间
     tcpConnect: navigation.connectEnd - navigation.connectStart,
-    
+
     // 请求响应时间
     requestResponse: navigation.responseEnd - navigation.requestStart,
-    
+
     // DOM 解析时间
     domParsing: navigation.domInteractive - navigation.responseEnd,
-    
+
     // 资源加载时间
     resourceLoad: navigation.loadEventStart - navigation.domContentLoadedEventEnd,
-    
+
     // 总加载时间
     totalLoad: navigation.loadEventEnd - navigation.navigationStart
   };
-  
+
   return metrics;
 }
 
@@ -1570,7 +1576,7 @@ function monitorNetworkRequests() {
       }
     });
   });
-  
+
   observer.observe({ entryTypes: ['resource'] });
 }
 
@@ -1581,23 +1587,23 @@ const renderingModeMetrics = {
     cons: ['服务器负载高', 'TTFB 较慢'],
     典型指标: {
       TTFB: '200-500ms',
-      FCP: '200-400ms', 
+      FCP: '200-400ms',
       LCP: '400-800ms',
       TTI: '600-1200ms'
     }
   },
-  
+
   SSG: {
     pros: ['最快的加载速度', 'CDN 友好', '低服务器负载'],
     cons: ['数据可能过时', '构建时间长'],
     典型指标: {
       TTFB: '50-150ms',
       FCP: '100-300ms',
-      LCP: '200-500ms', 
+      LCP: '200-500ms',
       TTI: '300-600ms'
     }
   },
-  
+
   CSR: {
     pros: ['动态交互', '减少服务器负载'],
     cons: ['慢首屏渲染', 'SEO 困难'],
@@ -1634,7 +1640,7 @@ function OptimizedImage() {
       height={600}
       priority // 优先加载
       placeholder="blur" // 模糊占位符
-      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQ..." 
+      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQ..."
       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
     />
   );
@@ -1861,7 +1867,7 @@ const ConditionalComponent = dynamic(
 
 function Dashboard() {
   const [showChart, setShowChart] = useState(false);
-  
+
   return (
     <div>
       <h1>仪表板</h1>
@@ -1880,14 +1886,14 @@ import Link from 'next/link';
 function Navigation() {
   return (
     <nav>
-      <Link 
-        href="/about" 
+      <Link
+        href="/about"
         prefetch={true} // 预取页面
       >
         关于我们
       </Link>
-      <Link 
-        href="/heavy-page" 
+      <Link
+        href="/heavy-page"
         prefetch={false} // 禁用预取
       >
         重型页面
@@ -1919,22 +1925,22 @@ function Navigation() {
         <section>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">在线代码编辑器</h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6">
-            尝试修改下面的代码，体验 Next.js 15 的特性：
+            尝试修改下面的代码，体验 Next.js 15 的特性。代码将实时渲染在下方的预览区域：
           </p>
 
           <CodeEditor
-            title="Next.js 15 组件示例"
+            title="Next.js 15 组件示例 - 可预览沙箱"
             defaultCode={`'use client';
 
 import { useState } from 'react';
 
 export default function MyComponent() {
   const [message, setMessage] = useState('Hello Next.js 15!');
-  
+
   return (
     <div className="p-4 border rounded">
       <h1 className="text-2xl font-bold mb-4">{message}</h1>
-      <button 
+      <button
         onClick={() => setMessage('你修改了代码！')}
         className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
       >
@@ -1945,8 +1951,7 @@ export default function MyComponent() {
 }`}
             language="tsx"
             height="300px"
-            onRun={code => console.log('执行代码:', code)}
-            showConsole={true}
+            renderMode="sandbox"
           />
         </section>
 

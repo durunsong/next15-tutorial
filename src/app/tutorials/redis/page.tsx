@@ -415,8 +415,8 @@ export class CacheManager {
   }
 
   static async set<T>(
-    key: string, 
-    value: T, 
+    key: string,
+    value: T,
     options?: { ex?: number; px?: number }
   ): Promise<boolean> {
     try {
@@ -493,21 +493,21 @@ const topUsers = await redis.zrange('leaderboard', 0, 2, { withScores: true });`
 // 1. Cache-First 策略
 export async function getCachedUser(id: number) {
   const cacheKey = \`user:\${id}\`;
-  
+
   // 先尝试从缓存获取
   const cached = await redis.get(cacheKey);
   if (cached) {
     return { data: cached, source: 'cache' };
   }
-  
+
   // 缓存未命中，从数据库获取
   const user = await prisma.user.findUnique({ where: { id } });
-  
+
   if (user) {
     // 缓存数据，5分钟过期
     await redis.set(cacheKey, user, { ex: 300 });
   }
-  
+
   return { data: user, source: 'database' };
 }
 
@@ -518,10 +518,10 @@ export async function updateUser(id: number, data: Partial<User>) {
     where: { id },
     data
   });
-  
+
   // 删除缓存，下次读取时重新缓存
   await redis.del(\`user:\${id}\`);
-  
+
   return updatedUser;
 }
 
@@ -530,7 +530,7 @@ export async function createUserWithCache(userData: CreateUserInput) {
   // 同时写入数据库和缓存
   const user = await prisma.user.create({ data: userData });
   await redis.set(\`user:\${user.id}\`, user, { ex: 300 });
-  
+
   return user;
 }
 
@@ -542,7 +542,7 @@ export async function warmupCache() {
     take: 10,
     include: { author: true }
   });
-  
+
   // 批量缓存热门文章
   const pipeline = redis.pipeline();
   popularPosts.forEach(post => {
@@ -562,9 +562,9 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const page = parseInt(searchParams.get('page') || '1');
   const limit = parseInt(searchParams.get('limit') || '10');
-  
+
   const cacheKey = \`posts:page:\${page}:limit:\${limit}\`;
-  
+
   try {
     // 尝试从缓存获取
     const cached = await redis.get(cacheKey);
@@ -574,7 +574,7 @@ export async function GET(request: NextRequest) {
         source: 'cache'
       });
     }
-    
+
     // 从数据库获取
     const posts = await prisma.post.findMany({
       skip: (page - 1) * limit,
@@ -582,10 +582,10 @@ export async function GET(request: NextRequest) {
       include: { author: true },
       orderBy: { createdAt: 'desc' }
     });
-    
+
     // 缓存结果，5分钟过期
     await redis.set(cacheKey, posts, { ex: 300 });
-    
+
     return NextResponse.json({
       data: posts,
       source: 'database'
@@ -601,28 +601,28 @@ export async function GET(request: NextRequest) {
 // app/api/stats/route.ts
 export async function GET() {
   const cacheKey = 'site:stats';
-  
+
   // 使用 Redis 作为计数器
   const [totalViews, totalUsers] = await Promise.all([
     redis.get('stats:total_views') || 0,
     redis.get('stats:total_users') || 0,
   ]);
-  
+
   // 实时统计也可以缓存短时间
   const cachedStats = await redis.get(cacheKey);
   if (cachedStats) {
     return NextResponse.json(cachedStats);
   }
-  
+
   const stats = {
     totalViews,
     totalUsers,
     timestamp: new Date().toISOString()
   };
-  
+
   // 缓存1分钟
   await redis.set(cacheKey, stats, { ex: 60 });
-  
+
   return NextResponse.json(stats);
 }`;
 
@@ -631,18 +631,18 @@ export async function GET() {
 // 1. 批量操作使用 Pipeline
 export async function batchUpdateCache(updates: Array<{key: string, value: unknown}>) {
   const pipeline = redis.pipeline();
-  
+
   updates.forEach(({ key, value }) => {
     pipeline.set(key, value, { ex: 300 });
   });
-  
+
   // 一次性执行所有命令
   await pipeline.exec();
 }
 
 // 2. 缓存穿透保护
 export async function getCachedDataWithNullProtection<T>(
-  key: string, 
+  key: string,
   fetchData: () => Promise<T | null>
 ): Promise<T | null> {
   // 检查缓存
@@ -650,13 +650,13 @@ export async function getCachedDataWithNullProtection<T>(
   if (cached !== null) {
     return cached === 'NULL' ? null : cached as T;
   }
-  
+
   // 获取数据
   const data = await fetchData();
-  
+
   // 即使是 null 也要缓存，防止缓存穿透
   await redis.set(key, data || 'NULL', { ex: 60 });
-  
+
   return data;
 }
 
@@ -669,16 +669,16 @@ export async function getCachedDataWithLock<T>(
   // 检查缓存
   const cached = await redis.get(key);
   if (cached) return cached as T;
-  
+
   // 尝试获取锁
   const lockAcquired = await redis.set(lockKey, '1', { nx: true, ex: 10 });
-  
+
   if (lockAcquired) {
     try {
       // 再次检查缓存（双重检查）
       const recheck = await redis.get(key);
       if (recheck) return recheck as T;
-      
+
       // 获取数据并缓存
       const data = await fetchData();
       await redis.set(key, data, { ex: 300 });
@@ -698,7 +698,7 @@ export async function getCachedDataWithLock<T>(
 export async function invalidateRelatedCache(pattern: string) {
   // 获取匹配的键
   const keys = await redis.keys(pattern);
-  
+
   if (keys.length > 0) {
     // 批量删除
     await redis.del(...keys);
@@ -711,14 +711,14 @@ export async function updatePost(id: number, data: Record<string, unknown>) {
     where: { id },
     data
   });
-  
+
   // 删除相关缓存
   await Promise.all([
     redis.del(\`post:\${id}\`),
     invalidateRelatedCache('posts:page:*'),
     invalidateRelatedCache('posts:author:*')
   ]);
-  
+
   return updatedPost;
 }`;
 
@@ -902,22 +902,22 @@ import { redis } from '@/lib/redis';
 async function manageUserSession() {
   const sessionId = 'session_' + Math.random().toString(36);
   const userId = 123;
-  
+
   // 创建会话，30分钟过期
   await redis.set(sessionId, {
     userId,
     loginTime: new Date().toISOString(),
     userAgent: 'Mozilla/5.0...'
   }, { ex: 1800 });
-  
+
   console.log('会话已创建:', sessionId);
-  
+
   // 验证会话
   const session = await redis.get(sessionId);
   if (session) {
     console.log('会话有效:', session);
   }
-  
+
   return sessionId;
 }
 
@@ -925,40 +925,40 @@ async function manageUserSession() {
 async function trackPageViews(pageId: string) {
   const dailyKey = \`views:\${pageId}:\${new Date().toDateString()}\`;
   const totalKey = \`views:\${pageId}:total\`;
-  
+
   // 使用 pipeline 批量操作
   const pipeline = redis.pipeline();
   pipeline.incr(dailyKey);
   pipeline.incr(totalKey);
   pipeline.expire(dailyKey, 86400); // 每日统计保留24小时
-  
+
   const results = await pipeline.exec();
-  
+
   console.log('今日访问量:', results[0]);
   console.log('总访问量:', results[1]);
-  
+
   return results;
 }
 
 // 练习 3: 排行榜功能
 async function updateLeaderboard(userId: string, score: number) {
   const leaderboardKey = 'game:leaderboard';
-  
+
   // 添加或更新分数
   await redis.zadd(leaderboardKey, { score, member: userId });
-  
+
   // 获取前10名
-  const topPlayers = await redis.zrange(leaderboardKey, 0, 9, { 
-    withScores: true, 
+  const topPlayers = await redis.zrange(leaderboardKey, 0, 9, {
+    withScores: true,
     rev: true // 降序排列
   });
-  
+
   console.log('排行榜前10名:', topPlayers);
-  
+
   // 获取用户排名
   const userRank = await redis.zrevrank(leaderboardKey, userId);
   console.log(\`用户 \${userId} 的排名:, userRank !== null ? userRank + 1 : '未上榜'\`);
-  
+
   return { topPlayers, userRank };
 }
 
@@ -975,7 +975,7 @@ runExercises().then(() => {
             language="typescript"
             height="600px"
             onRun={code => console.log('执行 Redis 代码:', code)}
-            showConsole={true}
+            showConsole
           />
         </section>
 

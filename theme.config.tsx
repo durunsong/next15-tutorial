@@ -1,5 +1,3 @@
-import React from 'react';
-
 const config = {
   // 网站logo和标题
   logo: (
@@ -135,11 +133,7 @@ const config = {
   // Banner 横幅（可选）
   banner: {
     key: 'next15-tutorial-launch',
-    text: (
-      <a href="/tutorials" target="_blank">
-        🎉 Next.js 15 教程项目正式发布！立即查看教程 →
-      </a>
-    ),
+    text: <a href="/tutorials">🎉 Next.js 15 教程项目正式发布！立即查看教程 →</a>,
   },
 
   // 主要颜色（主题色）

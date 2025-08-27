@@ -387,7 +387,7 @@ export const useCounterStore = create<CounterState>((set) => ({
 // 在组件中使用
 function Counter() {
   const { count, increment, decrement, reset } = useCounterStore();
-  
+
   return (
     <div>
       <p>计数: {count}</p>
@@ -420,22 +420,22 @@ interface AppState {
   // 用户状态
   user: User | null;
   setUser: (user: User | null) => void;
-  
+
   // 待办事项状态
   todos: Todo[];
   addTodo: (text: string) => void;
   toggleTodo: (id: number) => void;
   deleteTodo: (id: number) => void;
   clearCompleted: () => void;
-  
+
   // UI 状态
   isLoading: boolean;
   setLoading: (loading: boolean) => void;
-  
+
   // 主题状态
   theme: 'light' | 'dark';
   toggleTheme: () => void;
-  
+
   // 计算属性
   completedTodos: Todo[];
   pendingTodos: Todo[];
@@ -455,10 +455,10 @@ export const useAppStore = create<AppState>()(
         todos: [],
         isLoading: false,
         theme: 'light',
-        
+
         // 用户相关操作
         setUser: (user) => set({ user }),
-        
+
         // 待办事项操作
         addTodo: (text) => set((state) => ({
           todos: [
@@ -471,38 +471,38 @@ export const useAppStore = create<AppState>()(
             },
           ],
         })),
-        
+
         toggleTodo: (id) => set((state) => ({
           todos: state.todos.map(todo =>
             todo.id === id ? { ...todo, completed: !todo.completed } : todo
           ),
         })),
-        
+
         deleteTodo: (id) => set((state) => ({
           todos: state.todos.filter(todo => todo.id !== id),
         })),
-        
+
         clearCompleted: () => set((state) => ({
           todos: state.todos.filter(todo => !todo.completed),
         })),
-        
+
         // UI 状态操作
         setLoading: (isLoading) => set({ isLoading }),
-        
+
         // 主题操作
         toggleTheme: () => set((state) => ({
           theme: state.theme === 'light' ? 'dark' : 'light',
         })),
-        
+
         // 计算属性（getters）
         get completedTodos() {
           return get().todos.filter(todo => todo.completed);
         },
-        
+
         get pendingTodos() {
           return get().todos.filter(todo => !todo.completed);
         },
-        
+
         get todoStats() {
           const todos = get().todos;
           return {
@@ -615,7 +615,7 @@ const useDevtoolsStore = create(
 function TodoList() {
   const { todos, addTodo, toggleTodo, deleteTodo } = useAppStore();
   const [newTodo, setNewTodo] = useState('');
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (newTodo.trim()) {
@@ -623,7 +623,7 @@ function TodoList() {
       setNewTodo('');
     }
   };
-  
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -634,7 +634,7 @@ function TodoList() {
         />
         <button type="submit">添加</button>
       </form>
-      
+
       <ul>
         {todos.map((todo) => (
           <li key={todo.id}>
@@ -656,7 +656,7 @@ function TodoList() {
 function TodoStats() {
   // 只订阅 todoStats，其他状态变化不会触发重渲染
   const stats = useAppStore((state) => state.todoStats);
-  
+
   return (
     <div>
       <p>总计: {stats.total}</p>
@@ -674,9 +674,9 @@ function UserProfile() {
     (state) => ({ user: state.user, setUser: state.setUser }),
     shallow
   );
-  
+
   if (!user) return <div>请登录</div>;
-  
+
   return (
     <div>
       <h2>{user.name}</h2>
@@ -688,7 +688,7 @@ function UserProfile() {
 // 4. 异步操作
 function DataFetcher() {
   const { setLoading, setUser } = useAppStore();
-  
+
   const fetchUser = async () => {
     setLoading(true);
     try {
@@ -701,15 +701,15 @@ function DataFetcher() {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     fetchUser();
   }, []);
-  
+
   const isLoading = useAppStore((state) => state.isLoading);
-  
+
   if (isLoading) return <div>加载中...</div>;
-  
+
   return <UserProfile />;
 }`;
 
@@ -730,11 +730,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 // stores/useCartStore.ts
 export const useCartStore = create<CartState>((set, get) => ({
   items: [],
-  addItem: (item) => set((state) => ({ 
-    items: [...state.items, item] 
+  addItem: (item) => set((state) => ({
+    items: [...state.items, item]
   })),
-  removeItem: (id) => set((state) => ({ 
-    items: state.items.filter(item => item.id !== id) 
+  removeItem: (id) => set((state) => ({
+    items: state.items.filter(item => item.id !== id)
   })),
 }));
 
@@ -899,7 +899,7 @@ const useTodoStore = create((set) => ({
     }]
   })),
   toggleTodo: (id) => set((state) => ({
-    todos: state.todos.map(todo => 
+    todos: state.todos.map(todo =>
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
     )
   })),
@@ -941,21 +941,21 @@ interface AppState {
   user: User | null;
   cart: CartItem[];
   notifications: Notification[];
-  
+
   // 用户操作
   setUser: (user: User | null) => void;
-  
+
   // 购物车操作
   addToCart: (item: CartItem) => void;
   updateQuantity: (id: number, quantity: number) => void;
   removeFromCart: (id: number) => void;
   clearCart: () => void;
-  
+
   // 通知操作
   addNotification: (message: string, type: string) => void;
   removeNotification: (id: number) => void;
   clearNotifications: () => void;
-  
+
   // 计算属性
   cartTotal: number;
   cartItemCount: number;
@@ -968,25 +968,25 @@ export const useAppStore = create<AppState>()(
         user: null,
         cart: [],
         notifications: [],
-        
+
         setUser: (user) => set({ user }),
-        
+
         addToCart: (item) => set((state) => ({
           cart: [...state.cart, item]
         })),
-        
+
         updateQuantity: (id, quantity) => set((state) => ({
           cart: state.cart.map(item =>
             item.id === id ? { ...item, quantity } : item
           )
         })),
-        
+
         removeFromCart: (id) => set((state) => ({
           cart: state.cart.filter(item => item.id !== id)
         })),
-        
+
         clearCart: () => set({ cart: [] }),
-        
+
         addNotification: (message, type) => set((state) => ({
           notifications: [{
             id: Date.now(),
@@ -995,19 +995,19 @@ export const useAppStore = create<AppState>()(
             timestamp: new Date()
           }, ...state.notifications]
         })),
-        
+
         removeNotification: (id) => set((state) => ({
           notifications: state.notifications.filter(n => n.id !== id)
         })),
-        
+
         clearNotifications: () => set({ notifications: [] }),
-        
+
         get cartTotal() {
-          return get().cart.reduce((sum, item) => 
+          return get().cart.reduce((sum, item) =>
             sum + (item.price * item.quantity), 0
           );
         },
-        
+
         get cartItemCount() {
           return get().cart.reduce((sum, item) => sum + item.quantity, 0);
         },
@@ -1089,17 +1089,17 @@ interface BlogState {
   posts: Post[];
   filter: 'all' | 'published' | 'draft';
   searchTerm: string;
-  
+
   // 文章操作
   addPost: (post: Omit<Post, 'id' | 'createdAt'>) => void;
   updatePost: (id: number, updates: Partial<Post>) => void;
   deletePost: (id: number) => void;
   togglePublished: (id: number) => void;
-  
+
   // 过滤和搜索
   setFilter: (filter: 'all' | 'published' | 'draft') => void;
   setSearchTerm: (term: string) => void;
-  
+
   // 计算属性
   filteredPosts: Post[];
   stats: {
@@ -1135,7 +1135,7 @@ export const useBlogStore = create<BlogState>()(
         ],
         filter: 'all',
         searchTerm: '',
-        
+
         addPost: (postData) => set((state) => ({
           posts: [
             ...state.posts,
@@ -1146,54 +1146,54 @@ export const useBlogStore = create<BlogState>()(
             },
           ],
         })),
-        
+
         updatePost: (id, updates) => set((state) => ({
           posts: state.posts.map(post =>
             post.id === id ? { ...post, ...updates } : post
           ),
         })),
-        
+
         deletePost: (id) => set((state) => ({
           posts: state.posts.filter(post => post.id !== id),
         })),
-        
+
         togglePublished: (id) => set((state) => ({
           posts: state.posts.map(post =>
             post.id === id ? { ...post, published: !post.published } : post
           ),
         })),
-        
+
         setFilter: (filter) => set({ filter }),
         setSearchTerm: (searchTerm) => set({ searchTerm }),
-        
+
         get filteredPosts() {
           const { posts, filter, searchTerm } = get();
-          
+
           let filtered = posts;
-          
+
           // 应用状态过滤
           if (filter === 'published') {
             filtered = filtered.filter(post => post.published);
           } else if (filter === 'draft') {
             filtered = filtered.filter(post => !post.published);
           }
-          
+
           // 应用搜索过滤
           if (searchTerm) {
             filtered = filtered.filter(post =>
               post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
               post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              post.tags.some(tag => 
+              post.tags.some(tag =>
                 tag.toLowerCase().includes(searchTerm.toLowerCase())
               )
             );
           }
-          
-          return filtered.sort((a, b) => 
+
+          return filtered.sort((a, b) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           );
         },
-        
+
         get stats() {
           const posts = get().posts;
           return {
@@ -1227,7 +1227,7 @@ function BlogApp() {
     togglePublished,
     deletePost,
   } = useBlogStore();
-  
+
   const handleAddPost = () => {
     addPost({
       title: '新文章标题',
@@ -1237,12 +1237,12 @@ function BlogApp() {
       tags: ['新标签'],
     });
   };
-  
+
   console.log('博客统计:', stats);
   console.log('当前过滤器:', filter);
   console.log('搜索词:', searchTerm);
   console.log('过滤后的文章:', filteredPosts);
-  
+
   return {
     stats,
     filteredPosts,
@@ -1269,7 +1269,7 @@ console.log('添加文章后的统计:', useBlogStore.getState().stats);`}
             language="typescript"
             height="700px"
             onRun={code => console.log('执行 Zustand 代码:', code)}
-            showConsole={true}
+            showConsole
           />
         </section>
 

@@ -1,18 +1,8 @@
 'use client';
 
 import { Check, Copy, Play } from 'lucide-react';
-import Prism from 'prismjs';
-import 'prismjs/components/prism-bash';
-import 'prismjs/components/prism-css';
-import 'prismjs/components/prism-javascript';
-import 'prismjs/components/prism-json';
-import 'prismjs/components/prism-jsx';
-import 'prismjs/components/prism-sql';
-import 'prismjs/components/prism-tsx';
-import 'prismjs/components/prism-typescript';
-import 'prismjs/themes/prism-tomorrow.css';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface CodeBlockProps {
   code: string;
@@ -32,6 +22,51 @@ export function CodeBlock({
   onRun,
 }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
+  const [highlightedCode, setHighlightedCode] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // 动态导入 Prism.js 以避免 SSR 水合不匹配
+    const loadPrism = async () => {
+      try {
+        const Prism = (await import('prismjs')).default;
+
+        // 动态导入所需的语言组件 - 使用具体的导入路径避免表达式警告
+        const importPromises = [
+          'prismjs/components/prism-bash',
+          'prismjs/components/prism-css',
+          'prismjs/components/prism-javascript',
+          'prismjs/components/prism-json',
+          'prismjs/components/prism-jsx',
+          'prismjs/components/prism-sql',
+          'prismjs/components/prism-tsx',
+          'prismjs/components/prism-typescript',
+        ].map(component => import(component as any));
+
+        await Promise.all(importPromises);
+
+        // 加载主题
+        await import('prismjs/themes/prism-tomorrow.css' as any);
+
+        // 执行语法高亮
+        const highlighted = Prism.highlight(
+          code,
+          Prism.languages[language] || Prism.languages.plaintext,
+          language
+        );
+
+        setHighlightedCode(highlighted);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Prism.js 加载失败:', error);
+        // 如果加载失败，直接显示原始代码
+        setHighlightedCode(code);
+        setIsLoading(false);
+      }
+    };
+
+    loadPrism();
+  }, [code, language]);
 
   const handleCopy = async () => {
     try {
@@ -42,12 +77,6 @@ export function CodeBlock({
       console.error('复制失败:', err);
     }
   };
-
-  const highlightedCode = Prism.highlight(
-    code,
-    Prism.languages[language] || Prism.languages.plaintext,
-    language
-  );
 
   return (
     <div className="relative group">
@@ -63,10 +92,15 @@ export function CodeBlock({
         <pre
           className={`bg-gray-900 text-gray-100 p-4 overflow-x-auto text-sm ${filename ? 'rounded-t-none' : 'rounded-t-lg'} rounded-b-lg`}
         >
-          <code
-            className={`language-${language}`}
-            dangerouslySetInnerHTML={{ __html: highlightedCode }}
-          />
+          {isLoading ? (
+            // 加载中显示原始代码，避免水合不匹配
+            <code className={`language-${language}`}>{code}</code>
+          ) : (
+            <code
+              className={`language-${language}`}
+              dangerouslySetInnerHTML={{ __html: highlightedCode }}
+            />
+          )}
         </pre>
 
         {/* 操作按钮 */}

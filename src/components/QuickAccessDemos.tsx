@@ -115,8 +115,6 @@ export function QuickAccessDemos() {
 
               <Link
                 href={demo.url}
-                target="_blank"
-                rel="noopener noreferrer"
                 className={`w-full px-3 py-2 ${colorClasses.button} text-white rounded inline-flex items-center justify-center space-x-2 text-sm transition-colors`}
               >
                 <ExternalLink className="h-4 w-4" />

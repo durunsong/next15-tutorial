@@ -464,7 +464,7 @@ export async function GET() {
         }
       }
     });
-    
+
     return NextResponse.json(users);
   } catch (error) {
     return NextResponse.json(
@@ -477,11 +477,11 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const { name, email } = await request.json();
-    
+
     const user = await prisma.user.create({
       data: { name, email }
     });
-    
+
     return NextResponse.json(user, { status: 201 });
   } catch (error) {
     return NextResponse.json(
@@ -504,14 +504,14 @@ export async function GET(
         profile: true
       }
     });
-    
+
     if (!user) {
       return NextResponse.json(
         { error: '用户不存在' },
         { status: 404 }
       );
     }
-    
+
     return NextResponse.json(user);
   } catch (error) {
     return NextResponse.json(
@@ -721,7 +721,7 @@ const stats = await prisma.post.aggregate({
 // 3. 事务操作
 const result = await prisma.$transaction([
   prisma.user.create({ data: userData }),
-  prisma.post.updateMany({ 
+  prisma.post.updateMany({
     where: { authorId: "user-id" },
     data: { published: true }
   })
@@ -903,7 +903,7 @@ async function createUserWithPost() {
         email: 'newuser@example.com'
       }
     });
-    
+
     const post = await tx.post.create({
       data: {
         title: '我的第一篇文章',
@@ -912,10 +912,10 @@ async function createUserWithPost() {
         published: true
       }
     });
-    
+
     return { user, post };
   });
-  
+
   return result;
 }
 
@@ -944,7 +944,7 @@ async function getPublishedPostsWithAuthors() {
       createdAt: 'desc'
     }
   });
-  
+
   return posts;
 }
 
@@ -953,7 +953,7 @@ console.log('Prisma 查询示例已准备就绪！');`}
             language="typescript"
             height="500px"
             onRun={code => console.log('执行 Prisma 查询:', code)}
-            showConsole={true}
+            showConsole
           />
         </section>
 

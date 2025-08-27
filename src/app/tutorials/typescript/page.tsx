@@ -330,7 +330,7 @@ export default function ProductPage({ params, searchParams }: PageProps) {
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
-  
+
   return NextResponse.json({ id });
 }
 
@@ -538,7 +538,7 @@ type MouseEvent = EventName<"click" | "hover">; // "onClick" | "onHover"`}
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "moduleResolution": "node",
-    
+
     // 严格类型检查 - 推荐全部启用
     "strict": true,
     "noImplicitAny": true,
@@ -547,17 +547,17 @@ type MouseEvent = EventName<"click" | "hover">; // "onClick" | "onHover"`}
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
-    
+
     // 代码质量检查
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "exactOptionalPropertyTypes": true,
-    
+
     // 模块导入
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    
+
     // 路径映射
     "baseUrl": ".",
     "paths": {
@@ -567,7 +567,7 @@ type MouseEvent = EventName<"click" | "hover">; // "onClick" | "onHover"`}
       "@/types/*": ["./src/types/*"],
       "@/hooks/*": ["./src/hooks/*"]
     },
-    
+
     // Next.js 专用配置
     "allowJs": true,
     "skipLibCheck": true,
@@ -711,19 +711,19 @@ interface User {
 // 创建一个用户验证函数
 function validateUser(user: User): string[] {
   const errors: string[] = [];
-  
+
   if (!user.name || user.name.length < 2) {
     errors.push('姓名至少需要 2 个字符');
   }
-  
+
   if (!user.email.includes('@')) {
     errors.push('邮箱格式不正确');
   }
-  
+
   if (user.age !== undefined && user.age < 0) {
     errors.push('年龄不能为负数');
   }
-  
+
   return errors;
 }
 
@@ -742,7 +742,7 @@ console.log('验证结果:', validationErrors.length === 0 ? '通过' : validati
             language="typescript"
             height="400px"
             onRun={code => console.log('执行 TypeScript 代码:', code)}
-            showConsole={true}
+            showConsole
           />
         </section>
 

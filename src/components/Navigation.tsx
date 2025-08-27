@@ -1,20 +1,18 @@
 'use client';
 
-import { Avatar, Button, Dropdown, message } from 'antd';
 import type { MenuProps } from 'antd';
-import { LogIn, LogOut, Menu, Moon, Sun, User, UserCircle, X } from 'lucide-react';
+import { Avatar, Button, Dropdown, message } from 'antd';
+import { LogIn, LogOut, Menu, User, UserCircle, X } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
-import { useTheme } from 'next-themes';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import AuthModal from '@/components/AuthModal';
 import { useAuthStore } from '@/store/authStore';
 
 const navigationItems = [
-  { name: '技术栈', href: '/tech-stack' },
   { name: 'JSX 语法', href: '/tutorials/jsx-basics' },
   { name: 'Next.js 基础', href: '/tutorials/nextjs-basics' },
   { name: 'TypeScript', href: '/tutorials/typescript' },
@@ -29,8 +27,9 @@ export function Navigation() {
   const [mounted, setMounted] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalTab, setAuthModalTab] = useState<'login' | 'register'>('login');
-  const { theme, setTheme } = useTheme();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const { user, isAuthenticated, logout } = useAuthStore();
 
   // 防止水合不匹配错误
@@ -38,9 +37,22 @@ export function Navigation() {
     setMounted(true);
   }, []);
 
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
-  };
+  // 监听URL参数，自动打开认证弹窗
+  useEffect(() => {
+    if (!mounted || !searchParams) return;
+
+    const authParam = searchParams.get('auth');
+    if (authParam === 'login' || authParam === 'register') {
+      setAuthModalTab(authParam);
+      setAuthModalOpen(true);
+
+      // 清理URL参数，但保留returnUrl
+      const newSearchParams = new URLSearchParams(searchParams.toString());
+      newSearchParams.delete('auth');
+      const newUrl = `${pathname}${newSearchParams.toString() ? `?${newSearchParams.toString()}` : ''}`;
+      router.replace(newUrl, { scroll: false });
+    }
+  }, [mounted, searchParams, pathname, router]);
 
   const isActive = (href: string) => {
     if (!pathname) return false;
@@ -54,6 +66,13 @@ export function Navigation() {
   const handleLoginSuccess = (user: Record<string, unknown>) => {
     const username = (user as { username?: string })?.username || '用户';
     message.success(`欢迎回来，${username}!`);
+
+    // 检查是否有返回URL
+    const returnUrl = searchParams?.get('returnUrl');
+    if (returnUrl) {
+      // 清理URL参数并跳转到返回URL
+      router.push(returnUrl);
+    }
     // AuthModal内部已经处理了状态更新
   };
 
@@ -209,42 +228,11 @@ export function Navigation() {
                   </Button>
                 </>
               )}
-
-              <button
-                onClick={toggleTheme}
-                className="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                aria-label="切换主题"
-              >
-                {mounted ? (
-                  theme === 'dark' ? (
-                    <Sun className="h-5 w-5" />
-                  ) : (
-                    <Moon className="h-5 w-5" />
-                  )
-                ) : (
-                  <div className="h-5 w-5" />
-                )}
-              </button>
             </div>
           </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-2">
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              aria-label="切换主题"
-            >
-              {mounted ? (
-                theme === 'dark' ? (
-                  <Sun className="h-5 w-5" />
-                ) : (
-                  <Moon className="h-5 w-5" />
-                )
-              ) : (
-                <div className="h-5 w-5" />
-              )}
-            </button>
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"

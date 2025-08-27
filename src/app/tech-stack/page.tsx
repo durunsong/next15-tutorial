@@ -158,6 +158,223 @@ const techStack: TechStackItem[] = [
     difficulty: 'beginner',
     color: 'bg-gray-700 text-white',
   },
+  // React 生态
+  {
+    name: 'React 19',
+    description: '声明式 UI 库，构建用户界面的基石',
+    category: 'frontend',
+    icon: Code,
+    features: ['组件化', 'Virtual DOM', 'Hooks', 'Server Components'],
+    officialLink: 'https://react.dev',
+    version: '19.0.0',
+    difficulty: 'intermediate',
+    color: 'bg-cyan-500 text-white',
+  },
+  {
+    name: 'Framer Motion',
+    description: 'React 动画库，轻松创建流畅动画',
+    category: 'frontend',
+    icon: Zap,
+    features: ['手势控制', '拖拽支持', '布局动画', '页面转场'],
+    officialLink: 'https://www.framer.com/motion',
+    version: '10.16.16',
+    difficulty: 'intermediate',
+    color: 'bg-pink-600 text-white',
+  },
+  {
+    name: 'Lucide React',
+    description: '美观的开源图标库',
+    category: 'frontend',
+    icon: Star,
+    features: ['一致设计', '轻量级', '可定制', 'TypeScript 支持'],
+    officialLink: 'https://lucide.dev',
+    version: '0.263.1',
+    difficulty: 'beginner',
+    color: 'bg-indigo-500 text-white',
+  },
+  // 后端和API
+  {
+    name: 'Node.js',
+    description: 'JavaScript 运行时，构建服务端应用',
+    category: 'backend',
+    icon: Settings,
+    features: ['事件驱动', '非阻塞I/O', 'NPM生态', '跨平台'],
+    officialLink: 'https://nodejs.org',
+    version: '20.x',
+    difficulty: 'intermediate',
+    color: 'bg-green-700 text-white',
+  },
+  {
+    name: 'JWT',
+    description: 'JSON Web Token，安全的用户认证方案',
+    category: 'backend',
+    icon: Settings,
+    features: ['无状态认证', '跨域支持', '安全传输', '标准化'],
+    officialLink: 'https://jwt.io',
+    version: '9.0.2',
+    difficulty: 'intermediate',
+    color: 'bg-purple-700 text-white',
+  },
+  {
+    name: 'bcryptjs',
+    description: '密码哈希库，保护用户密码安全',
+    category: 'backend',
+    icon: Settings,
+    features: ['密码加密', '盐值生成', '安全验证', '跨平台'],
+    officialLink: 'https://github.com/dcodeIO/bcrypt.js',
+    version: '2.4.3',
+    difficulty: 'beginner',
+    color: 'bg-red-700 text-white',
+  },
+  // 数据库和缓存
+  {
+    name: 'PostgreSQL',
+    description: '强大的开源关系型数据库',
+    category: 'database',
+    icon: Database,
+    features: ['ACID 事务', 'JSON 支持', '扩展性', '复杂查询'],
+    officialLink: 'https://www.postgresql.org',
+    version: '15.x',
+    difficulty: 'advanced',
+    color: 'bg-blue-800 text-white',
+  },
+  {
+    name: 'Redis',
+    description: '高性能键值存储数据库',
+    category: 'database',
+    icon: Database,
+    features: ['内存存储', '数据结构', '持久化', '分布式'],
+    tutorialLink: '/tutorials/redis',
+    officialLink: 'https://redis.io',
+    version: '7.x',
+    difficulty: 'intermediate',
+    color: 'bg-red-500 text-white',
+  },
+  // 开发工具
+  {
+    name: 'ESLint',
+    description: 'JavaScript 代码质量检查工具',
+    category: 'tools',
+    icon: CheckCircle,
+    features: ['代码检查', '规则定制', '自动修复', '插件生态'],
+    officialLink: 'https://eslint.org',
+    version: '8.x',
+    difficulty: 'beginner',
+    color: 'bg-purple-500 text-white',
+  },
+  {
+    name: 'Prettier',
+    description: '代码格式化工具，统一代码风格',
+    category: 'tools',
+    icon: Code,
+    features: ['自动格式化', '多语言支持', '编辑器集成', '配置简单'],
+    officialLink: 'https://prettier.io',
+    version: '3.0.3',
+    difficulty: 'beginner',
+    color: 'bg-gray-600 text-white',
+  },
+  {
+    name: 'Husky',
+    description: 'Git hooks 工具，提升代码质量',
+    category: 'tools',
+    icon: Settings,
+    features: ['Git 钩子', '提交检查', '自动化', '团队规范'],
+    officialLink: 'https://typicode.github.io/husky',
+    version: '8.0.3',
+    difficulty: 'intermediate',
+    color: 'bg-yellow-600 text-white',
+  },
+  {
+    name: 'Docker',
+    description: '容器化平台，简化部署流程',
+    category: 'tools',
+    icon: Cloud,
+    features: ['容器化', '环境一致', '快速部署', '资源隔离'],
+    officialLink: 'https://www.docker.com',
+    version: '24.x',
+    difficulty: 'advanced',
+    color: 'bg-blue-600 text-white',
+  },
+  // 可视化和图表
+  {
+    name: 'ECharts',
+    description: 'Apache ECharts 数据可视化库',
+    category: 'frontend',
+    icon: Star,
+    features: ['丰富图表', '交互设计', '数据驱动', '响应式'],
+    officialLink: 'https://echarts.apache.org',
+    version: '5.4.3',
+    difficulty: 'intermediate',
+    color: 'bg-orange-500 text-white',
+  },
+  {
+    name: 'G6',
+    description: 'AntV G6 图可视化引擎',
+    category: 'frontend',
+    icon: Star,
+    features: ['关系图', '网络图', '自定义布局', '交互分析'],
+    officialLink: 'https://g6.antv.vision',
+    version: '4.8.24',
+    difficulty: 'advanced',
+    color: 'bg-teal-600 text-white',
+  },
+  {
+    name: 'Three.js',
+    description: '3D 图形库，创建 3D 可视化效果',
+    category: 'frontend',
+    icon: Star,
+    features: ['3D 渲染', 'WebGL', '动画系统', '物理引擎'],
+    officialLink: 'https://threejs.org',
+    version: '0.156.1',
+    difficulty: 'advanced',
+    color: 'bg-gray-800 text-white',
+  },
+  // 云服务
+  {
+    name: 'Vercel',
+    description: '现代化部署平台，专为前端优化',
+    category: 'cloud',
+    icon: Cloud,
+    features: ['自动部署', 'Edge Network', '域名管理', 'Analytics'],
+    officialLink: 'https://vercel.com',
+    version: 'Latest',
+    difficulty: 'beginner',
+    color: 'bg-black text-white',
+  },
+  {
+    name: 'AWS',
+    description: '亚马逊云服务平台',
+    category: 'cloud',
+    icon: Cloud,
+    features: ['云计算', '存储服务', '数据库', '机器学习'],
+    officialLink: 'https://aws.amazon.com',
+    version: 'Latest',
+    difficulty: 'advanced',
+    color: 'bg-orange-400 text-white',
+  },
+  // 测试工具
+  {
+    name: 'Jest',
+    description: 'JavaScript 测试框架',
+    category: 'tools',
+    icon: CheckCircle,
+    features: ['单元测试', '快照测试', '代码覆盖', '并行执行'],
+    officialLink: 'https://jestjs.io',
+    version: '29.x',
+    difficulty: 'intermediate',
+    color: 'bg-green-500 text-white',
+  },
+  {
+    name: 'Cypress',
+    description: '端到端测试工具',
+    category: 'tools',
+    icon: CheckCircle,
+    features: ['E2E 测试', '实时重载', '时间旅行', '网络控制'],
+    officialLink: 'https://www.cypress.io',
+    version: '13.x',
+    difficulty: 'advanced',
+    color: 'bg-green-600 text-white',
+  },
 ];
 
 const categories = [
@@ -210,7 +427,19 @@ export default function TechStackPage() {
     return stats;
   };
 
+  const getDifficultyStats = () => {
+    const stats = techStack.reduce(
+      (acc, item) => {
+        acc[item.difficulty] = (acc[item.difficulty] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
+    return stats;
+  };
+
   const stats = getCategoryStats();
+  const difficultyStats = getDifficultyStats();
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -280,100 +509,196 @@ export default function TechStackPage() {
 
         {/* 难度过滤 */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">按难度筛选</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+            按难度筛选
+            <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
+              (当前显示 {filteredTechStack.length} 项技术)
+            </span>
+          </h3>
           <div className="flex flex-wrap gap-2">
-            {difficulties.map(difficulty => (
-              <button
-                key={difficulty.key}
-                onClick={() => setSelectedDifficulty(difficulty.key)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  selectedDifficulty === difficulty.key
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-                }`}
-              >
-                {difficulty.name}
-              </button>
-            ))}
+            {difficulties.map(difficulty => {
+              const count =
+                difficulty.key === 'all' ? techStack.length : difficultyStats[difficulty.key] || 0;
+              return (
+                <button
+                  key={difficulty.key}
+                  onClick={() => setSelectedDifficulty(difficulty.key)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 flex items-center gap-2 ${
+                    selectedDifficulty === difficulty.key
+                      ? 'bg-blue-600 text-white shadow-lg'
+                      : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  <span>{difficulty.name}</span>
+                  <span
+                    className={`px-2 py-0.5 rounded-full text-xs ${
+                      selectedDifficulty === difficulty.key
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+                    }`}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* 难度说明 */}
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+            <div className="flex items-center gap-2 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <div>
+                <div className="font-medium text-green-800 dark:text-green-400">初级</div>
+                <div className="text-green-600 dark:text-green-300">基础技术，容易上手学习</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+              <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+              <div>
+                <div className="font-medium text-yellow-800 dark:text-yellow-400">中级</div>
+                <div className="text-yellow-600 dark:text-yellow-300">需要一定基础和经验</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+              <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+              <div>
+                <div className="font-medium text-red-800 dark:text-red-400">高级</div>
+                <div className="text-red-600 dark:text-red-300">复杂技术，需要深度理解</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
+      {/* 筛选结果提示 */}
+      {(selectedCategory !== 'all' || selectedDifficulty !== 'all') && (
+        <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="text-blue-600 dark:text-blue-400">
+                <Star className="h-5 w-5" />
+              </div>
+              <span className="text-blue-800 dark:text-blue-300">
+                筛选结果：找到 <strong>{filteredTechStack.length}</strong> 项
+                {selectedCategory !== 'all' &&
+                  ` · ${categories.find(c => c.key === selectedCategory)?.name}`}
+                {selectedDifficulty !== 'all' &&
+                  ` · ${difficulties.find(d => d.key === selectedDifficulty)?.name}`}
+                技术
+              </span>
+            </div>
+            <button
+              onClick={() => {
+                setSelectedCategory('all');
+                setSelectedDifficulty('all');
+              }}
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-sm font-medium"
+            >
+              清除筛选
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* 技术栈卡片 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-        {filteredTechStack.map(tech => (
-          <div
-            key={tech.name}
-            className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-shadow"
-          >
-            {/* 卡片头部 */}
-            <div className={`${tech.color} p-4`}>
-              <div className="flex items-center space-x-3">
-                <tech.icon className="h-8 w-8" />
-                <div>
-                  <h3 className="text-lg font-semibold">{tech.name}</h3>
-                  <p className="text-sm opacity-90">v{tech.version}</p>
+        {filteredTechStack.length > 0 ? (
+          filteredTechStack.map(tech => (
+            <div
+              key={tech.name}
+              className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-shadow"
+            >
+              {/* 卡片头部 */}
+              <div className={`${tech.color} p-4`}>
+                <div className="flex items-center space-x-3">
+                  <tech.icon className="h-8 w-8" />
+                  <div>
+                    <h3 className="text-lg font-semibold">{tech.name}</h3>
+                    <p className="text-sm opacity-90">v{tech.version}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* 卡片内容 */}
+              <div className="p-6">
+                <p className="text-gray-600 dark:text-gray-300 mb-4">{tech.description}</p>
+
+                {/* 难度标签 */}
+                <div className="mb-4">
+                  <span
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getDifficultyColor(tech.difficulty)}`}
+                  >
+                    {tech.difficulty === 'beginner' && '初级'}
+                    {tech.difficulty === 'intermediate' && '中级'}
+                    {tech.difficulty === 'advanced' && '高级'}
+                  </span>
+                </div>
+
+                {/* 特性列表 */}
+                <div className="mb-6">
+                  <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                    主要特性
+                  </h4>
+                  <ul className="space-y-1">
+                    {tech.features.map((feature, index) => (
+                      <li
+                        key={index}
+                        className="flex items-center text-sm text-gray-600 dark:text-gray-300"
+                      >
+                        <CheckCircle className="h-3 w-3 text-green-600 mr-2 flex-shrink-0" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* 操作按钮 */}
+                <div className="flex space-x-3">
+                  {tech.tutorialLink && (
+                    <Link
+                      href={tech.tutorialLink}
+                      className="flex-1 flex items-center justify-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      <span>查看教程</span>
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  )}
+                  <a
+                    href={tech.officialLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`${tech.tutorialLink ? 'flex-shrink-0' : 'flex-1'} flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors`}
+                  >
+                    <span>{tech.tutorialLink ? '官网' : '官方文档'}</span>
+                    <ExternalLink className="ml-2 h-4 w-4" />
+                  </a>
                 </div>
               </div>
             </div>
-
-            {/* 卡片内容 */}
-            <div className="p-6">
-              <p className="text-gray-600 dark:text-gray-300 mb-4">{tech.description}</p>
-
-              {/* 难度标签 */}
-              <div className="mb-4">
-                <span
-                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getDifficultyColor(tech.difficulty)}`}
-                >
-                  {tech.difficulty === 'beginner' && '初级'}
-                  {tech.difficulty === 'intermediate' && '中级'}
-                  {tech.difficulty === 'advanced' && '高级'}
-                </span>
-              </div>
-
-              {/* 特性列表 */}
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
-                  主要特性
-                </h4>
-                <ul className="space-y-1">
-                  {tech.features.map((feature, index) => (
-                    <li
-                      key={index}
-                      className="flex items-center text-sm text-gray-600 dark:text-gray-300"
-                    >
-                      <CheckCircle className="h-3 w-3 text-green-600 mr-2 flex-shrink-0" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* 操作按钮 */}
-              <div className="flex space-x-3">
-                {tech.tutorialLink && (
-                  <Link
-                    href={tech.tutorialLink}
-                    className="flex-1 flex items-center justify-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    <span>查看教程</span>
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                )}
-                <a
-                  href={tech.officialLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`${tech.tutorialLink ? 'flex-shrink-0' : 'flex-1'} flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors`}
-                >
-                  <span>{tech.tutorialLink ? '官网' : '官方文档'}</span>
-                  <ExternalLink className="ml-2 h-4 w-4" />
-                </a>
-              </div>
+          ))
+        ) : (
+          <div className="col-span-full flex flex-col items-center justify-center py-16">
+            <div className="text-gray-400 dark:text-gray-500 mb-4">
+              <Star className="h-16 w-16" />
             </div>
+            <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">
+              没有找到匹配的技术
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 text-center max-w-md">
+              尝试调整筛选条件，或
+              <button
+                onClick={() => {
+                  setSelectedCategory('all');
+                  setSelectedDifficulty('all');
+                }}
+                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 ml-1"
+              >
+                查看全部技术
+              </button>
+            </p>
           </div>
-        ))}
+        )}
       </div>
 
       {/* 学习路径建议 */}

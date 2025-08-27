@@ -13,8 +13,6 @@ import React, { useState } from 'react';
 
 import { CodeBlock } from '@/components/CodeBlock';
 
-const { TabPane } = Tabs;
-
 // JSX 演示组件
 const GreetingComponent = ({ name }: { name: string }) => {
   return (
@@ -225,7 +223,7 @@ const users = [
 function UserList() {
   return (
     <ul>
-      {users.map(user => 
+      {users.map(user =>
         <User key={user.id} user={user} />
       )}
     </ul>
@@ -305,8 +303,8 @@ function App() {
 // 3. 组件组合
 function Avatar({ user }) {
   return (
-    <img 
-      src={user.avatar} 
+    <img
+      src={user.avatar}
       alt={user.name}
       className="avatar"
     />
@@ -357,21 +355,36 @@ function Card({ children, title }) {
         {/* 快速导航 */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {[
-            { key: 'syntax', title: '基础语法', icon: <CodeOutlined /> },
+            { key: 'greeting', title: '基础语法', icon: <CodeOutlined /> },
             { key: 'conditional', title: '条件渲染', icon: <BulbOutlined /> },
             { key: 'lists', title: '列表渲染', icon: <ExperimentOutlined /> },
             { key: 'events', title: '事件处理', icon: <PlayCircleOutlined /> },
           ].map(item => (
-            <Button
+            <div
               key={item.key}
               onClick={() => setActiveDemo(item.key)}
-              className={`h-auto p-4 ${activeDemo === item.key ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : ''}`}
+              className={`
+                cursor-pointer p-4 rounded-lg border-2 transition-all duration-200
+                ${
+                  activeDemo === item.key
+                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-md'
+                    : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-blue-300 hover:shadow-sm'
+                }
+              `}
             >
-              <div className="flex flex-col items-center space-y-2">
-                {item.icon}
-                <span className="text-sm font-medium">{item.title}</span>
+              <div className="flex flex-col items-center space-y-2 text-center">
+                <div
+                  className={`text-xl ${activeDemo === item.key ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'}`}
+                >
+                  {item.icon}
+                </div>
+                <span
+                  className={`text-sm font-medium ${activeDemo === item.key ? 'text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300'}`}
+                >
+                  {item.title}
+                </span>
               </div>
-            </Button>
+            </div>
           ))}
         </div>
 
@@ -417,70 +430,100 @@ function Card({ children, title }) {
 
             {/* 代码示例 */}
             <Card title="💻 代码示例" className="shadow-lg">
-              <Tabs defaultActiveKey="basic">
-                <TabPane tab="基础语法" key="basic">
-                  <CodeBlock language="jsx" code={jsxExamples.basic} />
-                </TabPane>
-                <TabPane tab="条件渲染" key="conditional">
-                  <CodeBlock language="jsx" code={jsxExamples.conditional} />
-                </TabPane>
-                <TabPane tab="列表渲染" key="lists">
-                  <CodeBlock language="jsx" code={jsxExamples.lists} />
-                </TabPane>
-                <TabPane tab="事件处理" key="events">
-                  <CodeBlock language="jsx" code={jsxExamples.events} />
-                </TabPane>
-                <TabPane tab="组件" key="components">
-                  <CodeBlock language="jsx" code={jsxExamples.components} />
-                </TabPane>
-              </Tabs>
+              <Tabs
+                defaultActiveKey="basic"
+                items={[
+                  {
+                    key: 'basic',
+                    label: '基础语法',
+                    children: <CodeBlock language="jsx" code={jsxExamples.basic} />,
+                  },
+                  {
+                    key: 'conditional',
+                    label: '条件渲染',
+                    children: <CodeBlock language="jsx" code={jsxExamples.conditional} />,
+                  },
+                  {
+                    key: 'lists',
+                    label: '列表渲染',
+                    children: <CodeBlock language="jsx" code={jsxExamples.lists} />,
+                  },
+                  {
+                    key: 'events',
+                    label: '事件处理',
+                    children: <CodeBlock language="jsx" code={jsxExamples.events} />,
+                  },
+                  {
+                    key: 'components',
+                    label: '组件',
+                    children: <CodeBlock language="jsx" code={jsxExamples.components} />,
+                  },
+                ]}
+              />
             </Card>
           </div>
 
           {/* 右侧：实时演示 */}
           <div className="space-y-6">
             <Card title="🎯 实时演示" className="shadow-lg">
-              <Tabs activeKey={activeDemo} onChange={setActiveDemo}>
-                <TabPane tab="问候组件" key="greeting">
-                  <div className="space-y-4">
-                    <h4 className="font-semibold">基础 JSX 组件</h4>
-                    <GreetingComponent name="开发者" />
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      这个组件演示了基本的 JSX 语法和 props 的使用
-                    </p>
-                  </div>
-                </TabPane>
-
-                <TabPane tab="条件渲染" key="conditional">
-                  <div className="space-y-4">
-                    <h4 className="font-semibold">条件渲染演示</h4>
-                    <ConditionalExample />
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      演示了三种常见的条件渲染方式
-                    </p>
-                  </div>
-                </TabPane>
-
-                <TabPane tab="列表渲染" key="lists">
-                  <div className="space-y-4">
-                    <h4 className="font-semibold">列表渲染演示</h4>
-                    <ListRenderingExample />
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      动态列表渲染，注意 key 属性的重要性
-                    </p>
-                  </div>
-                </TabPane>
-
-                <TabPane tab="事件处理" key="events">
-                  <div className="space-y-4">
-                    <h4 className="font-semibold">事件处理演示</h4>
-                    <EventHandlingExample />
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      不同类型的事件处理方式
-                    </p>
-                  </div>
-                </TabPane>
-              </Tabs>
+              <Tabs
+                activeKey={activeDemo}
+                onChange={setActiveDemo}
+                items={[
+                  {
+                    key: 'greeting',
+                    label: '问候组件',
+                    children: (
+                      <div className="space-y-4">
+                        <h4 className="font-semibold">基础 JSX 组件</h4>
+                        <GreetingComponent name="开发者" />
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          这个组件演示了基本的 JSX 语法和 props 的使用
+                        </p>
+                      </div>
+                    ),
+                  },
+                  {
+                    key: 'conditional',
+                    label: '条件渲染',
+                    children: (
+                      <div className="space-y-4">
+                        <h4 className="font-semibold">条件渲染演示</h4>
+                        <ConditionalExample />
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          演示了三种常见的条件渲染方式
+                        </p>
+                      </div>
+                    ),
+                  },
+                  {
+                    key: 'lists',
+                    label: '列表渲染',
+                    children: (
+                      <div className="space-y-4">
+                        <h4 className="font-semibold">列表渲染演示</h4>
+                        <ListRenderingExample />
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          动态列表渲染，注意 key 属性的重要性
+                        </p>
+                      </div>
+                    ),
+                  },
+                  {
+                    key: 'events',
+                    label: '事件处理',
+                    children: (
+                      <div className="space-y-4">
+                        <h4 className="font-semibold">事件处理演示</h4>
+                        <EventHandlingExample />
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          不同类型的事件处理方式
+                        </p>
+                      </div>
+                    ),
+                  },
+                ]}
+              />
             </Card>
 
             {/* 最佳实践 */}

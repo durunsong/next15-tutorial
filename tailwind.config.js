@@ -5,7 +5,7 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  darkMode: 'class', // 启用基于class的暗色模式
+  darkMode: 'class', // 保留样式支持，但移除了动态切换功能
   theme: {
     extend: {
       colors: {
