@@ -51,7 +51,7 @@ export default function LazyG6Component({ data, style, className }: LazyG6Props)
           }
           setIsG6Ready(true);
         }
-      } catch (error) {
+      } catch (_error) {
         // 记录最小错误信息，避免生产环境噪声
         setLoadError('图表库加载失败，请检查网络连接');
       }

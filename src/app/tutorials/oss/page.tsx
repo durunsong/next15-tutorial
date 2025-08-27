@@ -15,7 +15,6 @@ import { useCallback, useState } from 'react';
 
 import NextImage from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 import { CodeBlock } from '@/components/CodeBlock';
 import { CodeEditor } from '@/components/CodeEditor';
@@ -24,7 +23,6 @@ import { TutorialLayout } from '@/components/TutorialLayout';
 
 // 文件上传演示组件
 function FileUploadDemo() {
-  const router = useRouter();
   const [files, setFiles] = useState([
     {
       id: 1,
@@ -750,12 +748,14 @@ export function FileUpload({ onUploadComplete }: {
                   </p>
                 </div>
               </div>
-              <button
-                onClick={() => router.push(file.url)}
+              <a
+                href={file.url}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-blue-600 hover:text-blue-700"
               >
                 查看
-              </button>
+              </a>
             </div>
           ))}
         </div>
