@@ -1,7 +1,7 @@
-import type { NextConfig } from 'next';
-
 // Bundle分析配置
 import bundleAnalyzer from '@next/bundle-analyzer';
+
+import type { NextConfig } from 'next';
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
