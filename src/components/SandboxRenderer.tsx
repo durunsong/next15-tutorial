@@ -64,7 +64,7 @@ export function SandboxRenderer({ code, language }: SandboxRendererProps) {
         /import\s+\{\s*([^}]+)\s*\}\s+from\s+['"]react['"];?/g,
         (match, imports) => {
           // 提取导入的项目并清理空格
-          const importItems = imports.split(',').map(item => item.trim());
+          const importItems = imports.split(',').map((item: string) => item.trim());
           return `// React imports converted to global variables: ${importItems.join(', ')}`;
         }
       );
