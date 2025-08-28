@@ -239,11 +239,25 @@ export default function RedisTestComponent() {
           {captchaResult && (
             <Alert
               type={captchaResult.success ? 'success' : 'error'}
-              message="验证码生成结果"
+              message={`验证码生成结果 - ${captchaResult.success ? '成功' : '失败'}`}
               description={
-                <pre className="bg-gray-50 p-2 rounded mt-2 overflow-auto text-xs">
-                  {JSON.stringify(captchaResult, null, 2)}
-                </pre>
+                <div>
+                  <div className="mb-2">
+                    <strong>详细信息:</strong>
+                    <ul className="mt-1 text-sm">
+                      <li>• 消息: {captchaResult.message}</li>
+                      {captchaResult.code && <li>• 生成的验证码: <span className="font-mono bg-yellow-100 px-1 rounded">{captchaResult.code}</span></li>}
+                      {captchaResult.expiresIn && <li>• 过期时间: {captchaResult.expiresIn}</li>}
+                      {captchaResult.redisKey && <li>• Redis存储键: <span className="font-mono bg-blue-100 px-1 rounded">{captchaResult.redisKey}</span></li>}
+                    </ul>
+                  </div>
+                  <details className="mt-2">
+                    <summary className="cursor-pointer text-sm font-medium">查看完整API响应 (教学用)</summary>
+                    <pre className="bg-gray-50 p-2 rounded mt-2 overflow-auto text-xs">
+                      {JSON.stringify(captchaResult, null, 2)}
+                    </pre>
+                  </details>
+                </div>
               }
             />
           )}
@@ -265,11 +279,31 @@ export default function RedisTestComponent() {
           {verifyResult && (
             <Alert
               type={verifyResult.success ? 'success' : 'error'}
-              message="验证码验证结果"
+              message={`验证码验证结果 - ${verifyResult.success ? '验证成功' : '验证失败'}`}
               description={
-                <pre className="bg-gray-50 p-2 rounded mt-2 overflow-auto text-xs">
-                  {JSON.stringify(verifyResult, null, 2)}
-                </pre>
+                <div>
+                  <div className="mb-2">
+                    <strong>验证详情:</strong>
+                    <ul className="mt-1 text-sm">
+                      <li>• 结果: {verifyResult.message}</li>
+                      <li>• HTTP状态: {verifyResult.status} {verifyResult.statusText}</li>
+                      {verifyResult.debug && (
+                        <>
+                          {verifyResult.debug.expected && <li>• 预期验证码: <span className="font-mono bg-green-100 px-1 rounded">{verifyResult.debug.expected}</span></li>}
+                          {verifyResult.debug.received && <li>• 输入验证码: <span className="font-mono bg-red-100 px-1 rounded">{verifyResult.debug.received}</span></li>}
+                          {verifyResult.debug.codeMatched && <li>• 匹配的验证码: <span className="font-mono bg-green-100 px-1 rounded">{verifyResult.debug.codeMatched}</span></li>}
+                          {verifyResult.debug.redisKeyDeleted && <li>• 已删除Redis键: <span className="font-mono bg-gray-100 px-1 rounded">{verifyResult.debug.redisKeyDeleted}</span></li>}
+                        </>
+                      )}
+                    </ul>
+                  </div>
+                  <details className="mt-2">
+                    <summary className="cursor-pointer text-sm font-medium">查看完整API响应 (教学用)</summary>
+                    <pre className="bg-gray-50 p-2 rounded mt-2 overflow-auto text-xs">
+                      {JSON.stringify(verifyResult, null, 2)}
+                    </pre>
+                  </details>
+                </div>
               }
             />
           )}

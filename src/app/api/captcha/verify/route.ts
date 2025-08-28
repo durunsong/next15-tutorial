@@ -37,14 +37,13 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
           success: false,
           message: '验证码已过期或不存在',
-          debug:
-            process.env.NODE_ENV === 'development'
-              ? {
-                  redisKey,
-                  searchedFor: code,
-                  timestamp: new Date().toISOString(),
-                }
-              : undefined,
+          debug: {
+            redisKey,
+            searchedFor: code,
+            timestamp: new Date().toISOString(),
+            redisAvailable: !!redis,
+            environment: process.env.NODE_ENV || 'unknown',
+          },
         });
       }
 
@@ -52,14 +51,13 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
           success: false,
           message: '验证码错误',
-          debug:
-            process.env.NODE_ENV === 'development'
-              ? {
-                  expected: storedCode,
-                  received: code,
-                  timestamp: new Date().toISOString(),
-                }
-              : undefined,
+          debug: {
+            expected: storedCode,
+            received: code,
+            timestamp: new Date().toISOString(),
+            redisKey,
+            environment: process.env.NODE_ENV || 'unknown',
+          },
         });
       }
 
@@ -71,13 +69,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         message: '验证码验证成功',
-        debug:
-          process.env.NODE_ENV === 'development'
-            ? {
-                verifiedAt: new Date().toISOString(),
-                redisKeyDeleted: redisKey,
-              }
-            : undefined,
+        debug: {
+          verifiedAt: new Date().toISOString(),
+          redisKeyDeleted: redisKey,
+          codeMatched: code,
+          environment: process.env.NODE_ENV || 'unknown',
+          redisAvailable: !!redis,
+        },
       });
     } catch (redisError) {
       console.error('Redis操作失败:', redisError);
