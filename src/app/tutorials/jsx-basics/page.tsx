@@ -8,11 +8,8 @@ import {
   PlayCircleOutlined,
 } from '@ant-design/icons';
 import { Alert, Button, Card, Input, InputRef, Tabs, Tag } from 'antd';
-import { ArrowRight } from 'lucide-react';
 
 import React, { useRef, useState } from 'react';
-
-import Link from 'next/link';
 
 import { CodeBlock } from '@/components/CodeBlock';
 import { TutorialLayout } from '@/components/TutorialLayout';
@@ -867,24 +864,24 @@ function ParentComponent() {
       title="JSX 语法基础"
       description="学习 JSX 语法，掌握 React 开发的基础语言。JSX 是 JavaScript 的语法扩展，让你能够以类似 HTML 的方式编写组件。"
       nextTutorial={{
-        title: "Next.js 基础",
-        href: "/tutorials/nextjs-basics"
+        title: 'Next.js 基础',
+        href: '/tutorials/nextjs-basics',
       }}
     >
-        {/* 快速导航 */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
-          {[
-            { key: 'greeting', title: '基础语法', icon: <CodeOutlined /> },
-            { key: 'conditional', title: '条件渲染', icon: <BulbOutlined /> },
-            { key: 'lists', title: '列表渲染', icon: <ExperimentOutlined /> },
-            { key: 'events', title: '事件处理', icon: <PlayCircleOutlined /> },
-            { key: 'fragments', title: 'Fragments', icon: <CodeOutlined /> },
-            { key: 'styling', title: '样式处理', icon: <BulbOutlined /> },
-          ].map(item => (
-            <div
-              key={item.key}
-              onClick={() => setActiveDemo(item.key)}
-              className={`
+      {/* 快速导航 */}
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
+        {[
+          { key: 'greeting', title: '基础语法', icon: <CodeOutlined /> },
+          { key: 'conditional', title: '条件渲染', icon: <BulbOutlined /> },
+          { key: 'lists', title: '列表渲染', icon: <ExperimentOutlined /> },
+          { key: 'events', title: '事件处理', icon: <PlayCircleOutlined /> },
+          { key: 'fragments', title: 'Fragments', icon: <CodeOutlined /> },
+          { key: 'styling', title: '样式处理', icon: <BulbOutlined /> },
+        ].map(item => (
+          <div
+            key={item.key}
+            onClick={() => setActiveDemo(item.key)}
+            className={`
                 cursor-pointer p-4 rounded-lg border-2 transition-all duration-200
                 ${
                   activeDemo === item.key
@@ -892,412 +889,410 @@ function ParentComponent() {
                     : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-blue-300 hover:shadow-sm'
                 }
               `}
-            >
-              <div className="flex flex-col items-center space-y-2 text-center">
-                <div
-                  className={`text-xl ${activeDemo === item.key ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'}`}
-                >
-                  {item.icon}
-                </div>
-                <span
-                  className={`text-sm font-medium ${activeDemo === item.key ? 'text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300'}`}
-                >
-                  {item.title}
-                </span>
+          >
+            <div className="flex flex-col items-center space-y-2 text-center">
+              <div
+                className={`text-xl ${activeDemo === item.key ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'}`}
+              >
+                {item.icon}
+              </div>
+              <span
+                className={`text-sm font-medium ${activeDemo === item.key ? 'text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300'}`}
+              >
+                {item.title}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* 左侧：理论知识 */}
+        <div className="space-y-6">
+          <Card title="📚 JSX 语法规则" className="shadow-lg">
+            <div className="space-y-4">
+              <Alert
+                message="什么是 JSX？"
+                description="JSX (JavaScript XML) 是 React 中使用的语法扩展，它允许你在 JavaScript 中编写类似 HTML 的标记。"
+                type="info"
+                showIcon
+              />
+
+              <div className="space-y-2">
+                <h4 className="font-semibold text-lg">核心规则：</h4>
+                <ul className="space-y-2 text-gray-600 dark:text-gray-300">
+                  <li className="flex items-start space-x-2">
+                    <CheckCircleOutlined className="text-green-500 mt-1" />
+                    <span>必须有一个根元素（或使用 Fragment）</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <CheckCircleOutlined className="text-green-500 mt-1" />
+                    <span>所有标签都必须闭合</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <CheckCircleOutlined className="text-green-500 mt-1" />
+                    <span>使用 camelCase 命名属性</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <CheckCircleOutlined className="text-green-500 mt-1" />
+                    <span>使用 {} 嵌入 JavaScript 表达式</span>
+                  </li>
+                  <li className="flex items-start space-x-2">
+                    <CheckCircleOutlined className="text-green-500 mt-1" />
+                    <span>class 属性要写成 className</span>
+                  </li>
+                </ul>
               </div>
             </div>
-          ))}
+          </Card>
+
+          {/* 代码示例 */}
+          <Card title="💻 代码示例" className="shadow-lg">
+            <Tabs
+              defaultActiveKey="basic"
+              items={[
+                {
+                  key: 'basic',
+                  label: '基础语法',
+                  children: <CodeBlock language="jsx" code={jsxExamples.basic} />,
+                },
+                {
+                  key: 'conditional',
+                  label: '条件渲染',
+                  children: <CodeBlock language="jsx" code={jsxExamples.conditional} />,
+                },
+                {
+                  key: 'lists',
+                  label: '列表渲染',
+                  children: <CodeBlock language="jsx" code={jsxExamples.lists} />,
+                },
+                {
+                  key: 'events',
+                  label: '事件处理',
+                  children: <CodeBlock language="jsx" code={jsxExamples.events} />,
+                },
+                {
+                  key: 'components',
+                  label: '组件',
+                  children: <CodeBlock language="jsx" code={jsxExamples.components} />,
+                },
+                {
+                  key: 'fragments',
+                  label: 'Fragments',
+                  children: <CodeBlock language="jsx" code={jsxExamples.fragments} />,
+                },
+                {
+                  key: 'styling',
+                  label: '样式处理',
+                  children: <CodeBlock language="jsx" code={jsxExamples.styling} />,
+                },
+                {
+                  key: 'propsAdvanced',
+                  label: 'Props高级',
+                  children: <CodeBlock language="jsx" code={jsxExamples.propsAdvanced} />,
+                },
+                {
+                  key: 'escapeChars',
+                  label: '特殊字符',
+                  children: <CodeBlock language="jsx" code={jsxExamples.escapeChars} />,
+                },
+                {
+                  key: 'refs',
+                  label: 'Refs',
+                  children: <CodeBlock language="jsx" code={jsxExamples.refs} />,
+                },
+              ]}
+            />
+          </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* 左侧：理论知识 */}
-          <div className="space-y-6">
-            <Card title="📚 JSX 语法规则" className="shadow-lg">
-              <div className="space-y-4">
-                <Alert
-                  message="什么是 JSX？"
-                  description="JSX (JavaScript XML) 是 React 中使用的语法扩展，它允许你在 JavaScript 中编写类似 HTML 的标记。"
-                  type="info"
-                  showIcon
-                />
+        {/* 右侧：实时演示 */}
+        <div className="space-y-6">
+          <Card title="🎯 实时演示" className="shadow-lg">
+            <Tabs
+              activeKey={activeDemo}
+              onChange={setActiveDemo}
+              items={[
+                {
+                  key: 'greeting',
+                  label: '问候组件',
+                  children: (
+                    <div className="space-y-4">
+                      <h4 className="font-semibold">基础 JSX 组件</h4>
+                      <GreetingComponent name="开发者" />
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        这个组件演示了基本的 JSX 语法和 props 的使用
+                      </p>
+                    </div>
+                  ),
+                },
+                {
+                  key: 'conditional',
+                  label: '条件渲染',
+                  children: (
+                    <div className="space-y-4">
+                      <h4 className="font-semibold">条件渲染演示</h4>
+                      <ConditionalExample />
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        演示了三种常见的条件渲染方式
+                      </p>
+                    </div>
+                  ),
+                },
+                {
+                  key: 'lists',
+                  label: '列表渲染',
+                  children: (
+                    <div className="space-y-4">
+                      <h4 className="font-semibold">列表渲染演示</h4>
+                      <ListRenderingExample />
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        动态列表渲染，注意 key 属性的重要性
+                      </p>
+                    </div>
+                  ),
+                },
+                {
+                  key: 'events',
+                  label: '事件处理',
+                  children: (
+                    <div className="space-y-4">
+                      <h4 className="font-semibold">事件处理演示</h4>
+                      <EventHandlingExample />
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        不同类型的事件处理方式
+                      </p>
+                    </div>
+                  ),
+                },
+                {
+                  key: 'fragments',
+                  label: 'Fragment',
+                  children: (
+                    <div className="space-y-4">
+                      <h4 className="font-semibold">Fragment 演示</h4>
+                      <FragmentExample />
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        使用 Fragment 避免额外的 DOM 节点
+                      </p>
+                    </div>
+                  ),
+                },
+                {
+                  key: 'styling',
+                  label: '样式处理',
+                  children: (
+                    <div className="space-y-4">
+                      <h4 className="font-semibold">样式处理演示</h4>
+                      <StylingExample />
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        JSX 中的内联样式和动态样式处理
+                      </p>
+                    </div>
+                  ),
+                },
+                {
+                  key: 'refs',
+                  label: 'Refs',
+                  children: (
+                    <div className="space-y-4">
+                      <h4 className="font-semibold">Ref 使用演示</h4>
+                      <RefExample />
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        直接访问和操作 DOM 元素
+                      </p>
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          </Card>
 
-                <div className="space-y-2">
-                  <h4 className="font-semibold text-lg">核心规则：</h4>
-                  <ul className="space-y-2 text-gray-600 dark:text-gray-300">
-                    <li className="flex items-start space-x-2">
-                      <CheckCircleOutlined className="text-green-500 mt-1" />
-                      <span>必须有一个根元素（或使用 Fragment）</span>
-                    </li>
-                    <li className="flex items-start space-x-2">
-                      <CheckCircleOutlined className="text-green-500 mt-1" />
-                      <span>所有标签都必须闭合</span>
-                    </li>
-                    <li className="flex items-start space-x-2">
-                      <CheckCircleOutlined className="text-green-500 mt-1" />
-                      <span>使用 camelCase 命名属性</span>
-                    </li>
-                    <li className="flex items-start space-x-2">
-                      <CheckCircleOutlined className="text-green-500 mt-1" />
-                      <span>使用 {} 嵌入 JavaScript 表达式</span>
-                    </li>
-                    <li className="flex items-start space-x-2">
-                      <CheckCircleOutlined className="text-green-500 mt-1" />
-                      <span>class 属性要写成 className</span>
-                    </li>
-                  </ul>
+          {/* 最佳实践 */}
+          <Card title="💡 最佳实践" className="shadow-lg">
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 gap-3">
+                <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border-l-4 border-green-500">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <CheckCircleOutlined className="text-green-500" />
+                    <span className="font-medium">使用有意义的 key</span>
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    列表渲染时使用唯一且稳定的 key，避免使用数组索引
+                  </p>
+                </div>
+
+                <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-l-4 border-blue-500">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <BulbOutlined className="text-blue-500" />
+                    <span className="font-medium">保持组件纯粹</span>
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    相同的输入应该产生相同的输出，避免副作用
+                  </p>
+                </div>
+
+                <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border-l-4 border-purple-500">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <ExperimentOutlined className="text-purple-500" />
+                    <span className="font-medium">合理拆分组件</span>
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    单一职责原则，保持组件简单易维护
+                  </p>
+                </div>
+
+                <div className="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border-l-4 border-orange-500">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <CodeOutlined className="text-orange-500" />
+                    <span className="font-medium">优先使用 Fragment</span>
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    避免不必要的包装元素，使用 &lt;&gt; 或 React.Fragment
+                  </p>
+                </div>
+
+                <div className="p-3 bg-cyan-50 dark:bg-cyan-900/20 rounded-lg border-l-4 border-cyan-500">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <BulbOutlined className="text-cyan-500" />
+                    <span className="font-medium">样式管理</span>
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    避免大量内联样式，优先使用CSS类和CSS模块
+                  </p>
+                </div>
+
+                <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border-l-4 border-red-500">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <ExperimentOutlined className="text-red-500" />
+                    <span className="font-medium">谨慎使用 Refs</span>
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    只在必要时使用ref，优先考虑声明式编程
+                  </p>
+                </div>
+
+                <div className="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border-l-4 border-emerald-500">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <CheckCircleOutlined className="text-emerald-500" />
+                    <span className="font-medium">转义和安全</span>
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    React自动转义内容，避免使用dangerouslySetInnerHTML
+                  </p>
                 </div>
               </div>
-            </Card>
+            </div>
+          </Card>
+        </div>
+      </div>
 
-            {/* 代码示例 */}
-            <Card title="💻 代码示例" className="shadow-lg">
-              <Tabs
-                defaultActiveKey="basic"
-                items={[
-                  {
-                    key: 'basic',
-                    label: '基础语法',
-                    children: <CodeBlock language="jsx" code={jsxExamples.basic} />,
-                  },
-                  {
-                    key: 'conditional',
-                    label: '条件渲染',
-                    children: <CodeBlock language="jsx" code={jsxExamples.conditional} />,
-                  },
-                  {
-                    key: 'lists',
-                    label: '列表渲染',
-                    children: <CodeBlock language="jsx" code={jsxExamples.lists} />,
-                  },
-                  {
-                    key: 'events',
-                    label: '事件处理',
-                    children: <CodeBlock language="jsx" code={jsxExamples.events} />,
-                  },
-                  {
-                    key: 'components',
-                    label: '组件',
-                    children: <CodeBlock language="jsx" code={jsxExamples.components} />,
-                  },
-                  {
-                    key: 'fragments',
-                    label: 'Fragments',
-                    children: <CodeBlock language="jsx" code={jsxExamples.fragments} />,
-                  },
-                  {
-                    key: 'styling',
-                    label: '样式处理',
-                    children: <CodeBlock language="jsx" code={jsxExamples.styling} />,
-                  },
-                  {
-                    key: 'propsAdvanced',
-                    label: 'Props高级',
-                    children: <CodeBlock language="jsx" code={jsxExamples.propsAdvanced} />,
-                  },
-                  {
-                    key: 'escapeChars',
-                    label: '特殊字符',
-                    children: <CodeBlock language="jsx" code={jsxExamples.escapeChars} />,
-                  },
-                  {
-                    key: 'refs',
-                    label: 'Refs',
-                    children: <CodeBlock language="jsx" code={jsxExamples.refs} />,
-                  },
-                ]}
-              />
-            </Card>
+      {/* 练习区域 */}
+      <Card title="🔨 动手练习" className="mt-8 shadow-lg">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border">
+            <h4 className="font-semibold mb-2">练习 1: Fragment 优化</h4>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+              重构现有组件，使用Fragment减少不必要的DOM嵌套
+            </p>
+            <Tag color="orange">初级</Tag>
           </div>
 
-          {/* 右侧：实时演示 */}
-          <div className="space-y-6">
-            <Card title="🎯 实时演示" className="shadow-lg">
-              <Tabs
-                activeKey={activeDemo}
-                onChange={setActiveDemo}
-                items={[
-                  {
-                    key: 'greeting',
-                    label: '问候组件',
-                    children: (
-                      <div className="space-y-4">
-                        <h4 className="font-semibold">基础 JSX 组件</h4>
-                        <GreetingComponent name="开发者" />
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          这个组件演示了基本的 JSX 语法和 props 的使用
-                        </p>
-                      </div>
-                    ),
-                  },
-                  {
-                    key: 'conditional',
-                    label: '条件渲染',
-                    children: (
-                      <div className="space-y-4">
-                        <h4 className="font-semibold">条件渲染演示</h4>
-                        <ConditionalExample />
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          演示了三种常见的条件渲染方式
-                        </p>
-                      </div>
-                    ),
-                  },
-                  {
-                    key: 'lists',
-                    label: '列表渲染',
-                    children: (
-                      <div className="space-y-4">
-                        <h4 className="font-semibold">列表渲染演示</h4>
-                        <ListRenderingExample />
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          动态列表渲染，注意 key 属性的重要性
-                        </p>
-                      </div>
-                    ),
-                  },
-                  {
-                    key: 'events',
-                    label: '事件处理',
-                    children: (
-                      <div className="space-y-4">
-                        <h4 className="font-semibold">事件处理演示</h4>
-                        <EventHandlingExample />
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          不同类型的事件处理方式
-                        </p>
-                      </div>
-                    ),
-                  },
-                  {
-                    key: 'fragments',
-                    label: 'Fragment',
-                    children: (
-                      <div className="space-y-4">
-                        <h4 className="font-semibold">Fragment 演示</h4>
-                        <FragmentExample />
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          使用 Fragment 避免额外的 DOM 节点
-                        </p>
-                      </div>
-                    ),
-                  },
-                  {
-                    key: 'styling',
-                    label: '样式处理',
-                    children: (
-                      <div className="space-y-4">
-                        <h4 className="font-semibold">样式处理演示</h4>
-                        <StylingExample />
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          JSX 中的内联样式和动态样式处理
-                        </p>
-                      </div>
-                    ),
-                  },
-                  {
-                    key: 'refs',
-                    label: 'Refs',
-                    children: (
-                      <div className="space-y-4">
-                        <h4 className="font-semibold">Ref 使用演示</h4>
-                        <RefExample />
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          直接访问和操作 DOM 元素
-                        </p>
-                      </div>
-                    ),
-                  },
-                ]}
-              />
-            </Card>
+          <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border">
+            <h4 className="font-semibold mb-2">练习 2: 动态样式系统</h4>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+              创建一个主题切换组件，支持多种样式配置
+            </p>
+            <Tag color="blue">中级</Tag>
+          </div>
 
-            {/* 最佳实践 */}
-            <Card title="💡 最佳实践" className="shadow-lg">
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 gap-3">
-                  <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border-l-4 border-green-500">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <CheckCircleOutlined className="text-green-500" />
-                      <span className="font-medium">使用有意义的 key</span>
-                    </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      列表渲染时使用唯一且稳定的 key，避免使用数组索引
-                    </p>
-                  </div>
+          <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border">
+            <h4 className="font-semibold mb-2">练习 3: Ref 实战应用</h4>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+              实现一个富文本编辑器，使用ref控制光标和选择
+            </p>
+            <Tag color="green">高级</Tag>
+          </div>
 
-                  <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-l-4 border-blue-500">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <BulbOutlined className="text-blue-500" />
-                      <span className="font-medium">保持组件纯粹</span>
-                    </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      相同的输入应该产生相同的输出，避免副作用
-                    </p>
-                  </div>
+          <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border">
+            <h4 className="font-semibold mb-2">练习 4: Props 高级处理</h4>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+              创建通用组件，支持props解构、传播和条件属性
+            </p>
+            <Tag color="purple">中级</Tag>
+          </div>
 
-                  <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border-l-4 border-purple-500">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <ExperimentOutlined className="text-purple-500" />
-                      <span className="font-medium">合理拆分组件</span>
-                    </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      单一职责原则，保持组件简单易维护
-                    </p>
-                  </div>
+          <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border">
+            <h4 className="font-semibold mb-2">练习 5: 安全内容渲染</h4>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+              处理用户输入，实现安全的HTML内容渲染机制
+            </p>
+            <Tag color="red">高级</Tag>
+          </div>
 
-                  <div className="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg border-l-4 border-orange-500">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <CodeOutlined className="text-orange-500" />
-                      <span className="font-medium">优先使用 Fragment</span>
-                    </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      避免不必要的包装元素，使用 &lt;&gt; 或 React.Fragment
-                    </p>
-                  </div>
-
-                  <div className="p-3 bg-cyan-50 dark:bg-cyan-900/20 rounded-lg border-l-4 border-cyan-500">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <BulbOutlined className="text-cyan-500" />
-                      <span className="font-medium">样式管理</span>
-                    </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      避免大量内联样式，优先使用CSS类和CSS模块
-                    </p>
-                  </div>
-
-                  <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border-l-4 border-red-500">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <ExperimentOutlined className="text-red-500" />
-                      <span className="font-medium">谨慎使用 Refs</span>
-                    </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      只在必要时使用ref，优先考虑声明式编程
-                    </p>
-                  </div>
-
-                  <div className="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border-l-4 border-emerald-500">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <CheckCircleOutlined className="text-emerald-500" />
-                      <span className="font-medium">转义和安全</span>
-                    </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      React自动转义内容，避免使用dangerouslySetInnerHTML
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </Card>
+          <div className="p-4 bg-cyan-50 dark:bg-cyan-900/20 rounded-lg border">
+            <h4 className="font-semibold mb-2">练习 6: 综合应用</h4>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+              构建一个完整的组件库，应用所有JSX高级技术
+            </p>
+            <Tag color="cyan">专家级</Tag>
           </div>
         </div>
+      </Card>
 
-        {/* 练习区域 */}
-        <Card title="🔨 动手练习" className="mt-8 shadow-lg">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border">
-              <h4 className="font-semibold mb-2">练习 1: Fragment 优化</h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                重构现有组件，使用Fragment减少不必要的DOM嵌套
-              </p>
-              <Tag color="orange">初级</Tag>
-            </div>
-
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border">
-              <h4 className="font-semibold mb-2">练习 2: 动态样式系统</h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                创建一个主题切换组件，支持多种样式配置
-              </p>
-              <Tag color="blue">中级</Tag>
-            </div>
-
-            <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border">
-              <h4 className="font-semibold mb-2">练习 3: Ref 实战应用</h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                实现一个富文本编辑器，使用ref控制光标和选择
-              </p>
-              <Tag color="green">高级</Tag>
-            </div>
-
-            <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border">
-              <h4 className="font-semibold mb-2">练习 4: Props 高级处理</h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                创建通用组件，支持props解构、传播和条件属性
-              </p>
-              <Tag color="purple">中级</Tag>
-            </div>
-
-            <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border">
-              <h4 className="font-semibold mb-2">练习 5: 安全内容渲染</h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                处理用户输入，实现安全的HTML内容渲染机制
-              </p>
-              <Tag color="red">高级</Tag>
-            </div>
-
-            <div className="p-4 bg-cyan-50 dark:bg-cyan-900/20 rounded-lg border">
-              <h4 className="font-semibold mb-2">练习 6: 综合应用</h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                构建一个完整的组件库，应用所有JSX高级技术
-              </p>
-              <Tag color="cyan">专家级</Tag>
-            </div>
+      {/* 性能优化提示 */}
+      <Card title="⚡ 性能优化提示" className="mt-8 shadow-lg">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <h4 className="font-semibold text-lg flex items-center space-x-2">
+              <ExperimentOutlined className="text-blue-500" />
+              <span>JSX 优化技巧</span>
+            </h4>
+            <ul className="space-y-2 text-gray-600 dark:text-gray-300">
+              <li className="flex items-start space-x-2">
+                <CheckCircleOutlined className="text-green-500 mt-1 flex-shrink-0" />
+                <span>避免在render中创建对象和函数</span>
+              </li>
+              <li className="flex items-start space-x-2">
+                <CheckCircleOutlined className="text-green-500 mt-1 flex-shrink-0" />
+                <span>使用React.memo包装纯组件</span>
+              </li>
+              <li className="flex items-start space-x-2">
+                <CheckCircleOutlined className="text-green-500 mt-1 flex-shrink-0" />
+                <span>合理使用key属性，避免不必要的重渲染</span>
+              </li>
+              <li className="flex items-start space-x-2">
+                <CheckCircleOutlined className="text-green-500 mt-1 flex-shrink-0" />
+                <span>条件渲染时考虑性能影响</span>
+              </li>
+            </ul>
           </div>
-        </Card>
-
-        {/* 性能优化提示 */}
-        <Card title="⚡ 性能优化提示" className="mt-8 shadow-lg">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <h4 className="font-semibold text-lg flex items-center space-x-2">
-                <ExperimentOutlined className="text-blue-500" />
-                <span>JSX 优化技巧</span>
-              </h4>
-              <ul className="space-y-2 text-gray-600 dark:text-gray-300">
-                <li className="flex items-start space-x-2">
-                  <CheckCircleOutlined className="text-green-500 mt-1 flex-shrink-0" />
-                  <span>避免在render中创建对象和函数</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <CheckCircleOutlined className="text-green-500 mt-1 flex-shrink-0" />
-                  <span>使用React.memo包装纯组件</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <CheckCircleOutlined className="text-green-500 mt-1 flex-shrink-0" />
-                  <span>合理使用key属性，避免不必要的重渲染</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <CheckCircleOutlined className="text-green-500 mt-1 flex-shrink-0" />
-                  <span>条件渲染时考虑性能影响</span>
-                </li>
-              </ul>
-            </div>
-            <div className="space-y-4">
-              <h4 className="font-semibold text-lg flex items-center space-x-2">
-                <BulbOutlined className="text-yellow-500" />
-                <span>常见陷阱</span>
-              </h4>
-              <ul className="space-y-2 text-gray-600 dark:text-gray-300">
-                <li className="flex items-start space-x-2">
-                  <span className="text-red-500 mt-1 flex-shrink-0">⚠️</span>
-                  <span>避免使用数组索引作为key</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <span className="text-red-500 mt-1 flex-shrink-0">⚠️</span>
-                  <span>不要在循环中使用内联对象样式</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <span className="text-red-500 mt-1 flex-shrink-0">⚠️</span>
-                  <span>避免深层条件嵌套，影响可读性</span>
-                </li>
-                <li className="flex items-start space-x-2">
-                  <span className="text-red-500 mt-1 flex-shrink-0">⚠️</span>
-                  <span>谨慎使用dangerouslySetInnerHTML</span>
-                </li>
-              </ul>
-            </div>
+          <div className="space-y-4">
+            <h4 className="font-semibold text-lg flex items-center space-x-2">
+              <BulbOutlined className="text-yellow-500" />
+              <span>常见陷阱</span>
+            </h4>
+            <ul className="space-y-2 text-gray-600 dark:text-gray-300">
+              <li className="flex items-start space-x-2">
+                <span className="text-red-500 mt-1 flex-shrink-0">⚠️</span>
+                <span>避免使用数组索引作为key</span>
+              </li>
+              <li className="flex items-start space-x-2">
+                <span className="text-red-500 mt-1 flex-shrink-0">⚠️</span>
+                <span>不要在循环中使用内联对象样式</span>
+              </li>
+              <li className="flex items-start space-x-2">
+                <span className="text-red-500 mt-1 flex-shrink-0">⚠️</span>
+                <span>避免深层条件嵌套，影响可读性</span>
+              </li>
+              <li className="flex items-start space-x-2">
+                <span className="text-red-500 mt-1 flex-shrink-0">⚠️</span>
+                <span>谨慎使用dangerouslySetInnerHTML</span>
+              </li>
+            </ul>
           </div>
-        </Card>
-
-
+        </div>
+      </Card>
     </TutorialLayout>
   );
 }
