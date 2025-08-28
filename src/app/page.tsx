@@ -141,39 +141,6 @@ const techStack: TechStackItem[] = [
   },
 
   // 数据可视化
-  {
-    name: 'ECharts',
-    description: 'Apache ECharts 数据可视化库',
-    category: 'frontend',
-    icon: Star,
-    features: ['丰富图表', '交互设计', '数据驱动', '响应式'],
-    officialLink: 'https://echarts.apache.org',
-    version: '5.6.0',
-    difficulty: 'intermediate',
-    color: 'bg-orange-500 text-white',
-  },
-  {
-    name: 'AntV G6',
-    description: '图可视化引擎，构建关系图和网络图',
-    category: 'frontend',
-    icon: Star,
-    features: ['关系图', '网络图', '自定义布局', '交互分析'],
-    officialLink: 'https://g6.antv.vision',
-    version: '5.0.49',
-    difficulty: 'advanced',
-    color: 'bg-teal-600 text-white',
-  },
-  {
-    name: 'Three.js',
-    description: '3D 图形库，创建 3D 可视化效果',
-    category: 'frontend',
-    icon: Star,
-    features: ['3D 渲染', 'WebGL', '动画系统', '物理引擎'],
-    officialLink: 'https://threejs.org',
-    version: '0.178.0',
-    difficulty: 'advanced',
-    color: 'bg-gray-800 text-white',
-  },
 
   // 后端和认证
   {
@@ -241,17 +208,6 @@ const techStack: TechStackItem[] = [
 
   // 工具类
   {
-    name: 'Shiki',
-    description: '代码语法高亮库，VS Code 同款高亮引擎',
-    category: 'tools',
-    icon: Code,
-    features: ['VS Code 主题', '多语言支持', '高性能', 'TypeScript 友好'],
-    officialLink: 'https://shiki.style',
-    version: '3.9.2',
-    difficulty: 'beginner',
-    color: 'bg-green-600 text-white',
-  },
-  {
     name: 'MDX',
     description: 'Markdown 中使用 JSX，强化文档体验',
     category: 'tools',
@@ -261,17 +217,6 @@ const techStack: TechStackItem[] = [
     version: '3.1.0',
     difficulty: 'intermediate',
     color: 'bg-blue-700 text-white',
-  },
-  {
-    name: 'clsx',
-    description: '条件性 CSS 类名工具库',
-    category: 'tools',
-    icon: Settings,
-    features: ['条件类名', '轻量级', '高性能', '类型安全'],
-    officialLink: 'https://github.com/lukeed/clsx',
-    version: '2.1.1',
-    difficulty: 'beginner',
-    color: 'bg-gray-600 text-white',
   },
 ];
 
@@ -458,21 +403,21 @@ export default function HomePage() {
           {/* 难度说明 */}
           <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
             <div className="flex items-center gap-2 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-green-500 rounded-full" />
               <div>
                 <div className="font-medium text-green-800 dark:text-green-400">初级</div>
                 <div className="text-green-600 dark:text-green-300">基础技术，容易上手学习</div>
               </div>
             </div>
             <div className="flex items-center gap-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-              <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-yellow-500 rounded-full" />
               <div>
                 <div className="font-medium text-yellow-800 dark:text-yellow-400">中级</div>
                 <div className="text-yellow-600 dark:text-yellow-300">需要一定基础和经验</div>
               </div>
             </div>
             <div className="flex items-center gap-2 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
-              <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-red-500 rounded-full" />
               <div>
                 <div className="font-medium text-red-800 dark:text-red-400">高级</div>
                 <div className="text-red-600 dark:text-red-300">复杂技术，需要深度理解</div>

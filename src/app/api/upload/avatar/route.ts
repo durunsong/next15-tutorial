@@ -22,10 +22,10 @@ function verifyToken(token: string): { userId: string } | null {
 
 // 初始化OSS客户端
 function createOSSClient() {
-  const region = process.env.ALIBABA_CLOUD_OSS_REGION;
-  const accessKeyId = process.env.ALIBABA_CLOUD_ACCESS_KEY_ID;
-  const accessKeySecret = process.env.ALIBABA_CLOUD_ACCESS_KEY_SECRET;
-  const bucket = process.env.ALIBABA_CLOUD_OSS_BUCKET;
+  const region = process.env.OSS_REGION;
+  const accessKeyId = process.env.OSS_ACCESS_KEY_ID;
+  const accessKeySecret = process.env.OSS_ACCESS_KEY_SECRET;
+  const bucket = process.env.OSS_BUCKET;
 
   if (!region || !accessKeyId || !accessKeySecret || !bucket) {
     throw new Error('OSS配置不完整，请检查环境变量');
@@ -90,7 +90,10 @@ export async function POST(request: NextRequest) {
     // 检查文件是否为空
     if (file.size === 0) {
       console.log('错误: 文件大小为0');
-      return NextResponse.json({ success: false, message: '文件为空，请选择有效的图片文件' }, { status: 400 });
+      return NextResponse.json(
+        { success: false, message: '文件为空，请选择有效的图片文件' },
+        { status: 400 }
+      );
     }
 
     // 检查文件类型
@@ -128,10 +131,10 @@ export async function POST(request: NextRequest) {
 
     // 检查环境变量
     const envVars = {
-      region: process.env.ALIBABA_CLOUD_OSS_REGION,
-      accessKeyId: process.env.ALIBABA_CLOUD_ACCESS_KEY_ID,
-      accessKeySecret: process.env.ALIBABA_CLOUD_ACCESS_KEY_SECRET ? '***' : undefined,
-      bucket: process.env.ALIBABA_CLOUD_OSS_BUCKET,
+      region: process.env.OSS_REGION,
+      accessKeyId: process.env.OSS_ACCESS_KEY_ID,
+      accessKeySecret: process.env.OSS_ACCESS_KEY_SECRET ? '***' : undefined,
+      bucket: process.env.OSS_BUCKET,
       baseUrl: process.env.BASE_OSS_URL,
     };
     console.log('环境变量检查:', envVars);

@@ -295,40 +295,7 @@ const techStack: TechStackItem[] = [
     difficulty: 'advanced',
     color: 'bg-blue-600 text-white',
   },
-  // 可视化和图表
-  {
-    name: 'ECharts',
-    description: 'Apache ECharts 数据可视化库',
-    category: 'frontend',
-    icon: Star,
-    features: ['丰富图表', '交互设计', '数据驱动', '响应式'],
-    officialLink: 'https://echarts.apache.org',
-    version: '5.4.3',
-    difficulty: 'intermediate',
-    color: 'bg-orange-500 text-white',
-  },
-  {
-    name: 'G6',
-    description: 'AntV G6 图可视化引擎',
-    category: 'frontend',
-    icon: Star,
-    features: ['关系图', '网络图', '自定义布局', '交互分析'],
-    officialLink: 'https://g6.antv.vision',
-    version: '4.8.24',
-    difficulty: 'advanced',
-    color: 'bg-teal-600 text-white',
-  },
-  {
-    name: 'Three.js',
-    description: '3D 图形库，创建 3D 可视化效果',
-    category: 'frontend',
-    icon: Star,
-    features: ['3D 渲染', 'WebGL', '动画系统', '物理引擎'],
-    officialLink: 'https://threejs.org',
-    version: '0.156.1',
-    difficulty: 'advanced',
-    color: 'bg-gray-800 text-white',
-  },
+  // 可视化和图表（当前教学暂不展示）
   // 云服务
   {
     name: 'Vercel',

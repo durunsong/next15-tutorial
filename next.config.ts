@@ -51,13 +51,7 @@ const nextConfig: NextConfig = {
 
   // 重定向配置
   async redirects() {
-    return [
-      {
-        source: '/docs',
-        destination: '/tutorials',
-        permanent: true,
-      },
-    ];
+    return [];
   },
 
   // 基本的头部配置

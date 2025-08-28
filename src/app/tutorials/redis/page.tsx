@@ -790,8 +790,8 @@ export async function updatePost(id: number, data: Record<string, unknown>) {
             <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">环境变量配置</h4>
             <CodeBlock
               code={`# .env.local
-UPSTASH_REDIS_REST_URL="https://capable-crab-11510.upstash.io"
-UPSTASH_REDIS_REST_TOKEN="ASz2AAIjcDFmOTJhYmMyNjI1MmQ0NmIwOGIxYjgyMWMyODA5NTBhOXAxMA"`}
+UPSTASH_REDIS_REST_URL="https://your-redis-url.upstash.io"
+UPSTASH_REDIS_REST_TOKEN="your_redis_token_here"`}
               language="bash"
               filename=".env.local"
             />

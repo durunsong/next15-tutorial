@@ -15,6 +15,21 @@ import { Component, type ErrorInfo, type ReactNode } from 'react';
  * 捕获并处理 React 组件树中的错误，提供优雅的错误处理界面
  */
 
+/**
+ * 错误边界组件
+ * 捕获并处理 React 组件树中的错误，提供优雅的错误处理界面
+ */
+
+/**
+ * 错误边界组件
+ * 捕获并处理 React 组件树中的错误，提供优雅的错误处理界面
+ */
+
+/**
+ * 错误边界组件
+ * 捕获并处理 React 组件树中的错误，提供优雅的错误处理界面
+ */
+
 interface Props {
   children: ReactNode;
   fallback?: ReactNode;

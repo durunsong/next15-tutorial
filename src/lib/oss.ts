@@ -2,27 +2,27 @@ import OSS from 'ali-oss';
 
 // 检查必需的环境变量
 if (
-  !process.env.ALIBABA_CLOUD_ACCESS_KEY_ID ||
-  !process.env.ALIBABA_CLOUD_ACCESS_KEY_SECRET ||
-  !process.env.ALIBABA_CLOUD_OSS_REGION ||
-  !process.env.ALIBABA_CLOUD_OSS_BUCKET
+  !process.env.OSS_ACCESS_KEY_ID ||
+  !process.env.OSS_ACCESS_KEY_SECRET ||
+  !process.env.OSS_REGION ||
+  !process.env.OSS_BUCKET
 ) {
   console.warn('OSS 配置缺失，某些功能可能无法使用');
 }
 
 // OSS 客户端配置
 export const ossClient = new OSS({
-  region: process.env.ALIBABA_CLOUD_OSS_REGION || 'oss-rg-china-mainland',
-  accessKeyId: process.env.ALIBABA_CLOUD_ACCESS_KEY_ID || '',
-  accessKeySecret: process.env.ALIBABA_CLOUD_ACCESS_KEY_SECRET || '',
-  bucket: process.env.ALIBABA_CLOUD_OSS_BUCKET || '',
+  region: process.env.OSS_REGION || 'oss-rg-china-mainland',
+  accessKeyId: process.env.OSS_ACCESS_KEY_ID || '',
+  accessKeySecret: process.env.OSS_ACCESS_KEY_SECRET || '',
+  bucket: process.env.OSS_BUCKET || '',
 });
 
 // 获取文件 URL
 export function getOSSUrl(filename: string): string {
-  const baseUrl = process.env.ALIBABA_CLOUD_OSS_ENDPOINT;
+  const baseUrl = process.env.BASE_OSS_URL;
   if (!baseUrl) {
-    return `https://${process.env.ALIBABA_CLOUD_OSS_BUCKET}.${process.env.ALIBABA_CLOUD_OSS_REGION}.aliyuncs.com/${filename}`;
+    return `https://${process.env.OSS_BUCKET}.${process.env.OSS_REGION}.aliyuncs.com/${filename}`;
   }
   return `${baseUrl}/${filename}`;
 }

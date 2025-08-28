@@ -843,7 +843,7 @@ const postsByUser = await prisma.post.groupBy({
 DATABASE_URL="postgresql://username:password@host:port/database?sslmode=require"
 
 # 示例（请替换为你的实际连接信息）
-DATABASE_URL="postgresql://kilyicmsDB_owner:FpaRmb1EM7jV@ep-calm-snow-a5ss0pnq-pooler.us-east-2.aws.neon.tech/kilyicmsDB?sslmode=require"`}
+DATABASE_URL="postgresql://username:password@hostname:port/database?sslmode=require"`}
                 language="bash"
                 filename=".env"
               />

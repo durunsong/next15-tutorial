@@ -38,7 +38,14 @@ export async function verifyAuth(request: NextRequest): Promise<AuthResult> {
       };
     }
 
-    const JWT_SECRET = process.env.JWT_SECRET || 'x6*Dq!s1V#F&7@pZb3r$QnT+9mYw';
+    const JWT_SECRET = process.env.JWT_SECRET;
+
+    if (!JWT_SECRET) {
+      return {
+        isValid: false,
+        error: 'JWT密钥未配置',
+      };
+    }
 
     // 验证 JWT token
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };

@@ -263,13 +263,29 @@ export default function RedisTestComponent() {
                     <strong>详细信息:</strong>
                     <ul className="mt-1 text-sm">
                       <li>• 消息: {captchaResult.message}</li>
-                      {captchaResult.code && <li>• 生成的验证码: <span className="font-mono bg-yellow-100 px-1 rounded">{captchaResult.code}</span></li>}
+                      {captchaResult.code && (
+                        <li>
+                          • 生成的验证码:{' '}
+                          <span className="font-mono bg-yellow-100 px-1 rounded">
+                            {captchaResult.code}
+                          </span>
+                        </li>
+                      )}
                       {captchaResult.expiresIn && <li>• 过期时间: {captchaResult.expiresIn}</li>}
-                      {captchaResult.redisKey && <li>• Redis存储键: <span className="font-mono bg-blue-100 px-1 rounded">{captchaResult.redisKey}</span></li>}
+                      {captchaResult.redisKey && (
+                        <li>
+                          • Redis存储键:{' '}
+                          <span className="font-mono bg-blue-100 px-1 rounded">
+                            {captchaResult.redisKey}
+                          </span>
+                        </li>
+                      )}
                     </ul>
                   </div>
                   <details className="mt-2">
-                    <summary className="cursor-pointer text-sm font-medium">查看完整API响应 (教学用)</summary>
+                    <summary className="cursor-pointer text-sm font-medium">
+                      查看完整API响应 (教学用)
+                    </summary>
                     <pre className="bg-gray-50 p-2 rounded mt-2 overflow-auto text-xs">
                       {JSON.stringify(captchaResult, null, 2)}
                     </pre>
@@ -303,23 +319,47 @@ export default function RedisTestComponent() {
                     <strong>验证详情:</strong>
                     <ul className="mt-1 text-sm">
                       <li>• 结果: {verifyResult.message}</li>
-                      <li>• HTTP状态: {verifyResult.status} {verifyResult.statusText}</li>
+                      <li>
+                        • HTTP状态: {verifyResult.status} {verifyResult.statusText}
+                      </li>
                       {verifyResult.debug && verifyResult.debug.expected && (
-                        <li>• 预期验证码: <span className="font-mono bg-green-100 px-1 rounded">{verifyResult.debug.expected}</span></li>
+                        <li>
+                          • 预期验证码:{' '}
+                          <span className="font-mono bg-green-100 px-1 rounded">
+                            {verifyResult.debug.expected}
+                          </span>
+                        </li>
                       )}
                       {verifyResult.debug && verifyResult.debug.received && (
-                        <li>• 输入验证码: <span className="font-mono bg-red-100 px-1 rounded">{verifyResult.debug.received}</span></li>
+                        <li>
+                          • 输入验证码:{' '}
+                          <span className="font-mono bg-red-100 px-1 rounded">
+                            {verifyResult.debug.received}
+                          </span>
+                        </li>
                       )}
                       {verifyResult.debug && verifyResult.debug.codeMatched && (
-                        <li>• 匹配的验证码: <span className="font-mono bg-green-100 px-1 rounded">{verifyResult.debug.codeMatched}</span></li>
+                        <li>
+                          • 匹配的验证码:{' '}
+                          <span className="font-mono bg-green-100 px-1 rounded">
+                            {verifyResult.debug.codeMatched}
+                          </span>
+                        </li>
                       )}
                       {verifyResult.debug && verifyResult.debug.redisKeyDeleted && (
-                        <li>• 已删除Redis键: <span className="font-mono bg-gray-100 px-1 rounded">{verifyResult.debug.redisKeyDeleted}</span></li>
+                        <li>
+                          • 已删除Redis键:{' '}
+                          <span className="font-mono bg-gray-100 px-1 rounded">
+                            {verifyResult.debug.redisKeyDeleted}
+                          </span>
+                        </li>
                       )}
                     </ul>
                   </div>
                   <details className="mt-2">
-                    <summary className="cursor-pointer text-sm font-medium">查看完整API响应 (教学用)</summary>
+                    <summary className="cursor-pointer text-sm font-medium">
+                      查看完整API响应 (教学用)
+                    </summary>
                     <pre className="bg-gray-50 p-2 rounded mt-2 overflow-auto text-xs">
                       {JSON.stringify(verifyResult, null, 2)}
                     </pre>
