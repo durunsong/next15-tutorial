@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken';
 
 import { NextRequest, NextResponse } from 'next/server';
 
+import { prisma } from '@/lib/prisma';
+
 // 验证JWT Token
 function verifyToken(token: string): { userId: string } | null {
   try {
@@ -192,6 +194,26 @@ export async function POST(request: NextRequest) {
       // 构造本地文件URL
       fileUrl = `/uploads/avatars/${localFileName}`;
       console.log('构造本地文件URL:', fileUrl);
+    }
+
+    // 更新数据库中用户的avatar字段
+    console.log('更新数据库中的用户头像...');
+    try {
+      const updatedUser = await prisma.user.update({
+        where: { id: decoded.userId },
+        data: { avatar: fileUrl },
+        select: {
+          id: true,
+          username: true,
+          email: true,
+          avatar: true,
+        },
+      });
+      console.log('数据库更新成功:', updatedUser);
+    } catch (dbError) {
+      console.error('数据库更新失败:', dbError);
+      // 虽然文件上传成功，但数据库更新失败，记录错误但仍返回成功
+      // 因为文件已经上传了，用户可以在前端看到新头像
     }
 
     const response = {
