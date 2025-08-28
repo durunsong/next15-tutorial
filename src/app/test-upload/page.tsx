@@ -100,10 +100,18 @@ export default function TestUploadPage() {
           <div className="bg-gray-50 p-4 rounded-lg">
             <h3 className="font-medium mb-2">选中的文件:</h3>
             <ul className="text-sm space-y-1">
-              <li><strong>文件名:</strong> {file.name}</li>
-              <li><strong>文件类型:</strong> {file.type}</li>
-              <li><strong>文件大小:</strong> {file.size} bytes</li>
-              <li><strong>最后修改:</strong> {new Date(file.lastModified).toLocaleString()}</li>
+              <li>
+                <strong>文件名:</strong> {file.name}
+              </li>
+              <li>
+                <strong>文件类型:</strong> {file.type}
+              </li>
+              <li>
+                <strong>文件大小:</strong> {file.size} bytes
+              </li>
+              <li>
+                <strong>最后修改:</strong> {new Date(file.lastModified).toLocaleString()}
+              </li>
             </ul>
           </div>
         )}

@@ -287,13 +287,17 @@ export default function RedisTestComponent() {
                     <ul className="mt-1 text-sm">
                       <li>• 结果: {verifyResult.message}</li>
                       <li>• HTTP状态: {verifyResult.status} {verifyResult.statusText}</li>
-                      {verifyResult.debug && (
-                        <>
-                          {verifyResult.debug.expected && <li>• 预期验证码: <span className="font-mono bg-green-100 px-1 rounded">{verifyResult.debug.expected}</span></li>}
-                          {verifyResult.debug.received && <li>• 输入验证码: <span className="font-mono bg-red-100 px-1 rounded">{verifyResult.debug.received}</span></li>}
-                          {verifyResult.debug.codeMatched && <li>• 匹配的验证码: <span className="font-mono bg-green-100 px-1 rounded">{verifyResult.debug.codeMatched}</span></li>}
-                          {verifyResult.debug.redisKeyDeleted && <li>• 已删除Redis键: <span className="font-mono bg-gray-100 px-1 rounded">{verifyResult.debug.redisKeyDeleted}</span></li>}
-                        </>
+                      {verifyResult.debug && verifyResult.debug.expected && (
+                        <li>• 预期验证码: <span className="font-mono bg-green-100 px-1 rounded">{verifyResult.debug.expected}</span></li>
+                      )}
+                      {verifyResult.debug && verifyResult.debug.received && (
+                        <li>• 输入验证码: <span className="font-mono bg-red-100 px-1 rounded">{verifyResult.debug.received}</span></li>
+                      )}
+                      {verifyResult.debug && verifyResult.debug.codeMatched && (
+                        <li>• 匹配的验证码: <span className="font-mono bg-green-100 px-1 rounded">{verifyResult.debug.codeMatched}</span></li>
+                      )}
+                      {verifyResult.debug && verifyResult.debug.redisKeyDeleted && (
+                        <li>• 已删除Redis键: <span className="font-mono bg-gray-100 px-1 rounded">{verifyResult.debug.redisKeyDeleted}</span></li>
                       )}
                     </ul>
                   </div>
