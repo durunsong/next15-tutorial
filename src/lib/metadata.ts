@@ -6,7 +6,7 @@ import type { Metadata } from 'next';
 export const SITE_CONFIG = {
   name: 'Next.js 教程平台',
   description: '现代化的 Next.js + Prisma + Neon 全栈开发教程平台',
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://next15-tutorial.vercel.app',
+  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://next15-tutorial-green.vercel.app',
   ogImage: '/og-image.png',
   creator: 'Next.js Tutorial Team',
   keywords: [
@@ -72,8 +72,8 @@ export function generateMetadata(config: PageMetadata): Metadata {
     noIndex = false,
   } = config;
 
-  // 构建完整标题
-  const fullTitle = title.includes(SITE_CONFIG.name) ? title : `${title} | ${SITE_CONFIG.name}`;
+  // 直接使用传入的标题，不在这里拼接（由layout.tsx的template处理）
+  const fullTitle = title;
 
   // 合并关键词
   const allKeywords = [...SITE_CONFIG.keywords, ...keywords] as string[];
@@ -159,7 +159,7 @@ export function generateMetadata(config: PageMetadata): Metadata {
 export const PAGE_METADATA = {
   // 首页
   home: {
-    title: 'Next.js 教程平台 - 现代化全栈开发学习中心',
+    title: '现代化全栈开发学习中心',
     description:
       '专业的 Next.js + Prisma + Neon 全栈开发教程平台，提供从基础到进阶的完整学习路径，包含实战项目和最佳实践',
     keywords: ['Next.js教程', '全栈开发', '前端学习', 'React教程', 'TypeScript'],
