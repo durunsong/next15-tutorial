@@ -19,7 +19,7 @@ export const SITE_CONFIG = {
     'OSS',
     '全栈开发',
     '教程',
-    '学习平台'
+    '学习平台',
   ],
 } as const;
 
@@ -36,7 +36,7 @@ export enum PageType {
   TECH = 'tech',
   SERVICE = 'service',
   DATABASE = 'database',
-  OTHER = 'other'
+  OTHER = 'other',
 }
 
 /**
@@ -59,35 +59,28 @@ export interface PageMetadata {
  * 生成完整的metadata对象
  */
 export function generateMetadata(config: PageMetadata): Metadata {
-  const { 
-    title, 
-    description, 
-    keywords = [], 
+  const {
+    title,
+    description,
+    keywords = [],
     type = PageType.OTHER,
     author,
     publishedTime,
     modifiedTime,
     section,
     image,
-    noIndex = false
+    noIndex = false,
   } = config;
 
   // 构建完整标题
-  const fullTitle = title.includes(SITE_CONFIG.name) 
-    ? title 
-    : `${title} | ${SITE_CONFIG.name}`;
+  const fullTitle = title.includes(SITE_CONFIG.name) ? title : `${title} | ${SITE_CONFIG.name}`;
 
   // 合并关键词
-  const allKeywords = [
-    ...SITE_CONFIG.keywords,
-    ...keywords
-  ] as string[];
+  const allKeywords = [...SITE_CONFIG.keywords, ...keywords] as string[];
 
   // 选择图片
   const ogImage = image || SITE_CONFIG.ogImage;
-  const fullImageUrl = ogImage.startsWith('http') 
-    ? ogImage 
-    : `${SITE_CONFIG.url}${ogImage}`;
+  const fullImageUrl = ogImage.startsWith('http') ? ogImage : `${SITE_CONFIG.url}${ogImage}`;
 
   const metadata: Metadata = {
     title: fullTitle,
@@ -96,13 +89,13 @@ export function generateMetadata(config: PageMetadata): Metadata {
     authors: author ? [{ name: author }] : [{ name: SITE_CONFIG.creator }],
     creator: SITE_CONFIG.creator,
     publisher: SITE_CONFIG.name,
-    
+
     // 防止索引（如果指定）
     ...(noIndex && {
       robots: {
         index: false,
         follow: false,
-      }
+      },
     }),
 
     // Open Graph
@@ -118,7 +111,7 @@ export function generateMetadata(config: PageMetadata): Metadata {
           width: 1200,
           height: 630,
           alt: title,
-        }
+        },
       ],
       locale: 'zh_CN',
       ...(publishedTime && { publishedTime }),
@@ -153,7 +146,7 @@ export function generateMetadata(config: PageMetadata): Metadata {
         'article:section': section || '教程',
         ...(publishedTime && { 'article:published_time': publishedTime }),
         ...(modifiedTime && { 'article:modified_time': modifiedTime }),
-      }
+      },
     }),
   };
 
@@ -167,7 +160,8 @@ export const PAGE_METADATA = {
   // 首页
   home: {
     title: 'Next.js 教程平台 - 现代化全栈开发学习中心',
-    description: '专业的 Next.js + Prisma + Neon 全栈开发教程平台，提供从基础到进阶的完整学习路径，包含实战项目和最佳实践',
+    description:
+      '专业的 Next.js + Prisma + Neon 全栈开发教程平台，提供从基础到进阶的完整学习路径，包含实战项目和最佳实践',
     keywords: ['Next.js教程', '全栈开发', '前端学习', 'React教程', 'TypeScript'],
     type: PageType.HOME,
   },
@@ -175,7 +169,8 @@ export const PAGE_METADATA = {
   // 关于页面
   about: {
     title: '关于我们',
-    description: '了解 Next.js 教程平台的使命、愿景和团队信息，我们致力于为开发者提供最优质的学习资源',
+    description:
+      '了解 Next.js 教程平台的使命、愿景和团队信息，我们致力于为开发者提供最优质的学习资源',
     keywords: ['关于我们', '团队介绍', '平台介绍'],
     type: PageType.OTHER,
   },
@@ -183,7 +178,8 @@ export const PAGE_METADATA = {
   // 技术栈页面
   techStack: {
     title: '技术栈',
-    description: '查看本平台使用的完整技术栈，包括前端、后端、数据库、部署等各个环节的技术选型和最佳实践',
+    description:
+      '查看本平台使用的完整技术栈，包括前端、后端、数据库、部署等各个环节的技术选型和最佳实践',
     keywords: ['技术栈', 'Next.js', 'React', 'TypeScript', 'Prisma', 'Neon', 'Redis'],
     type: PageType.TECH,
   },
@@ -331,12 +327,10 @@ export function generateDynamicMetadata(
   dynamicData: { id?: string; name?: string; [key: string]: any }
 ): PageMetadata {
   const { id, name, ...rest } = dynamicData;
-  
+
   return {
     title: name ? `${name} - ${baseTitle}` : `${baseTitle} #${id}`,
-    description: name 
-      ? `${baseDescription} - ${name}` 
-      : `${baseDescription}，ID: ${id}`,
+    description: name ? `${baseDescription} - ${name}` : `${baseDescription}，ID: ${id}`,
     keywords: [baseTitle.toLowerCase(), name || id].filter(Boolean) as string[],
     ...rest,
   };
