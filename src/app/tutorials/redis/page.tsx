@@ -872,14 +872,14 @@ import { redis } from '@/lib/redis';
 // 生成验证码 API
 export async function POST(request: NextRequest) {
   const { key } = await request.json();
-  
+
   // 生成6位数验证码
   const code = Math.floor(100000 + Math.random() * 900000).toString();
   const redisKey = \`captcha:\${key}\`;
-  
+
   // 存储验证码，5分钟过期
   await redis.set(redisKey, code, { ex: 300 });
-  
+
   return NextResponse.json({
     success: true,
     code, // 开发环境返回验证码
@@ -893,27 +893,27 @@ export async function POST(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const { key, code } = await request.json();
   const redisKey = \`captcha:\${key}\`;
-  
+
   // 从Redis获取验证码
   const storedCode = await redis.get(redisKey);
-  
+
   if (!storedCode) {
     return NextResponse.json({
       success: false,
       message: '验证码已过期或不存在'
     });
   }
-  
+
   if (storedCode !== code) {
     return NextResponse.json({
       success: false,
       message: '验证码错误'
     });
   }
-  
+
   // 验证成功，删除验证码
   await redis.del(redisKey);
-  
+
   return NextResponse.json({
     success: true,
     message: '验证码验证成功'
@@ -923,11 +923,11 @@ export async function POST(request: NextRequest) {
 // 限流实现
 export async function rateLimit(key: string, limit: number, window: number) {
   const current = await redis.incr(key);
-  
+
   if (current === 1) {
     await redis.expire(key, window);
   }
-  
+
   return {
     success: current <= limit,
     current,

@@ -63,13 +63,13 @@ export async function POST(request: NextRequest) {
 
     if (!token) {
       console.log('错误: 未找到认证令牌');
-      return NextResponse.json({ error: '未找到认证令牌' }, { status: 401 });
+      return NextResponse.json({ success: false, message: '未找到认证令牌' }, { status: 401 });
     }
 
     const decoded = verifyToken(token);
     if (!decoded) {
       console.log('错误: 无效的认证令牌');
-      return NextResponse.json({ error: '无效的认证令牌' }, { status: 401 });
+      return NextResponse.json({ success: false, message: '无效的认证令牌' }, { status: 401 });
     }
     console.log('用户验证成功:', decoded.userId);
 
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
 
     if (!file) {
       console.log('错误: 没有找到文件');
-      return NextResponse.json({ error: '没有找到文件' }, { status: 400 });
+      return NextResponse.json({ success: false, message: '没有找到文件' }, { status: 400 });
     }
 
     // 检查文件类型
@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
     if (!allowedTypes.includes(file.type)) {
       console.log('错误: 不支持的文件类型');
       return NextResponse.json(
-        { error: '不支持的文件类型。请上传 JPEG、PNG、GIF 或 WebP 格式的图片' },
+        { success: false, message: '不支持的文件类型。请上传 JPEG、PNG、GIF 或 WebP 格式的图片' },
         { status: 400 }
       );
     }
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
     console.log('文件大小检查:', file.size, 'max:', maxSize);
     if (file.size > maxSize) {
       console.log('错误: 文件大小超过限制');
-      return NextResponse.json({ error: '文件大小不能超过 5MB' }, { status: 400 });
+      return NextResponse.json({ success: false, message: '文件大小不能超过 5MB' }, { status: 400 });
     }
 
     // 转换文件为Buffer
@@ -154,56 +154,40 @@ export async function POST(request: NextRequest) {
       fileUrl = `${baseUrl}/${fileName}`;
       console.log('构造OSS文件URL:', fileUrl);
     } else {
-      console.log('OSS配置不完整，检查环境...');
+      console.log('OSS配置不完整，使用本地存储...');
+      
+      // 本地存储备选方案
+      const fs = await import('fs/promises');
+      const path = await import('path');
 
-      // 检查是否在Vercel等serverless环境中
-      const isServerless =
-        process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NETLIFY;
+      // 确保uploads目录存在
+      const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+      const avatarsDir = path.join(uploadsDir, 'avatars');
 
-      if (isServerless) {
-        console.log('检测到serverless环境，使用base64存储...');
-        // Serverless环境：将图片转换为base64存储
-        const base64Data = buffer.toString('base64');
-        const mimeType = file.type;
-        const dataUrl = `data:${mimeType};base64,${base64Data}`;
-
-        console.log('Base64转换完成，大小:', base64Data.length);
-
-        // 返回data URL，前端可以直接使用
-        fileUrl = dataUrl;
-        console.log('构造base64 URL完成');
-      } else {
-        console.log('本地环境，使用文件存储...');
-        // 本地开发环境：文件存储
-        const fs = await import('fs/promises');
-        const path = await import('path');
-
-        // 确保uploads目录存在
-        const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
-        const avatarsDir = path.join(uploadsDir, 'avatars');
-
-        try {
-          await fs.mkdir(avatarsDir, { recursive: true });
-        } catch (error) {
-          console.log('目录创建警告:', error);
-        }
-
-        // 保存文件到本地
-        const localFileName = `${decoded.userId}_${Date.now()}.${fileExtension}`;
-        const localFilePath = path.join(avatarsDir, localFileName);
-
-        await fs.writeFile(localFilePath, buffer);
-        console.log('本地文件保存成功:', localFilePath);
-
-        // 构造本地文件URL
-        fileUrl = `/uploads/avatars/${localFileName}`;
-        console.log('构造本地文件URL:', fileUrl);
+      try {
+        await fs.mkdir(avatarsDir, { recursive: true });
+      } catch (error) {
+        console.log('目录创建警告:', error);
       }
+
+      // 保存文件到本地
+      const localFileName = `${decoded.userId}_${Date.now()}.${fileExtension}`;
+      const localFilePath = path.join(avatarsDir, localFileName);
+
+      await fs.writeFile(localFilePath, buffer);
+      console.log('本地文件保存成功:', localFilePath);
+
+      // 构造本地文件URL
+      fileUrl = `/uploads/avatars/${localFileName}`;
+      console.log('构造本地文件URL:', fileUrl);
     }
 
     const response = {
+      success: true,
       message: '头像上传成功',
-      avatarUrl: fileUrl,
+      data: {
+        avatarUrl: fileUrl,
+      },
     };
     console.log('成功响应:', response);
     console.log('=== 头像上传成功 ===');
@@ -218,8 +202,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        error: '上传失败，请重试',
-        details: process.env.NODE_ENV === 'development' ? String(error) : undefined,
+        success: false,
+        message: '上传失败，请重试',
+        error: process.env.NODE_ENV === 'development' ? String(error) : undefined,
       },
       { status: 500 }
     );

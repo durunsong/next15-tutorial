@@ -5,8 +5,6 @@ import { Avatar, Button, Spin, message } from 'antd';
 
 import React, { useRef, useState } from 'react';
 
-import { useAuthStore } from '@/store/authStore';
-
 interface AvatarUploadProps {
   currentAvatar?: string | null;
   onAvatarChange?: (newAvatarUrl: string) => void;
@@ -16,7 +14,6 @@ export default function AvatarUpload({ currentAvatar, onAvatarChange }: AvatarUp
   const [loading, setLoading] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(currentAvatar || undefined);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { token } = useAuthStore();
 
   // 处理文件选择
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,26 +45,20 @@ export default function AvatarUpload({ currentAvatar, onAvatarChange }: AvatarUp
       const formData = new FormData();
       formData.append('avatar', file);
 
-      const headers: Record<string, string> = {};
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
-
       const response = await fetch('/api/upload/avatar', {
         method: 'POST',
-        headers,
         body: formData,
         credentials: 'include', // 包含cookies
       });
 
       const result = await response.json();
 
-      if (response.ok && result.avatarUrl) {
-        setAvatarUrl(result.avatarUrl);
-        onAvatarChange?.(result.avatarUrl);
-        message.success(result.message || '头像上传成功！');
+      if (result.success) {
+        setAvatarUrl(result.data.avatarUrl);
+        onAvatarChange?.(result.data.avatarUrl);
+        message.success('头像上传成功！');
       } else {
-        message.error(result.error || result.message || '上传失败');
+        message.error(result.message || '上传失败');
       }
     } catch (error) {
       console.error('上传头像错误：', error);

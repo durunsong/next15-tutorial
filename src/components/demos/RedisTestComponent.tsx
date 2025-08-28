@@ -2,7 +2,7 @@
 
 import { Alert, Button, Card, Divider, Input, Space, Tag, Typography, message } from 'antd';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const { Title, Text, Paragraph } = Typography;
 
