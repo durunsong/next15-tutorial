@@ -7,6 +7,23 @@ import { useState } from 'react';
 const { Title, Text, Paragraph } = Typography;
 
 // 定义类型
+interface CaptchaDebugInfo {
+  environment?: string;
+  host?: string;
+  timestamp?: string;
+  redisAvailable?: boolean;
+  keyGenerated?: string;
+  codeGenerated?: string;
+}
+
+interface VerifyDebugInfo {
+  expected?: string;
+  received?: string;
+  codeMatched?: string;
+  redisKeyDeleted?: string;
+  environment?: string;
+  redisAvailable?: boolean;
+}
 interface CaptchaResult {
   success: boolean;
   code?: string;
@@ -14,7 +31,7 @@ interface CaptchaResult {
   expiresIn?: string;
   redisKey?: string;
   error?: string;
-  debug?: Record<string, unknown>;
+  debug?: CaptchaDebugInfo;
 }
 
 interface VerifyResult {
@@ -23,7 +40,7 @@ interface VerifyResult {
   status?: number;
   statusText?: string;
   error?: string;
-  debug?: Record<string, unknown>;
+  debug?: VerifyDebugInfo;
 }
 
 interface RedisTestResult {
