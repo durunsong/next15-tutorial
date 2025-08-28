@@ -24,7 +24,7 @@ import {
   message,
 } from 'antd';
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -235,13 +235,13 @@ export default function ProfilePage() {
 
       if (response.ok) {
         message.success('头像上传成功！');
-        
+
         // 更新本地用户信息
         if (userInfo) {
           const updatedUserInfo = { ...userInfo, avatar: data.data.avatarUrl };
           setUserInfo(updatedUserInfo);
         }
-        
+
         // 同步更新全局认证状态
         updateUser({ avatar: data.data.avatarUrl });
         setAvatarModalVisible(false);

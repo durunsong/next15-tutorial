@@ -18,13 +18,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# 3. 运行测试（如果有的话）
-if [ -f "jest.config.js" ] || [ -f "vitest.config.ts" ] || grep -q '"test"' package.json; then
-    echo "🧪 Running tests..."
-    pnpm test --run --passWithNoTests 2>/dev/null || true
-fi
-
-# 4. 检查 Prisma schema（如果有变更）
+# 3. 检查 Prisma schema（如果有变更）
 if git diff --cached --name-only | grep -q "prisma/schema.prisma"; then
     echo "🗄️ Prisma schema changed, running generate..."
     pnpm db:generate
@@ -35,11 +29,12 @@ if git diff --cached --name-only | grep -q "prisma/schema.prisma"; then
     fi
 fi
 
-# 5. 检查构建是否成功（轻量级检查）
-echo "🔧 Running quick build check..."
-pnpm run build --dry-run 2>/dev/null || {
-    echo "⚠️  Build check skipped (not supported), will verify in pre-push"
-}
+# 4. 快速测试（仅检查语法）
+if [ -f "jest.config.js" ] || [ -f "vitest.config.ts" ] || grep -q '"test"' package.json; then
+    echo "🧪 Running quick test check..."
+    pnpm test --run --passWithNoTests 2>/dev/null || true
+fi
 
 echo "✅ All pre-commit checks passed!"
 echo "📤 Ready to commit!"
+echo "💡 Build verification will happen during push"

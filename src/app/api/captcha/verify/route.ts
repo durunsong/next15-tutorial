@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
       // 确保比较的都是字符串类型
       const normalizedStoredCode = String(storedCode).trim();
       const normalizedInputCode = String(code).trim();
-      
+
       console.log('验证码比较:', {
         storedCode: normalizedStoredCode,
         inputCode: normalizedInputCode,
