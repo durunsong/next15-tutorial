@@ -8,10 +8,14 @@ import {
   PlayCircleOutlined,
 } from '@ant-design/icons';
 import { Alert, Button, Card, Input, InputRef, Tabs, Tag } from 'antd';
+import { ArrowRight } from 'lucide-react';
 
 import React, { useRef, useState } from 'react';
 
+import Link from 'next/link';
+
 import { CodeBlock } from '@/components/CodeBlock';
+import { TutorialLayout } from '@/components/TutorialLayout';
 
 // JSX 演示组件
 const GreetingComponent = ({ name }: { name: string }) => {
@@ -859,18 +863,16 @@ function ParentComponent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="container mx-auto px-4 py-8">
-        {/* 页面标题 */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-            JSX 语法基础
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            学习 JSX 语法，掌握 React 开发的基础语言。JSX 是 JavaScript 的语法扩展，让你能够以类似
-            HTML 的方式编写组件。
-          </p>
-        </div>
+    <TutorialLayout
+      title="JSX 语法基础"
+      description="学习 JSX 语法，掌握 React 开发的基础语言。JSX 是 JavaScript 的语法扩展，让你能够以类似 HTML 的方式编写组件。"
+      nextTutorial={{
+        title: "Next.js 基础",
+        href: "/tutorials/nextjs-basics"
+      }}
+    >
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div className="container mx-auto px-4 py-8">
 
         {/* 快速导航 */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
@@ -1297,7 +1299,23 @@ function ParentComponent() {
             </div>
           </div>
         </Card>
+
+        {/* 下一步学习引导 */}
+        <section className="text-center mt-16">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">准备好了吗？</h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">
+            现在你已经掌握了 JSX 语法基础，让我们继续学习 Next.js 框架和数据库操作。
+          </p>
+          <Link
+            href="/tutorials/nextjs-basics"
+            className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            学习 Next.js 基础
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Link>
+        </section>
       </div>
     </div>
+    </TutorialLayout>
   );
 }

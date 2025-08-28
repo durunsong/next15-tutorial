@@ -35,6 +35,7 @@
 
     // JSX 配置
     "jsx": "preserve",
+    "allowImportingTsExtensions": false,
 
     // Next.js 插件
     "plugins": [
