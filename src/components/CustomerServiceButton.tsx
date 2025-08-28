@@ -8,26 +8,6 @@
 import { MessageOutlined } from '@ant-design/icons';
 import { Button, Tooltip } from 'antd';
 
-/**
- * 简单的客服按钮组件
- * 可以替代第三方客服组件
- */
-
-/**
- * 简单的客服按钮组件
- * 可以替代第三方客服组件
- */
-
-/**
- * 简单的客服按钮组件
- * 可以替代第三方客服组件
- */
-
-/**
- * 简单的客服按钮组件
- * 可以替代第三方客服组件
- */
-
 interface CustomerServiceButtonProps {
   className?: string;
   onClick?: () => void;

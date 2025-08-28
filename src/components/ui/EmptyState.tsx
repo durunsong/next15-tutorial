@@ -8,26 +8,6 @@
 import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Button, Empty } from 'antd';
 
-/**
- * 空状态组件
- * 提供统一的空数据展示
- */
-
-/**
- * 空状态组件
- * 提供统一的空数据展示
- */
-
-/**
- * 空状态组件
- * 提供统一的空数据展示
- */
-
-/**
- * 空状态组件
- * 提供统一的空数据展示
- */
-
 interface EmptyStateProps {
   title?: string;
   description?: string;
