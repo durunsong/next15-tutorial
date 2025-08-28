@@ -1,5 +1,3 @@
-// 全局类型定义
-
 export interface User {
   id: string;
   email: string;
@@ -102,7 +100,6 @@ export interface SiteStats {
   likes: number;
 }
 
-// API 响应类型
 export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
@@ -110,7 +107,6 @@ export interface ApiResponse<T = unknown> {
   message?: string;
 }
 
-// 分页相关类型
 export interface PaginationParams {
   page?: number;
   limit?: number;
@@ -130,7 +126,6 @@ export interface PaginatedResponse<T> {
   };
 }
 
-// 教程相关类型
 export interface TutorialSection {
   id: string;
   title: string;
@@ -161,10 +156,8 @@ export interface TechStackItem {
   color: string;
 }
 
-// 主题相关类型
 export type Theme = 'light' | 'dark' | 'system';
 
-// 通知类型
 export interface Notification {
   id: string;
   message: string;
@@ -173,16 +166,14 @@ export interface Notification {
   read?: boolean;
 }
 
-// 缓存相关类型
 export interface CacheConfig {
   key: string;
-  ttl?: number; // Time to live in seconds
+  ttl?: number;
   tags?: string[];
 }
 
-// 文件上传相关类型
 export interface FileUploadConfig {
-  maxSize: number; // in bytes
+  maxSize: number;
   allowedTypes: string[];
   folder?: string;
   generateThumbnail?: boolean;
@@ -196,7 +187,6 @@ export interface FileUploadResult {
   type: string;
 }
 
-// OSS 图片处理选项
 export interface ImageProcessOptions {
   resize?: {
     width?: number;

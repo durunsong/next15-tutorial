@@ -148,5 +148,3 @@ export function dnsPrefetch(urls: string[]): void {
     });
   }
 }
-
-// React 相关的函数应该在组件文件中使用，这里只提供工具函数

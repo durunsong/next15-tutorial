@@ -14,21 +14,29 @@ import TawkToWidget from '@/components/TawkToWidget';
 
 import './globals.css';
 
+import { SITE_CONFIG } from '@/lib/metadata';
+
 export const metadata: Metadata = {
   title: {
-    template: '%s | Next Neon Base',
-    default: 'Next Neon Base - 基础模板',
+    template: `%s | ${SITE_CONFIG.name}`,
+    default: SITE_CONFIG.name,
   },
-  description: '基于 Next.js 15、Prisma ORM 和 Neon 云数据库的现代化基础模板',
-  keywords: ['Next.js', 'Prisma', 'Neon', '基础模板', 'TypeScript'],
-  authors: [{ name: 'Du Run song' }],
-  creator: 'Du Run song',
-  publisher: 'Du Run song',
-  metadataBase: new URL('https://next-neon-base.vercel.app'),
+  description: SITE_CONFIG.description,
+  keywords: [...SITE_CONFIG.keywords],
+  authors: [{ name: SITE_CONFIG.creator }],
+  creator: SITE_CONFIG.creator,
+  publisher: SITE_CONFIG.name,
+  metadataBase: new URL(SITE_CONFIG.url),
   icons: {
     icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/favicon.ico',
+    shortcut: '/favicon-16x16.png',
+    apple: '/apple-touch-icon.png',
+  },
+  manifest: '/site.webmanifest',
+  other: {
+    'theme-color': '#0070f3',
+    'color-scheme': 'light dark',
+    'format-detection': 'telephone=no',
   },
 };
 

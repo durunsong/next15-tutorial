@@ -1,15 +1,7 @@
-import type { Metadata } from 'next';
+import { generateMetadata, PAGE_METADATA } from '@/lib/metadata';
 import Link from 'next/link';
 
-export const metadata: Metadata = {
-  title: '关于我们',
-  description: '了解 Next Neon Base 项目的详细信息、技术架构和开发团队',
-  keywords: ['关于', '技术架构', '开发团队', '项目介绍'],
-  openGraph: {
-    title: '关于我们 - Next Neon Base',
-    description: '了解项目背景和技术架构',
-  },
-};
+export const metadata = generateMetadata(PAGE_METADATA.about);
 
 export default function AboutPage() {
   return (
