@@ -87,6 +87,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: '没有找到文件' }, { status: 400 });
     }
 
+    // 检查文件是否为空
+    if (file.size === 0) {
+      console.log('错误: 文件大小为0');
+      return NextResponse.json({ success: false, message: '文件为空，请选择有效的图片文件' }, { status: 400 });
+    }
+
     // 检查文件类型
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
     console.log('文件类型检查:', file.type, 'allowed:', allowedTypes.includes(file.type));
