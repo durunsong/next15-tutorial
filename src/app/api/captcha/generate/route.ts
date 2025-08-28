@@ -21,6 +21,17 @@ export async function POST(request: NextRequest) {
     const redisKey = `captcha:${key}`;
 
     try {
+      // 检查Redis是否可用
+      if (!redis) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: 'Redis服务不可用',
+          },
+          { status: 503 }
+        );
+      }
+
       // 存储验证码，5分钟过期
       await redis.set(redisKey, code, { ex: 300 });
 
@@ -32,10 +43,13 @@ export async function POST(request: NextRequest) {
         message: '验证码生成成功',
         expiresIn: '5分钟',
         redisKey: process.env.NODE_ENV === 'development' ? redisKey : undefined,
-        debug: process.env.NODE_ENV === 'development' ? {
-          environment: 'development',
-          timestamp: new Date().toISOString(),
-        } : undefined,
+        debug:
+          process.env.NODE_ENV === 'development'
+            ? {
+                environment: 'development',
+                timestamp: new Date().toISOString(),
+              }
+            : undefined,
       });
     } catch (redisError) {
       console.error('Redis操作失败:', redisError);

@@ -19,6 +19,17 @@ export async function POST(request: NextRequest) {
     const redisKey = `captcha:${key}`;
 
     try {
+      // 检查Redis是否可用
+      if (!redis) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: 'Redis服务不可用',
+          },
+          { status: 503 }
+        );
+      }
+
       // 从Redis获取验证码
       const storedCode = await redis.get(redisKey);
 
@@ -26,11 +37,14 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
           success: false,
           message: '验证码已过期或不存在',
-          debug: process.env.NODE_ENV === 'development' ? {
-            redisKey,
-            searchedFor: code,
-            timestamp: new Date().toISOString(),
-          } : undefined,
+          debug:
+            process.env.NODE_ENV === 'development'
+              ? {
+                  redisKey,
+                  searchedFor: code,
+                  timestamp: new Date().toISOString(),
+                }
+              : undefined,
         });
       }
 
@@ -38,11 +52,14 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
           success: false,
           message: '验证码错误',
-          debug: process.env.NODE_ENV === 'development' ? {
-            expected: storedCode,
-            received: code,
-            timestamp: new Date().toISOString(),
-          } : undefined,
+          debug:
+            process.env.NODE_ENV === 'development'
+              ? {
+                  expected: storedCode,
+                  received: code,
+                  timestamp: new Date().toISOString(),
+                }
+              : undefined,
         });
       }
 
@@ -54,10 +71,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         message: '验证码验证成功',
-        debug: process.env.NODE_ENV === 'development' ? {
-          verifiedAt: new Date().toISOString(),
-          redisKeyDeleted: redisKey,
-        } : undefined,
+        debug:
+          process.env.NODE_ENV === 'development'
+            ? {
+                verifiedAt: new Date().toISOString(),
+                redisKeyDeleted: redisKey,
+              }
+            : undefined,
       });
     } catch (redisError) {
       console.error('Redis操作失败:', redisError);

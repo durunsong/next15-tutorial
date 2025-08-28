@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
       if (count === 0 || !currentCount) {
         // 设置初始计数为1并设置过期时间60秒
         await CacheManager.set(requestKey, '1', { ex: 60 });
-        
+
         return NextResponse.json({
           success: true,
           message: '请求成功',
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
 
       // 增加计数
       const newCount = await CacheManager.increment(requestKey);
-      
+
       return NextResponse.json({
         success: true,
         message: '请求成功',
