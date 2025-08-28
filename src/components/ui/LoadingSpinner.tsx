@@ -8,6 +8,11 @@
 import { LoadingOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
 
+/**
+ * 加载动画组件
+ * 提供统一的加载状态展示
+ */
+
 interface LoadingSpinnerProps {
   size?: 'small' | 'default' | 'large';
   tip?: string;

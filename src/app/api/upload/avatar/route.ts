@@ -127,32 +127,62 @@ export async function POST(request: NextRequest) {
     };
     console.log('环境变量检查:', envVars);
 
-    // 初始化OSS客户端
-    console.log('初始化OSS客户端...');
-    const client = createOSSClient();
+    // 检查是否有OSS配置，如果没有则使用本地存储
+    const hasOSSConfig = envVars.region && envVars.accessKeyId && envVars.accessKeySecret && envVars.bucket;
+    
+    let fileUrl: string;
+    
+    if (hasOSSConfig) {
+      console.log('使用OSS存储...');
+      // 初始化OSS客户端
+      console.log('初始化OSS客户端...');
+      const client = createOSSClient();
 
-    // 上传到OSS
-    console.log('开始上传到OSS...');
-    const result = await client.put(fileName, buffer, {
-      headers: {
-        'Content-Type': file.type,
-        'Cache-Control': 'public, max-age=31536000', // 1年缓存
-      },
-    });
-    console.log('OSS上传结果:', { name: result.name, url: result.url });
+      // 上传到OSS
+      console.log('开始上传到OSS...');
+      const result = await client.put(fileName, buffer, {
+        headers: {
+          'Content-Type': file.type,
+          'Cache-Control': 'public, max-age=31536000', // 1年缓存
+        },
+      });
+      console.log('OSS上传结果:', { name: result.name, url: result.url });
 
-    // 构造完整的文件URL
-    const baseUrl = process.env.BASE_OSS_URL;
-    const fileUrl = `${baseUrl}/${fileName}`;
-    console.log('构造文件URL:', fileUrl);
+      // 构造完整的文件URL
+      const baseUrl = process.env.BASE_OSS_URL;
+      fileUrl = `${baseUrl}/${fileName}`;
+      console.log('构造OSS文件URL:', fileUrl);
+    } else {
+      console.log('OSS配置不完整，使用本地存储...');
+      // 本地存储备选方案
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      
+      // 确保uploads目录存在
+      const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+      const avatarsDir = path.join(uploadsDir, 'avatars');
+      
+      try {
+        await fs.mkdir(avatarsDir, { recursive: true });
+      } catch (error) {
+        console.log('目录创建警告:', error);
+      }
+      
+      // 保存文件到本地
+      const localFileName = `${decoded.userId}_${Date.now()}.${fileExtension}`;
+      const localFilePath = path.join(avatarsDir, localFileName);
+      
+      await fs.writeFile(localFilePath, buffer);
+      console.log('本地文件保存成功:', localFilePath);
+      
+      // 构造本地文件URL
+      fileUrl = `/uploads/avatars/${localFileName}`;
+      console.log('构造本地文件URL:', fileUrl);
+    }
 
     const response = {
       message: '头像上传成功',
       avatarUrl: fileUrl,
-      ossResult: {
-        name: result.name,
-        url: result.url,
-      },
     };
     console.log('成功响应:', response);
     console.log('=== 头像上传成功 ===');
