@@ -128,10 +128,11 @@ export async function POST(request: NextRequest) {
     console.log('环境变量检查:', envVars);
 
     // 检查是否有OSS配置，如果没有则使用本地存储
-    const hasOSSConfig = envVars.region && envVars.accessKeyId && envVars.accessKeySecret && envVars.bucket;
-    
+    const hasOSSConfig =
+      envVars.region && envVars.accessKeyId && envVars.accessKeySecret && envVars.bucket;
+
     let fileUrl: string;
-    
+
     if (hasOSSConfig) {
       console.log('使用OSS存储...');
       // 初始化OSS客户端
@@ -157,24 +158,24 @@ export async function POST(request: NextRequest) {
       // 本地存储备选方案
       const fs = await import('fs/promises');
       const path = await import('path');
-      
+
       // 确保uploads目录存在
       const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
       const avatarsDir = path.join(uploadsDir, 'avatars');
-      
+
       try {
         await fs.mkdir(avatarsDir, { recursive: true });
       } catch (error) {
         console.log('目录创建警告:', error);
       }
-      
+
       // 保存文件到本地
       const localFileName = `${decoded.userId}_${Date.now()}.${fileExtension}`;
       const localFilePath = path.join(avatarsDir, localFileName);
-      
+
       await fs.writeFile(localFilePath, buffer);
       console.log('本地文件保存成功:', localFilePath);
-      
+
       // 构造本地文件URL
       fileUrl = `/uploads/avatars/${localFileName}`;
       console.log('构造本地文件URL:', fileUrl);
