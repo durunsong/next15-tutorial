@@ -13,15 +13,15 @@ export async function GET(request: NextRequest) {
     // 应用限流，每60秒最多5次请求
     const requestKey = `ratelimit:${ip}`;
     try {
-      // 检查键是否存在以及剩余过期时间
-      const ttl = await CacheManager.ttl(requestKey);
-      // 如果键不存在(ttl = -2)或已过期(ttl = -1)，则删除并重置
-      if (ttl < 0) {
-        await CacheManager.del(requestKey);
+      // 获取当前计数
+      const currentCount = await CacheManager.get<string>(requestKey);
+      const count = parseInt(currentCount || '0', 10);
 
-        // 设置初始计数为1并设置过期时间
+      // 如果计数为0或不存在，说明是新的时间窗口
+      if (count === 0 || !currentCount) {
+        // 设置初始计数为1并设置过期时间60秒
         await CacheManager.set(requestKey, '1', { ex: 60 });
-        // 返回成功响应
+        
         return NextResponse.json({
           success: true,
           message: '请求成功',
@@ -31,18 +31,17 @@ export async function GET(request: NextRequest) {
         });
       }
 
-      // 获取当前计数
-      const currentCount = await CacheManager.get<string>(requestKey);
-      const count = parseInt(currentCount || '0', 10);
       // 如果已经超过限制
       if (count >= 5) {
+        const ttl = await CacheManager.ttl(requestKey);
         return NextResponse.json(
           {
             success: false,
             message: '请求频率过高，请稍后再试',
             ip: ip,
-            count: count + 1, // 显示增加后的计数
-            retryAfter: `${ttl}秒`, // 显示实际剩余时间
+            count: count,
+            retryAfter: `${ttl}秒`,
+            timestamp: new Date().toISOString(),
           },
           {
             status: 429, // Too Many Requests
@@ -55,7 +54,7 @@ export async function GET(request: NextRequest) {
 
       // 增加计数
       const newCount = await CacheManager.increment(requestKey);
-      // 返回成功响应
+      
       return NextResponse.json({
         success: true,
         message: '请求成功',

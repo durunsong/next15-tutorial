@@ -103,7 +103,10 @@ export async function POST(request: NextRequest) {
     console.log('文件大小检查:', file.size, 'max:', maxSize);
     if (file.size > maxSize) {
       console.log('错误: 文件大小超过限制');
-      return NextResponse.json({ success: false, message: '文件大小不能超过 5MB' }, { status: 400 });
+      return NextResponse.json(
+        { success: false, message: '文件大小不能超过 5MB' },
+        { status: 400 }
+      );
     }
 
     // 转换文件为Buffer
@@ -155,7 +158,7 @@ export async function POST(request: NextRequest) {
       console.log('构造OSS文件URL:', fileUrl);
     } else {
       console.log('OSS配置不完整，使用本地存储...');
-      
+
       // 本地存储备选方案
       const fs = await import('fs/promises');
       const path = await import('path');
