@@ -155,46 +155,46 @@ export async function POST(request: NextRequest) {
       console.log('构造OSS文件URL:', fileUrl);
     } else {
       console.log('OSS配置不完整，检查环境...');
-      
+
       // 检查是否在Vercel等serverless环境中
-      const isServerless = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NETLIFY;
-      
+      const isServerless =
+        process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NETLIFY;
+
       if (isServerless) {
         console.log('检测到serverless环境，使用base64存储...');
         // Serverless环境：将图片转换为base64存储
         const base64Data = buffer.toString('base64');
         const mimeType = file.type;
         const dataUrl = `data:${mimeType};base64,${base64Data}`;
-        
+
         console.log('Base64转换完成，大小:', base64Data.length);
-        
+
         // 返回data URL，前端可以直接使用
         fileUrl = dataUrl;
         console.log('构造base64 URL完成');
-        
       } else {
         console.log('本地环境，使用文件存储...');
         // 本地开发环境：文件存储
         const fs = await import('fs/promises');
         const path = await import('path');
-        
+
         // 确保uploads目录存在
         const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
         const avatarsDir = path.join(uploadsDir, 'avatars');
-        
+
         try {
           await fs.mkdir(avatarsDir, { recursive: true });
         } catch (error) {
           console.log('目录创建警告:', error);
         }
-        
+
         // 保存文件到本地
         const localFileName = `${decoded.userId}_${Date.now()}.${fileExtension}`;
         const localFilePath = path.join(avatarsDir, localFileName);
-        
+
         await fs.writeFile(localFilePath, buffer);
         console.log('本地文件保存成功:', localFilePath);
-        
+
         // 构造本地文件URL
         fileUrl = `/uploads/avatars/${localFileName}`;
         console.log('构造本地文件URL:', fileUrl);

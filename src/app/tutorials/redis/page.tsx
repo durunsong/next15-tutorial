@@ -10,6 +10,7 @@ import { CodeBlock } from '@/components/CodeBlock';
 import { CodeEditor } from '@/components/CodeEditor';
 import { DemoSection } from '@/components/DemoSection';
 import { TutorialLayout } from '@/components/TutorialLayout';
+import RedisTestComponent from '@/components/demos/RedisTestComponent';
 
 // 模拟 Redis 缓存演示组件
 function RedisDemo() {
@@ -855,6 +856,88 @@ await pipeline.exec();`}
           demoComponent={<CacheStrategyDemo />}
           codeComponent={
             <CodeBlock code={cacheStrategiesCode} language="typescript" filename="缓存策略实现" />
+          }
+        />
+
+        {/* Redis 实际功能测试 */}
+        <DemoSection
+          title="Redis 实际功能测试"
+          description="测试真实的Redis功能：验证码生成/验证、连接测试、限流保护等"
+          demoComponent={<RedisTestComponent />}
+          codeComponent={
+            <CodeBlock
+              code={`// Redis 验证码实现
+import { redis } from '@/lib/redis';
+
+// 生成验证码 API
+export async function POST(request: NextRequest) {
+  const { key } = await request.json();
+  
+  // 生成6位数验证码
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  const redisKey = \`captcha:\${key}\`;
+  
+  // 存储验证码，5分钟过期
+  await redis.set(redisKey, code, { ex: 300 });
+  
+  return NextResponse.json({
+    success: true,
+    code, // 开发环境返回验证码
+    message: '验证码生成成功',
+    expiresIn: '5分钟',
+    redisKey
+  });
+}
+
+// 验证验证码 API
+export async function POST(request: NextRequest) {
+  const { key, code } = await request.json();
+  const redisKey = \`captcha:\${key}\`;
+  
+  // 从Redis获取验证码
+  const storedCode = await redis.get(redisKey);
+  
+  if (!storedCode) {
+    return NextResponse.json({
+      success: false,
+      message: '验证码已过期或不存在'
+    });
+  }
+  
+  if (storedCode !== code) {
+    return NextResponse.json({
+      success: false,
+      message: '验证码错误'
+    });
+  }
+  
+  // 验证成功，删除验证码
+  await redis.del(redisKey);
+  
+  return NextResponse.json({
+    success: true,
+    message: '验证码验证成功'
+  });
+}
+
+// 限流实现
+export async function rateLimit(key: string, limit: number, window: number) {
+  const current = await redis.incr(key);
+  
+  if (current === 1) {
+    await redis.expire(key, window);
+  }
+  
+  return {
+    success: current <= limit,
+    current,
+    limit,
+    retryAfter: current > limit ? await redis.ttl(key) : null
+  };
+}`}
+              language="typescript"
+              filename="Redis 实际应用案例"
+            />
           }
         />
 
