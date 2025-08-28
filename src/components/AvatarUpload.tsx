@@ -23,7 +23,7 @@ export default function AvatarUpload({ currentAvatar, onAvatarChange }: AvatarUp
     // 验证文件类型
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
-      message.error('只支持图片格式：JPEG、PNG、GIF、WebP');
+      message.error('只支持图片格式：JPEG、PNG、JPG、GIF、WebP');
       return;
     }
 

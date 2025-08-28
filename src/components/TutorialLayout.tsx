@@ -49,7 +49,7 @@ export function TutorialLayout({
       </div>
 
       {/* 教程内容 */}
-      <div className="prose prose-lg max-w-none dark:prose-invert">{children}</div>
+      <div className="max-w-none">{children}</div>
 
       {/* 导航按钮 */}
       <div className="flex justify-between items-center mt-16 pt-8 border-t border-gray-200 dark:border-gray-700">
