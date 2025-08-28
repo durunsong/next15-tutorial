@@ -47,13 +47,30 @@ export async function POST(request: NextRequest) {
         });
       }
 
-      if (storedCode !== code) {
+      // 确保比较的都是字符串类型
+      const normalizedStoredCode = String(storedCode).trim();
+      const normalizedInputCode = String(code).trim();
+      
+      console.log('验证码比较:', {
+        storedCode: normalizedStoredCode,
+        inputCode: normalizedInputCode,
+        storedType: typeof storedCode,
+        inputType: typeof code,
+        redisKey,
+        match: normalizedStoredCode === normalizedInputCode,
+      });
+
+      if (normalizedStoredCode !== normalizedInputCode) {
         return NextResponse.json({
           success: false,
           message: '验证码错误',
           debug: {
-            expected: storedCode,
-            received: code,
+            expected: normalizedStoredCode,
+            received: normalizedInputCode,
+            originalStored: storedCode,
+            originalReceived: code,
+            storedType: typeof storedCode,
+            inputType: typeof code,
             timestamp: new Date().toISOString(),
             redisKey,
             environment: process.env.NODE_ENV || 'unknown',

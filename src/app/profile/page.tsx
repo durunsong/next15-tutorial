@@ -234,32 +234,19 @@ export default function ProfilePage() {
       const data = await response.json();
 
       if (response.ok) {
-        // 上传成功后，更新用户头像
-        const updateResponse = await fetch('/api/auth/me', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token && { Authorization: `Bearer ${token}` }),
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            avatar: data.avatarUrl,
-          }),
-        });
-
-        const updateData = await updateResponse.json();
-
-        if (updateResponse.ok) {
-          message.success('头像上传成功！');
-          setUserInfo(updateData.user);
-          // 同步更新全局认证状态
-          updateUser({ avatar: data.avatarUrl });
-          setAvatarModalVisible(false);
-        } else {
-          message.error(updateData.error || '头像更新失败');
+        message.success('头像上传成功！');
+        
+        // 更新本地用户信息
+        if (userInfo) {
+          const updatedUserInfo = { ...userInfo, avatar: data.data.avatarUrl };
+          setUserInfo(updatedUserInfo);
         }
+        
+        // 同步更新全局认证状态
+        updateUser({ avatar: data.data.avatarUrl });
+        setAvatarModalVisible(false);
       } else {
-        message.error(data.error || '上传失败');
+        message.error(data.message || '上传失败');
       }
     } catch (error) {
       console.error('上传头像错误：', error);
