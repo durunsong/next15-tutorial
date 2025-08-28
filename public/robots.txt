@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# 允许搜索引擎访问的页面
+Allow: /about
+Allow: /tech-stack
+Allow: /tutorials/
+Allow: /demo/
+
+# 禁止搜索引擎访问的页面
+Disallow: /profile
+Disallow: /auth/
+Disallow: /api/
+Disallow: /database
+Disallow: /redis-test
+Disallow: /customer-service
+
+# 网站地图
+Sitemap: https://next15-tutorial-green.vercel.app/sitemap.xml

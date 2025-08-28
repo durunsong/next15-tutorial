@@ -7,7 +7,7 @@ export const SITE_CONFIG = {
   name: 'Next.js 教程平台',
   description: '现代化的 Next.js + Prisma + Neon 全栈开发教程平台',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://next15-tutorial-green.vercel.app',
-  ogImage: '/og-image.png',
+  ogImage: '/favicon.ico',
   creator: 'Next.js Tutorial Team',
   keywords: [
     'Next.js',
