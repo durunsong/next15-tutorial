@@ -70,6 +70,8 @@ export default function RedisTestComponent() {
 
     setCaptchaLoading(true);
     setCaptchaResult(null);
+    setCaptchaCode(''); // 清空之前的验证码
+    setRedisKey(''); // 清空之前的Redis键
     try {
       const response = await fetch('/api/captcha/generate', {
         method: 'POST',

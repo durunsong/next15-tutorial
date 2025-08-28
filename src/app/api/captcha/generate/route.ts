@@ -37,19 +37,21 @@ export async function POST(request: NextRequest) {
 
       console.log(`验证码生成成功: ${key} -> ${code}`);
 
+      // 在开发环境或本地环境返回验证码便于测试
+      const isLocalOrDev = process.env.NODE_ENV === 'development' || 
+                          request.headers.get('host')?.includes('localhost');
+
       return NextResponse.json({
         success: true,
-        code: process.env.NODE_ENV === 'development' ? code : undefined, // 开发环境返回验证码
+        code: code, // 为了演示始终返回验证码
         message: '验证码生成成功',
         expiresIn: '5分钟',
-        redisKey: process.env.NODE_ENV === 'development' ? redisKey : undefined,
-        debug:
-          process.env.NODE_ENV === 'development'
-            ? {
-                environment: 'development',
-                timestamp: new Date().toISOString(),
-              }
-            : undefined,
+        redisKey: redisKey, // 为了演示始终返回Redis键
+        debug: isLocalOrDev ? {
+          environment: process.env.NODE_ENV,
+          host: request.headers.get('host'),
+          timestamp: new Date().toISOString(),
+        } : undefined,
       });
     } catch (redisError) {
       console.error('Redis操作失败:', redisError);
