@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
     // 添加详细的调试日志
     console.log('=== 头像上传开始 ===');
     console.log('请求头:', Object.fromEntries(request.headers.entries()));
-    
+
     // 验证认证
     let token = request.headers.get('authorization')?.replace('Bearer ', '');
     console.log('Authorization token:', token ? 'Found' : 'Not found');
@@ -75,9 +75,12 @@ export async function POST(request: NextRequest) {
 
     const data = await request.formData();
     console.log('FormData keys:', Array.from(data.keys()));
-    
+
     const file: File | null = data.get('avatar') as unknown as File;
-    console.log('文件信息:', file ? { name: file.name, type: file.type, size: file.size } : 'No file');
+    console.log(
+      '文件信息:',
+      file ? { name: file.name, type: file.type, size: file.size } : 'No file'
+    );
 
     if (!file) {
       console.log('错误: 没有找到文件');
@@ -161,10 +164,13 @@ export async function POST(request: NextRequest) {
     console.error('错误类型:', typeof error);
     console.error('错误消息:', error instanceof Error ? error.message : String(error));
     console.error('错误堆栈:', error instanceof Error ? error.stack : 'No stack trace');
-    
-    return NextResponse.json({ 
-      error: '上传失败，请重试',
-      details: process.env.NODE_ENV === 'development' ? String(error) : undefined
-    }, { status: 500 });
+
+    return NextResponse.json(
+      {
+        error: '上传失败，请重试',
+        details: process.env.NODE_ENV === 'development' ? String(error) : undefined,
+      },
+      { status: 500 }
+    );
   }
 }

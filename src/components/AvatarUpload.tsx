@@ -53,12 +53,12 @@ export default function AvatarUpload({ currentAvatar, onAvatarChange }: AvatarUp
 
       const result = await response.json();
 
-      if (result.success) {
-        setAvatarUrl(result.data.avatarUrl);
-        onAvatarChange?.(result.data.avatarUrl);
-        message.success('头像上传成功！');
+      if (response.ok && result.avatarUrl) {
+        setAvatarUrl(result.avatarUrl);
+        onAvatarChange?.(result.avatarUrl);
+        message.success(result.message || '头像上传成功！');
       } else {
-        message.error(result.message || '上传失败');
+        message.error(result.error || result.message || '上传失败');
       }
     } catch (error) {
       console.error('上传头像错误：', error);
