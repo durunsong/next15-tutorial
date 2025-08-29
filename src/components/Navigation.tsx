@@ -20,6 +20,7 @@ const navigationItems = [
   { name: 'Redis 缓存', href: '/tutorials/redis' },
   { name: '阿里云 OSS', href: '/tutorials/oss' },
   { name: 'Zustand', href: '/tutorials/zustand' },
+  { name: 'Live2D 演示', href: '/live2d-demo' },
 ];
 
 export function Navigation() {

@@ -9,12 +9,12 @@ import type { Metadata } from 'next';
 import { AuthProvider } from '@/components/AuthProvider';
 import BackToTop from '@/components/BackToTop';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import Live2DWidget from '@/components/Live2DWidget';
 import { Navigation } from '@/components/Navigation';
 import TawkToWidget from '@/components/TawkToWidget';
+import { SITE_CONFIG } from '@/lib/metadata';
 
 import './globals.css';
-
-import { SITE_CONFIG } from '@/lib/metadata';
 
 export const metadata: Metadata = {
   title: {
@@ -62,6 +62,9 @@ export default function RootLayout({
 
             {/* 回到顶部 */}
             <BackToTop />
+
+            {/* Live2D 看板娘 */}
+            <Live2DWidget />
 
             {/* Tawk.to 客服组件 */}
             <TawkToWidget
