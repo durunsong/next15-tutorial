@@ -93,7 +93,7 @@ export default function SSRPage() {
         <Suspense
           fallback={
             <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-600 border-t-transparent mx-auto"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-600 border-t-transparent mx-auto" />
               <p className="mt-2 text-gray-500">加载数据中...</p>
             </div>
           }

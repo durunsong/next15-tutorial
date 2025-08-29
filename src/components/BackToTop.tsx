@@ -32,7 +32,7 @@ export default function BackToTop() {
         icon={<UpOutlined />}
         type="primary"
         shape="circle"
-        style={{ right: 24, bottom: 124, width: 50, height: 50 }}
+        style={{ right: 24, bottom: 184, width: 50, height: 50 }}
       />
     </Tooltip>
   );

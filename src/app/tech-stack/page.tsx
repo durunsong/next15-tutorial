@@ -514,21 +514,21 @@ export default function TechStackPage() {
           {/* 难度说明 */}
           <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
             <div className="flex items-center gap-2 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-green-500 rounded-full" />
               <div>
                 <div className="font-medium text-green-800 dark:text-green-400">初级</div>
                 <div className="text-green-600 dark:text-green-300">基础技术，容易上手学习</div>
               </div>
             </div>
             <div className="flex items-center gap-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-              <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-yellow-500 rounded-full" />
               <div>
                 <div className="font-medium text-yellow-800 dark:text-yellow-400">中级</div>
                 <div className="text-yellow-600 dark:text-yellow-300">需要一定基础和经验</div>
               </div>
             </div>
             <div className="flex items-center gap-2 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
-              <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-red-500 rounded-full" />
               <div>
                 <div className="font-medium text-red-800 dark:text-red-400">高级</div>
                 <div className="text-red-600 dark:text-red-300">复杂技术，需要深度理解</div>

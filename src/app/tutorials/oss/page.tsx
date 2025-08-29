@@ -154,7 +154,7 @@ function FileUploadDemo() {
         {uploading && (
           <div className="mt-4">
             <div className="inline-flex items-center">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2" />
               <span className="text-blue-600">上传中...</span>
             </div>
           </div>

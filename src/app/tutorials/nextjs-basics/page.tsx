@@ -170,7 +170,7 @@ function LoadingErrorDemo() {
       <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg min-h-24 flex items-center justify-center">
         {loading && (
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2" />
             <p className="text-gray-600 dark:text-gray-300">加载中...</p>
           </div>
         )}

@@ -35,7 +35,18 @@ export class Live2DUtils {
    */
   static hide() {
     if (window.OML2D) {
-      window.OML2D.stageSlideDown();
+      try {
+        // 尝试不同的API方法
+        if (typeof window.OML2D.stageSlideDown === 'function') {
+          window.OML2D.stageSlideDown();
+        } else if (typeof window.OML2D.hide === 'function') {
+          window.OML2D.hide();
+        } else {
+          console.warn('Live2D hide method not available');
+        }
+      } catch (error) {
+        console.error('Failed to hide Live2D:', error);
+      }
     }
   }
 
@@ -44,7 +55,18 @@ export class Live2DUtils {
    */
   static show() {
     if (window.OML2D) {
-      window.OML2D.stageSlideUp();
+      try {
+        // 尝试不同的API方法
+        if (typeof window.OML2D.stageSlideUp === 'function') {
+          window.OML2D.stageSlideUp();
+        } else if (typeof window.OML2D.show === 'function') {
+          window.OML2D.show();
+        } else {
+          console.warn('Live2D show method not available');
+        }
+      } catch (error) {
+        console.error('Failed to show Live2D:', error);
+      }
     }
   }
 
