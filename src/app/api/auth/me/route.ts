@@ -89,9 +89,9 @@ export async function GET(req: NextRequest) {
 
     // 更新会话活跃时间
     const session = await CacheManager.get(`session:${decoded.userId}`);
-    if (session) {
+    if (session && typeof session === 'object') {
       const updatedSession = {
-        ...session,
+        ...(session as Record<string, any>),
         lastActivity: new Date().toISOString(),
       };
       // 延长会话时间

@@ -14,6 +14,7 @@ import { Navigation } from '@/components/Navigation';
 import TawkToWidget from '@/components/TawkToWidget';
 import { SITE_CONFIG } from '@/lib/metadata';
 
+// @ts-ignore
 import './globals.css';
 
 export const metadata: Metadata = {
