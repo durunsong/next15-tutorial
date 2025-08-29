@@ -218,7 +218,7 @@ export const live2dConfig = {
   // 高级配置
   statusBar: {
     enable: true,
-    styles: {
+    style: {
       backgroundColor: 'rgba(0, 0, 0, 0.7)',
       borderRadius: '8px',
       padding: '4px 8px',

@@ -4,12 +4,6 @@ import { useEffect, useRef } from 'react';
 
 import { live2dConfig } from '@/config/live2d.config';
 
-declare global {
-  interface Window {
-    OML2D?: any;
-  }
-}
-
 interface Live2DWidgetProps {
   models?: Array<{
     path: string;
@@ -52,7 +46,7 @@ const Live2DWidget: React.FC<Live2DWidgetProps> = ({
   primaryColor = live2dConfig.primaryColor,
   sayHello = live2dConfig.sayHello,
   transitionTime = live2dConfig.transitionTime,
-  parentElement = document.body,
+  parentElement = typeof document !== 'undefined' ? document.body : undefined,
   importType = live2dConfig.importType,
 }) => {
   const scriptLoaded = useRef(false);
@@ -61,6 +55,9 @@ const Live2DWidget: React.FC<Live2DWidgetProps> = ({
   useEffect(() => {
     const loadLive2D = async () => {
       if (scriptLoaded.current && widgetInitialized.current) return;
+      
+      // 检查是否在浏览器环境
+      if (typeof window === 'undefined') return;
 
       try {
         // 动态导入oh-my-live2d
@@ -77,7 +74,7 @@ const Live2DWidget: React.FC<Live2DWidgetProps> = ({
             transitionTime,
             parentElement:
               typeof parentElement === 'string'
-                ? (document.querySelector(parentElement) as HTMLElement) || undefined
+                ? (typeof document !== 'undefined' ? (document.querySelector(parentElement) as HTMLElement) || undefined : undefined)
                 : parentElement,
             importType,
             dockedPosition: live2dConfig.dockedPosition,
@@ -90,24 +87,24 @@ const Live2DWidget: React.FC<Live2DWidgetProps> = ({
           widgetInitialized.current = true;
 
           // 添加自定义交互功能
-          if (oml2d && oml2d.pixiStage) {
+          if (oml2d && (oml2d as any).pixiStage) {
             // 点击交互
-            oml2d.pixiStage.on('pointertap', () => {
+            (oml2d as any).pixiStage.on('pointertap', () => {
               const clickTips = (live2dConfig.tips as any).clickTips || [];
               const randomTip = clickTips[Math.floor(Math.random() * clickTips.length)];
               oml2d.tipsMessage(randomTip, 3000, 3);
             });
 
             // 鼠标悬停交互
-            oml2d.pixiStage.on('pointerover', () => {
-              if (oml2d.pixiApp && oml2d.pixiApp.stage) {
-                oml2d.pixiApp.stage.cursor = 'pointer';
+            (oml2d as any).pixiStage.on('pointerover', () => {
+              if ((oml2d as any).pixiApp && (oml2d as any).pixiApp.stage) {
+                (oml2d as any).pixiApp.stage.cursor = 'pointer';
               }
             });
 
-            oml2d.pixiStage.on('pointerout', () => {
-              if (oml2d.pixiApp && oml2d.pixiApp.stage) {
-                oml2d.pixiApp.stage.cursor = 'default';
+            (oml2d as any).pixiStage.on('pointerout', () => {
+              if ((oml2d as any).pixiApp && (oml2d as any).pixiApp.stage) {
+                (oml2d as any).pixiApp.stage.cursor = 'default';
               }
             });
           }
@@ -171,7 +168,7 @@ const Live2DWidget: React.FC<Live2DWidgetProps> = ({
 
     // 监听页面可见性变化
     const handleVisibilityChange = () => {
-      if (!document.hidden && window.OML2D && widgetInitialized.current) {
+      if (typeof document !== 'undefined' && !document.hidden && window.OML2D && widgetInitialized.current) {
         setTimeout(() => {
           try {
             window.OML2D.stageSlideUp();
@@ -183,11 +180,17 @@ const Live2DWidget: React.FC<Live2DWidgetProps> = ({
       }
     };
 
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+    }
 
     return () => {
-      window.removeEventListener('popstate', handleRouteChange);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('popstate', handleRouteChange);
+      }
+      if (typeof document !== 'undefined') {
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+      }
     };
   }, []);
 
