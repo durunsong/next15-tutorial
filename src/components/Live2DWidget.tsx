@@ -77,7 +77,7 @@ const Live2DWidget: React.FC<Live2DWidgetProps> = ({
             transitionTime,
             parentElement:
               typeof parentElement === 'string'
-                ? document.querySelector(parentElement)
+                ? (document.querySelector(parentElement) as HTMLElement) || undefined
                 : parentElement,
             importType,
             dockedPosition: live2dConfig.dockedPosition,
@@ -112,14 +112,14 @@ const Live2DWidget: React.FC<Live2DWidgetProps> = ({
             });
           }
 
-                      // 添加欢迎提示
-            if (sayHello && (live2dConfig.tips as any).welcomeTips) {
-              setTimeout(() => {
-                const welcomeTips = (live2dConfig.tips as any).welcomeTips || [];
-                const randomWelcome = welcomeTips[Math.floor(Math.random() * welcomeTips.length)];
-                oml2d.tipsMessage(randomWelcome, 4000, 3);
-              }, 2000);
-            }
+          // 添加欢迎提示
+          if (sayHello && (live2dConfig.tips as any).welcomeTips) {
+            setTimeout(() => {
+              const welcomeTips = (live2dConfig.tips as any).welcomeTips || [];
+              const randomWelcome = welcomeTips[Math.floor(Math.random() * welcomeTips.length)];
+              oml2d.tipsMessage(randomWelcome, 4000, 3);
+            }, 2000);
+          }
         }
       } catch (error) {
         console.error('Failed to load Live2D:', error);
