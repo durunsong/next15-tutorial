@@ -93,9 +93,9 @@ const Live2DWidget: React.FC<Live2DWidgetProps> = ({
           if (oml2d && oml2d.pixiStage) {
             // 点击交互
             oml2d.pixiStage.on('pointertap', () => {
-              const clickTips = live2dConfig.tips.clickTips || [];
+              const clickTips = (live2dConfig.tips as any).clickTips || [];
               const randomTip = clickTips[Math.floor(Math.random() * clickTips.length)];
-              oml2d.tipsMessage(randomTip, 3000);
+              oml2d.tipsMessage(randomTip, 3000, 3);
             });
 
             // 鼠标悬停交互
@@ -112,14 +112,14 @@ const Live2DWidget: React.FC<Live2DWidgetProps> = ({
             });
           }
 
-          // 添加欢迎提示
-          if (sayHello && live2dConfig.tips.welcomeTips) {
-            setTimeout(() => {
-              const welcomeTips = live2dConfig.tips.welcomeTips || [];
-              const randomWelcome = welcomeTips[Math.floor(Math.random() * welcomeTips.length)];
-              oml2d.tipsMessage(randomWelcome, 4000);
-            }, 2000);
-          }
+                      // 添加欢迎提示
+            if (sayHello && (live2dConfig.tips as any).welcomeTips) {
+              setTimeout(() => {
+                const welcomeTips = (live2dConfig.tips as any).welcomeTips || [];
+                const randomWelcome = welcomeTips[Math.floor(Math.random() * welcomeTips.length)];
+                oml2d.tipsMessage(randomWelcome, 4000, 3);
+              }, 2000);
+            }
         }
       } catch (error) {
         console.error('Failed to load Live2D:', error);
@@ -152,11 +152,11 @@ const Live2DWidget: React.FC<Live2DWidgetProps> = ({
             window.OML2D.stageSlideUp();
 
             // 显示路由变化提示
-            const routeTips = live2dConfig.tips.routeTips || [];
+            const routeTips = (live2dConfig.tips as any).routeTips || [];
             if (routeTips.length > 0) {
               const randomRouteTip = routeTips[Math.floor(Math.random() * routeTips.length)];
               setTimeout(() => {
-                window.OML2D.tipsMessage(randomRouteTip, 3000);
+                window.OML2D.tipsMessage(randomRouteTip, 3000, 3);
               }, 500);
             }
           } catch (error) {
@@ -175,7 +175,7 @@ const Live2DWidget: React.FC<Live2DWidgetProps> = ({
         setTimeout(() => {
           try {
             window.OML2D.stageSlideUp();
-            window.OML2D.tipsMessage('欢迎回来！我在这里等你呢～ 💖', 3000);
+            window.OML2D.tipsMessage('欢迎回来！我在这里等你呢～ 💖', 3000, 3);
           } catch (error) {
             console.error('Failed to handle visibility change for Live2D:', error);
           }

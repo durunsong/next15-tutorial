@@ -7,7 +7,7 @@ export class Live2DUtils {
    */
   static showMessage(message: string, duration: number = 3000) {
     if (window.OML2D) {
-      window.OML2D.tipsMessage(message, duration);
+      window.OML2D.tipsMessage(message, duration, 3);
     }
   }
 
