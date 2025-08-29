@@ -1,4 +1,12 @@
 // Live2D 配置文件
+
+// 添加全局类型声明
+declare global {
+  interface Window {
+    OML2D?: any;
+  }
+}
+
 export const live2dConfig = {
   // 模型配置
   models: [

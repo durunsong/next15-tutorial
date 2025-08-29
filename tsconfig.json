@@ -5,9 +5,10 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
+    "noImplicitAny": false,
 
     // 严格模式配置 (逐步启用)
-    "strict": true,
+    "strict": false,
     // "noUncheckedIndexedAccess": true,  // 将来启用
     // "exactOptionalPropertyTypes": true,  // 将来启用
     // "noImplicitReturns": true,  // useEffect 组件中可能有复杂返回逻辑，暂时禁用

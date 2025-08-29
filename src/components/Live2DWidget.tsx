@@ -4,6 +4,13 @@ import { useEffect, useRef } from 'react';
 
 import { live2dConfig } from '@/config/live2d.config';
 
+// 确保类型声明生效
+declare global {
+  interface Window {
+    OML2D?: any;
+  }
+}
+
 interface Live2DWidgetProps {
   models?: Array<{
     path: string;
@@ -55,7 +62,7 @@ const Live2DWidget: React.FC<Live2DWidgetProps> = ({
   useEffect(() => {
     const loadLive2D = async () => {
       if (scriptLoaded.current && widgetInitialized.current) return;
-      
+
       // 检查是否在浏览器环境
       if (typeof window === 'undefined') return;
 
@@ -74,7 +81,9 @@ const Live2DWidget: React.FC<Live2DWidgetProps> = ({
             transitionTime,
             parentElement:
               typeof parentElement === 'string'
-                ? (typeof document !== 'undefined' ? (document.querySelector(parentElement) as HTMLElement) || undefined : undefined)
+                ? typeof document !== 'undefined'
+                  ? (document.querySelector(parentElement) as HTMLElement) || undefined
+                  : undefined
                 : parentElement,
             importType,
             dockedPosition: live2dConfig.dockedPosition,
@@ -168,7 +177,12 @@ const Live2DWidget: React.FC<Live2DWidgetProps> = ({
 
     // 监听页面可见性变化
     const handleVisibilityChange = () => {
-      if (typeof document !== 'undefined' && !document.hidden && window.OML2D && widgetInitialized.current) {
+      if (
+        typeof document !== 'undefined' &&
+        !document.hidden &&
+        window.OML2D &&
+        widgetInitialized.current
+      ) {
         setTimeout(() => {
           try {
             window.OML2D.stageSlideUp();
