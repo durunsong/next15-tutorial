@@ -102,3 +102,5 @@ yarn-error.log*
 # Misc
 .eslintcache
 .stylelintcache
+
+.vercel

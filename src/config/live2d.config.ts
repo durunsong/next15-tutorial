@@ -181,11 +181,11 @@ export const live2dConfig = {
         title: '关于我',
         onClick: () => {
           if (window.OML2D) {
-                         window.OML2D.tipsMessage(
-               '我是基于 Live2D 技术的虚拟助手，使用 oh-my-live2d 库开发～ 💻\n点击我可以互动，右键菜单有更多功能哦！',
-               6000,
-               3
-             );
+            window.OML2D.tipsMessage(
+              '我是基于 Live2D 技术的虚拟助手，使用 oh-my-live2d 库开发～ 💻\n点击我可以互动，右键菜单有更多功能哦！',
+              6000,
+              3
+            );
           }
         },
       },

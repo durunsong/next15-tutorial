@@ -284,7 +284,7 @@ export default function RedisTestComponent() {
                   </div>
                   <details className="mt-2">
                     <summary className="cursor-pointer text-sm font-medium">
-                      查看完整API响应 (教学用)
+                      查看完整API响应
                     </summary>
                     <pre className="bg-gray-50 p-2 rounded mt-2 overflow-auto text-xs">
                       {JSON.stringify(captchaResult, null, 2)}
@@ -358,7 +358,7 @@ export default function RedisTestComponent() {
                   </div>
                   <details className="mt-2">
                     <summary className="cursor-pointer text-sm font-medium">
-                      查看完整API响应 (教学用)
+                      查看完整API响应
                     </summary>
                     <pre className="bg-gray-50 p-2 rounded mt-2 overflow-auto text-xs">
                       {JSON.stringify(verifyResult, null, 2)}
