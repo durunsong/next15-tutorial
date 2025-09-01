@@ -461,7 +461,7 @@ export default function TechStackPage() {
               <button
                 key={category.key}
                 onClick={() => setSelectedCategory(category.key)}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`flex items-center cursor-pointer space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   selectedCategory === category.key
                     ? 'bg-blue-600 text-white'
                     : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
@@ -490,7 +490,7 @@ export default function TechStackPage() {
                 <button
                   key={difficulty.key}
                   onClick={() => setSelectedDifficulty(difficulty.key)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 flex items-center gap-2 ${
+                  className={`px-4 py-2 cursor-pointer rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 flex items-center gap-2 ${
                     selectedDifficulty === difficulty.key
                       ? 'bg-blue-600 text-white shadow-lg'
                       : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
@@ -560,7 +560,7 @@ export default function TechStackPage() {
                 setSelectedCategory('all');
                 setSelectedDifficulty('all');
               }}
-              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-sm font-medium"
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 text-sm font-medium cursor-pointer"
             >
               清除筛选
             </button>
@@ -659,7 +659,7 @@ export default function TechStackPage() {
                   setSelectedCategory('all');
                   setSelectedDifficulty('all');
                 }}
-                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 ml-1"
+                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 ml-1 cursor-pointer"
               >
                 查看全部技术
               </button>
