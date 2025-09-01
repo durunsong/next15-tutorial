@@ -302,7 +302,7 @@ export function NetworkMonitor() {
             <h3 className="font-semibold">网络监控</h3>
             {isMonitoring && (
               <div className="flex items-center space-x-2 text-sm text-blue-600">
-                <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-600 border-t-transparent"></div>
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-600 border-t-transparent" />
                 <span>监控中...</span>
               </div>
             )}
@@ -382,22 +382,22 @@ export function NetworkMonitor() {
                     className="bg-blue-400"
                     style={{ width: `${(request.timing.dns / request.timing.total) * 100}%` }}
                     title={`DNS: ${formatTime(request.timing.dns)}`}
-                  ></div>
+                  />
                   <div
                     className="bg-green-400"
                     style={{ width: `${(request.timing.connect / request.timing.total) * 100}%` }}
                     title={`Connect: ${formatTime(request.timing.connect)}`}
-                  ></div>
+                  />
                   <div
                     className="bg-yellow-400"
                     style={{ width: `${(request.timing.request / request.timing.total) * 100}%` }}
                     title={`Request: ${formatTime(request.timing.request)}`}
-                  ></div>
+                  />
                   <div
                     className="bg-red-400"
                     style={{ width: `${(request.timing.response / request.timing.total) * 100}%` }}
                     title={`Response: ${formatTime(request.timing.response)}`}
-                  ></div>
+                  />
                 </div>
 
                 <div className="flex justify-between text-xs text-gray-500 mt-1">

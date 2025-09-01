@@ -58,7 +58,6 @@ export function DynamicRouteDemo() {
               setCurrentPath(example.path);
               // 过滤掉 undefined 值
               const filteredParams = Object.fromEntries(
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 Object.entries(example.params).filter(([_, value]) => value !== undefined)
               ) as Record<string, string>;
               setParams(filteredParams);

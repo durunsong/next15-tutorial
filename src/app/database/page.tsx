@@ -880,7 +880,7 @@ export default function DatabasePage() {
           <Form.Item label="发布状态" name="published" initialValue={false}>
             <Select>
               <Select.Option value={false}>草稿</Select.Option>
-              <Select.Option value={true}>发布</Select.Option>
+              <Select.Option value>发布</Select.Option>
             </Select>
           </Form.Item>
 

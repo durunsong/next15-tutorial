@@ -15,11 +15,7 @@
       "type": "image/x-icon"
     }
   ],
-  "categories": [
-    "education",
-    "developer",
-    "tutorial"
-  ],
+  "categories": ["education", "developer", "tutorial"],
   "lang": "zh-CN",
   "dir": "ltr"
 }

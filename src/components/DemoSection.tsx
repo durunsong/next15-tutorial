@@ -2,8 +2,7 @@
 
 import { Code, Eye } from 'lucide-react';
 
-import { ReactNode } from 'react';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 
 interface DemoSectionProps {
   title: string;

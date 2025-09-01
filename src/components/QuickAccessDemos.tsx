@@ -107,7 +107,7 @@ export function QuickAccessDemos() {
                   <div key={index} className="flex items-center space-x-2">
                     <div
                       className={`w-1.5 h-1.5 rounded-full ${colorClasses.text.replace('text-', 'bg-')}`}
-                    ></div>
+                    />
                     <span className="text-xs text-gray-600 dark:text-gray-400">{feature}</span>
                   </div>
                 ))}

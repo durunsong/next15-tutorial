@@ -1,11 +1,8 @@
 import type { Metadata } from 'next';
+
 import { generateDynamicMetadata } from '@/lib/metadata';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { id: string };
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   // 在实际应用中，这里可以从API获取用户信息
   // 目前使用默认的动态metadata配置
   const dynamicConfig = generateDynamicMetadata(

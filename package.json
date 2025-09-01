@@ -13,7 +13,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "pre-commit": "lint-staged",
-    "pre-deploy": "pnpm lint && pnpm type-check && pnpm format:check && pnpm build",
+    "pre-deploy": "pnpm lint && pnpm type-check && pnpm format && pnpm build",
     "pre-commit-check": "pnpm lint:fix && pnpm type-check && pnpm format",
     "pre-push-check": "pnpm lint && pnpm type-check && pnpm format:check && pnpm build",
     "quick-check": "pnpm lint && pnpm type-check",

@@ -1,5 +1,6 @@
-import { generateMetadata, PAGE_METADATA } from '@/lib/metadata';
 import Link from 'next/link';
+
+import { PAGE_METADATA, generateMetadata } from '@/lib/metadata';
 
 export const metadata = generateMetadata(PAGE_METADATA.about);
 

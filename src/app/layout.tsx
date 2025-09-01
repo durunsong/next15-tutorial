@@ -11,10 +11,9 @@ import BackToTop from '@/components/BackToTop';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { Navigation } from '@/components/Navigation';
 import TawkToWidget from '@/components/TawkToWidget';
+import { SITE_CONFIG } from '@/lib/metadata';
 
 import './globals.css';
-
-import { SITE_CONFIG } from '@/lib/metadata';
 
 export const metadata: Metadata = {
   title: {

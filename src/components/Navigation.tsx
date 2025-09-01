@@ -1,7 +1,6 @@
 'use client';
 
-import type { MenuProps } from 'antd';
-import { Avatar, Button, Dropdown, message } from 'antd';
+import { Avatar, Button, Dropdown, type MenuProps, message } from 'antd';
 import { LogIn, LogOut, Menu, User, UserCircle, X } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
