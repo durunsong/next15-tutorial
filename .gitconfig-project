@@ -1,0 +1,16 @@
+# 项目级别的 Git 配置
+# 运行以下命令来应用配置：
+# git config core.autocrlf false
+# git config core.eol lf
+# git config core.safecrlf warn
+
+[core]
+    autocrlf = false
+    eol = lf
+    safecrlf = warn
+
+[push]
+    default = simple
+
+[pull]
+    rebase = false
