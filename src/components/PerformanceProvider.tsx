@@ -79,7 +79,7 @@ export function PerformanceProvider({
         intervalRef.current = null;
       }
     };
-  }, [enableDevTools]); // 移除 refreshMetrics 依赖，避免循环
+    }, [enableDevTools, refreshMetrics]); // 保持依赖完整性
 
   // 在开发环境下显示性能建议（进一步减少频率）
   useEffect(() => {

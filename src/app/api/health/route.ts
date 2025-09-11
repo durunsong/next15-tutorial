@@ -87,7 +87,7 @@ async function checkRedis(): Promise<HealthCheck> {
     return {
       status: 'fail',
       responseTime,
-      error: error instanceof Error ? error.message : 'Unknown Redis error',
+      error: _error instanceof Error ? _error.message : 'Unknown Redis error',
     };
   }
 }
@@ -141,7 +141,7 @@ function calculateOverallStatus(
 /**
  * GET 请求处理
  */
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now();
 
   try {
@@ -217,7 +217,7 @@ export async function HEAD(_request: NextRequest): Promise<NextResponse> {
         'Cache-Control': 'no-store, no-cache, must-revalidate',
       },
     });
-  } catch (error) {
+  } catch (_error) {
     return new NextResponse(null, {
       status: 503,
       headers: {

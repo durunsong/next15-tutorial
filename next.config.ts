@@ -62,10 +62,11 @@ const nextConfig: NextConfig = {
   },
 
   // Webpack 配置优化
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+      webpack: (config, { dev, isServer }) => {
     // 优化包分析
-    if (process.env.ANALYZE === 'true') {
-      const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+        if (process.env.ANALYZE === 'true') {
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
+          const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
       config.plugins.push(
         new BundleAnalyzerPlugin({
           analyzerMode: 'static',
