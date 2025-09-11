@@ -35,6 +35,11 @@ import { Component, type ErrorInfo, type ReactNode } from 'react';
  * 捕获并处理 React 组件树中的错误，提供优雅的错误处理界面
  */
 
+/**
+ * 错误边界组件
+ * 捕获并处理 React 组件树中的错误，提供优雅的错误处理界面
+ */
+
 interface Props {
   children: ReactNode;
   fallback?: ReactNode;
@@ -58,7 +63,7 @@ class ErrorBoundary extends Component<Props, State> {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // 记录错误信息
     this.setState({ error, errorInfo });
 
@@ -107,7 +112,7 @@ class ErrorBoundary extends Component<Props, State> {
     window.location.reload();
   };
 
-  render() {
+  override render() {
     if (this.state.hasError) {
       // 如果提供了自定义 fallback，使用它
       if (this.props.fallback) {

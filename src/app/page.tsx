@@ -17,6 +17,8 @@ import { useState } from 'react';
 
 import Link from 'next/link';
 
+import ClientOnly from '@/components/ClientOnly';
+
 interface TechStackItem {
   name: string;
   description: string;
@@ -218,6 +220,29 @@ const techStack: TechStackItem[] = [
     difficulty: 'intermediate',
     color: 'bg-blue-700 text-white',
   },
+  // 高级技术
+  {
+    name: 'GraphQL',
+    description: 'API 查询语言和运行时',
+    category: 'backend',
+    icon: Database,
+    features: ['类型安全', '按需查询', '实时订阅', '自省能力'],
+    officialLink: 'https://graphql.org',
+    version: '16.8.x',
+    difficulty: 'advanced',
+    color: 'bg-pink-600 text-white',
+  },
+  {
+    name: 'Serverless',
+    description: '无服务器计算模式',
+    category: 'cloud',
+    icon: Cloud,
+    features: ['按需计费', '自动扩展', '事件驱动', '零运维'],
+    officialLink: 'https://www.serverless.com',
+    version: '3.38.x',
+    difficulty: 'advanced',
+    color: 'bg-teal-600 text-white',
+  },
 ];
 
 const categories = [
@@ -367,9 +392,15 @@ export default function HomePage() {
         <div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
             按难度筛选
-            <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
-              (当前显示 {filteredTechStack.length} 项技术)
-            </span>
+            <ClientOnly
+              fallback={
+                <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">(加载中...)</span>
+              }
+            >
+              <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
+                (当前显示 {filteredTechStack.length} 项技术)
+              </span>
+            </ClientOnly>
           </h3>
           <div className="flex flex-wrap gap-2">
             {difficulties.map(difficulty => {
@@ -386,15 +417,23 @@ export default function HomePage() {
                   }`}
                 >
                   <span>{difficulty.name}</span>
-                  <span
-                    className={`px-2 py-0.5 rounded-full text-xs ${
-                      selectedDifficulty === difficulty.key
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
-                    }`}
+                  <ClientOnly
+                    fallback={
+                      <span className="px-2 py-0.5 rounded-full text-xs bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+                        -
+                      </span>
+                    }
                   >
-                    {count}
-                  </span>
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-xs ${
+                        selectedDifficulty === difficulty.key
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  </ClientOnly>
                 </button>
               );
             })}

@@ -10,6 +10,7 @@ import { AuthProvider } from '@/components/AuthProvider';
 import BackToTop from '@/components/BackToTop';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { Navigation } from '@/components/Navigation';
+import { PerformanceProvider } from '@/components/PerformanceProvider';
 import TawkToWidget from '@/components/TawkToWidget';
 import { SITE_CONFIG } from '@/lib/metadata';
 
@@ -49,29 +50,33 @@ export default function RootLayout({
       <head />
       <body className="antialiased font-sans">
         <ErrorBoundary>
-          <AuthProvider>
-            {/* 固定在顶部的导航栏 */}
-            <div className="fixed top-0 left-0 right-0 z-50">
-              <Suspense fallback={null}>
-                <Navigation />
-              </Suspense>
-            </div>
-            {/* 主内容区域，添加上边距避免被导航栏遮挡 */}
-            <main className="mt-16">{children}</main>
+          <PerformanceProvider enableDevTools={false}>
+            <AuthProvider>
+              {/* 固定在顶部的导航栏 */}
+              <div className="fixed top-0 left-0 right-0 z-50">
+                <Suspense fallback={null}>
+                  <Navigation />
+                </Suspense>
+              </div>
+              {/* 主内容区域，添加上边距避免被导航栏遮挡 */}
+              <main className="mt-16">{children}</main>
 
-            {/* 回到顶部 */}
-            <BackToTop />
+              {/* 回到顶部 */}
+              <BackToTop />
 
-            {/* Tawk.to 客服组件 */}
-            <TawkToWidget
-              enableInDev
-              customSettings={{
-                position: 'bottom-right',
-                showPreChatForm: true,
-                showOfflineForm: true,
-              }}
-            />
-          </AuthProvider>
+              {/* Tawk.to 客服组件 - 暂时禁用以避免错误 */}
+              {process.env.NODE_ENV === 'production' && (
+                <TawkToWidget
+                  enableInDev={false}
+                  customSettings={{
+                    position: 'bottom-right',
+                    showPreChatForm: true,
+                    showOfflineForm: true,
+                  }}
+                />
+              )}
+            </AuthProvider>
+          </PerformanceProvider>
         </ErrorBoundary>
       </body>
     </html>

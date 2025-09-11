@@ -8,10 +8,12 @@
 
     // 严格模式配置 (逐步启用)
     "strict": true,
-    // "noUncheckedIndexedAccess": true,  // 将来启用
-    // "exactOptionalPropertyTypes": true,  // 将来启用
-    // "noImplicitReturns": true,  // useEffect 组件中可能有复杂返回逻辑，暂时禁用
+    "noUncheckedIndexedAccess": true, // 启用：避免未检查的索引访问
+    // "exactOptionalPropertyTypes": true,  // 将来启用：精确的可选属性类型
+    "noImplicitReturns": true, // 启用：所有代码路径都必须返回值
     "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true, // 启用：要求显式的 override 关键字
+    "noPropertyAccessFromIndexSignature": true, // 启用：从索引签名访问属性时要求使用括号记法
     // "noUncheckedSideEffectImports": true,  // 将来启用
 
     // 模块配置
@@ -52,7 +54,10 @@
       "@/utils/*": ["./src/utils/*"],
       "@/types/*": ["./src/types/*"],
       "@/store/*": ["./src/store/*"],
-      "@/app/*": ["./src/app/*"]
+      "@/app/*": ["./src/app/*"],
+      "@/hooks/*": ["./src/hooks/*"],
+      "@/services/*": ["./src/services/*"],
+      "@/styles/*": ["./src/styles/*"]
     }
   },
   "include": [
