@@ -64,17 +64,16 @@ export default function RootLayout({
               {/* 回到顶部 */}
               <BackToTop />
 
-              {/* Tawk.to 客服组件 - 暂时禁用以避免错误 */}
-              {process.env.NODE_ENV === 'production' && (
-                <TawkToWidget
-                  enableInDev={false}
-                  customSettings={{
-                    position: 'bottom-right',
-                    showPreChatForm: true,
-                    showOfflineForm: true,
-                  }}
-                />
-              )}
+              {/* Tawk.to 客服组件 - 页面加载完成后延迟3秒加载 */}
+              <TawkToWidget
+                enableInDev // 开发环境也启用，便于测试
+                delayMs={3000} // 延迟3秒加载
+                customSettings={{
+                  position: 'bottom-right',
+                  showPreChatForm: true,
+                  showOfflineForm: true,
+                }}
+              />
             </AuthProvider>
           </PerformanceProvider>
         </ErrorBoundary>

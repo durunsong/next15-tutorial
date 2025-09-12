@@ -62,11 +62,11 @@ const nextConfig: NextConfig = {
   },
 
   // Webpack 配置优化
-      webpack: (config, { dev, isServer }) => {
+  webpack: (config, { dev, isServer }) => {
     // 优化包分析
-        if (process.env.ANALYZE === 'true') {
-          // eslint-disable-next-line @typescript-eslint/no-require-imports
-          const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+    if (process.env.ANALYZE === 'true') {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
       config.plugins.push(
         new BundleAnalyzerPlugin({
           analyzerMode: 'static',
@@ -155,13 +155,14 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' *.tawk.to *.antd.org cdn.jsdelivr.net",
-              "style-src 'self' 'unsafe-inline' fonts.googleapis.com cdn.jsdelivr.net *.antd.org",
-              "font-src 'self' fonts.gstatic.com",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' *.tawk.to *.antd.org cdn.jsdelivr.net unpkg.com",
+              "style-src 'self' 'unsafe-inline' fonts.googleapis.com cdn.jsdelivr.net *.antd.org *.tawk.to",
+              "font-src 'self' fonts.gstatic.com *.tawk.to cdn.jsdelivr.net",
               "img-src 'self' data: blob: https: *.aliyuncs.com *.dicebear.com *.antd.org",
               "media-src 'self' blob:",
               "connect-src 'self' *.tawk.to wss://*.tawk.to *.upstash.io",
               "frame-src 'self' *.tawk.to",
+              "worker-src 'self' blob:",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",
