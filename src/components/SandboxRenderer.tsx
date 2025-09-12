@@ -14,7 +14,7 @@ export function SandboxRenderer({ code, language }: SandboxRendererProps) {
 
   useEffect(() => {
     if (!code.trim() || !['javascript', 'typescript', 'jsx', 'tsx'].includes(language)) {
-      return;
+      return undefined;
     }
 
     setIsLoading(true);
@@ -22,7 +22,7 @@ export function SandboxRenderer({ code, language }: SandboxRendererProps) {
 
     try {
       const iframe = iframeRef.current;
-      if (!iframe) return;
+      if (!iframe) return undefined;
 
       // 构建沙箱 HTML 内容
       const sandboxHtml = createSandboxHtml(code, language);
@@ -48,6 +48,8 @@ export function SandboxRenderer({ code, language }: SandboxRendererProps) {
     } catch (err) {
       setError(err instanceof Error ? err.message : '未知错误');
       setIsLoading(false);
+      // 确保所有代码路径都有返回值，避免 TypeScript 错误
+      return undefined;
     }
   }, [code, language]);
 

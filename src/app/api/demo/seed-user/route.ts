@@ -207,19 +207,22 @@ model Post {
     if (createdUsers.length > 0) {
       const firstUser = createdUsers[0];
 
-      for (const postData of demoPosts) {
-        // 检查文章是否已存在
-        const existingPost = await prisma.post.findFirst({
-          where: { title: postData.title },
-        });
-
-        if (!existingPost) {
-          await prisma.post.create({
-            data: {
-              ...postData,
-              authorId: firstUser.id,
-            },
+      // 确保 firstUser 存在，避免 TypeScript 类型错误
+      if (firstUser) {
+        for (const postData of demoPosts) {
+          // 检查文章是否已存在
+          const existingPost = await prisma.post.findFirst({
+            where: { title: postData.title },
           });
+
+          if (!existingPost) {
+            await prisma.post.create({
+              data: {
+                ...postData,
+                authorId: firstUser.id,
+              },
+            });
+          }
         }
       }
     }

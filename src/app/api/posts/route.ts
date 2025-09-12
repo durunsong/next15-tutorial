@@ -39,22 +39,26 @@ export async function GET(req: NextRequest) {
     const where: Record<string, unknown> = {};
 
     if (search) {
-      where.OR = [
+      // 使用方括号表示法访问 OR 属性，避免 TypeScript 类型错误
+      where['OR'] = [
         { title: { contains: search, mode: 'insensitive' } },
         { content: { contains: search, mode: 'insensitive' } },
       ];
     }
 
     if (category) {
-      where.category = category;
+      // 使用方括号表示法访问 category 属性，避免 TypeScript 类型错误
+      where['category'] = category;
     }
 
     if (difficulty) {
-      where.difficulty = difficulty;
+      // 使用方括号表示法访问 difficulty 属性，避免 TypeScript 类型错误
+      where['difficulty'] = difficulty;
     }
 
     if (published !== null && published !== undefined) {
-      where.published = published === 'true';
+      // 使用方括号表示法访问 published 属性，避免 TypeScript 类型错误
+      where['published'] = published === 'true';
     }
 
     // 并行查询文章列表和总数

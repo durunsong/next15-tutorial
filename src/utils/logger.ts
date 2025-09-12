@@ -39,6 +39,11 @@ export class Logger {
   private config: LoggerConfig;
   private static instance: Logger;
 
+  // 添加 getter 方法来访问配置，避免私有属性访问错误
+  protected getConfig(): LoggerConfig {
+    return this.config;
+  }
+
   constructor(config: Partial<LoggerConfig> = {}) {
     this.config = {
       level: LogLevel.INFO,
@@ -73,7 +78,7 @@ export class Logger {
       level,
       message,
       timestamp: new Date().toISOString(),
-      context: context || this.config.context,
+      context: context || this.getConfig().context,
       metadata,
       error,
     };
@@ -84,7 +89,7 @@ export class Logger {
    */
   private shouldLog(level: LogLevel): boolean {
     const levels = [LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARN, LogLevel.ERROR];
-    const currentLevelIndex = levels.indexOf(this.config.level);
+    const currentLevelIndex = levels.indexOf(this.getConfig().level);
     const requestedLevelIndex = levels.indexOf(level);
     return requestedLevelIndex >= currentLevelIndex;
   }
@@ -137,7 +142,7 @@ export class Logger {
     }
 
     // 控制台输出
-    if (this.config.enableConsole) {
+    if (this.getConfig().enableConsole) {
       const formatted = this.formatForConsole(entry);
 
       switch (entry.level) {
@@ -157,12 +162,12 @@ export class Logger {
     }
 
     // 文件输出（Node.js 环境）
-    if (this.config.enableFile && typeof window === 'undefined') {
+    if (this.getConfig().enableFile && typeof window === 'undefined') {
       this.writeToFile(entry);
     }
 
     // 远程日志服务输出
-    if (this.config.enableRemote) {
+    if (this.getConfig().enableRemote) {
       this.sendToRemote(entry);
     }
   }
@@ -303,16 +308,17 @@ export class RequestLogger extends Logger {
     const metadata = { statusCode, duration };
 
     // 直接创建条目而不使用私有方法
+    const config = this.getConfig();
     const entry = {
       level,
       message,
       timestamp: new Date().toISOString(),
-      context: this.config.context,
+      context: config.context,
       metadata,
     };
 
     // 直接输出而不使用私有方法
-    if (this.config.enableConsole) {
+    if (config.enableConsole) {
       console.log(`[${entry.timestamp}] ${level.toUpperCase()}: ${message}`, metadata);
     }
   }

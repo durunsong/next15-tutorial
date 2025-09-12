@@ -73,7 +73,7 @@ export const perfLog = {
       try {
         performance.measure(name, startMark, endMark);
         const entries = performance.getEntriesByName(name);
-        if (entries.length > 0) {
+        if (entries.length > 0 && entries[0] && entries[0].duration !== undefined) {
           console.log(`[PERF] ${name}:`, `${entries[0].duration.toFixed(2)}ms`);
         }
       } catch (error) {

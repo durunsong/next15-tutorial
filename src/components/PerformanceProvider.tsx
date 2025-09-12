@@ -79,7 +79,7 @@ export function PerformanceProvider({
         intervalRef.current = null;
       }
     };
-    }, [enableDevTools, refreshMetrics]); // 保持依赖完整性
+  }, [enableDevTools, refreshMetrics]); // 保持依赖完整性
 
   // 在开发环境下显示性能建议（进一步减少频率）
   useEffect(() => {
@@ -95,9 +95,12 @@ export function PerformanceProvider({
           console.groupEnd();
         }, 3000); // 3秒防抖
 
+        // 返回清理函数
         return () => clearTimeout(timeoutId);
       }
     }
+    // 确保所有代码路径都有返回值，避免 TypeScript 错误
+    return undefined;
   }, [suggestions, enableDevTools]);
 
   return (

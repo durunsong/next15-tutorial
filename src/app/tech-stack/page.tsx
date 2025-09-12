@@ -501,20 +501,20 @@ export default function TechStackPage() {
           <div className="text-sm text-gray-600 dark:text-gray-300">总技术数</div>
         </div>
         <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 text-center">
-          <div className="text-2xl font-bold text-green-600">{stats.frontend || 0}</div>
+          <div className="text-2xl font-bold text-green-600">{stats['frontend'] || 0}</div>
           <div className="text-sm text-gray-600 dark:text-gray-300">前端技术</div>
         </div>
         <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 text-center">
-          <div className="text-2xl font-bold text-purple-600">{stats.backend || 0}</div>
+          <div className="text-2xl font-bold text-purple-600">{stats['backend'] || 0}</div>
           <div className="text-sm text-gray-600 dark:text-gray-300">后端技术</div>
         </div>
         <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 text-center">
-          <div className="text-2xl font-bold text-indigo-600">{stats.database || 0}</div>
+          <div className="text-2xl font-bold text-indigo-600">{stats['database'] || 0}</div>
           <div className="text-sm text-gray-600 dark:text-gray-300">数据库</div>
         </div>
         <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 text-center">
           <div className="text-2xl font-bold text-orange-600">
-            {(stats.cloud || 0) + (stats.tools || 0)}
+            {(stats['cloud'] || 0) + (stats['tools'] || 0)}
           </div>
           <div className="text-sm text-gray-600 dark:text-gray-300">云服务&工具</div>
         </div>

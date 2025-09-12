@@ -114,32 +114,42 @@ export function CodeBlock({
         if (!grammar) {
           if (currentLanguage === 'tsx') {
             // TSX回退顺序：tsx -> typescript -> jsx -> javascript
+            // 使用方括号表示法访问属性，避免 TypeScript 类型错误
             grammar =
-              Prism.languages.tsx ||
-              Prism.languages.typescript ||
-              Prism.languages.jsx ||
-              Prism.languages.javascript;
+              Prism.languages['tsx'] ||
+              Prism.languages['typescript'] ||
+              Prism.languages['jsx'] ||
+              Prism.languages['javascript'];
             targetLanguage =
-              grammar === Prism.languages.typescript
+              grammar === Prism.languages['typescript']
                 ? 'typescript'
-                : grammar === Prism.languages.jsx
+                : grammar === Prism.languages['jsx']
                   ? 'jsx'
-                  : grammar === Prism.languages.javascript
+                  : grammar === Prism.languages['javascript']
                     ? 'javascript'
                     : 'tsx';
           } else if (currentLanguage === 'ts') {
-            grammar = Prism.languages.typescript || Prism.languages.javascript;
-            targetLanguage = grammar === Prism.languages.javascript ? 'javascript' : 'typescript';
+            grammar = Prism.languages['typescript'] || Prism.languages['javascript'];
+            targetLanguage =
+              grammar === Prism.languages['javascript'] ? 'javascript' : 'typescript';
           } else if (currentLanguage === 'jsx') {
-            grammar = Prism.languages.jsx || Prism.languages.javascript;
-            targetLanguage = grammar === Prism.languages.javascript ? 'javascript' : 'jsx';
+            grammar = Prism.languages['jsx'] || Prism.languages['javascript'];
+            targetLanguage = grammar === Prism.languages['javascript'] ? 'javascript' : 'jsx';
           }
 
           // 最终回退到plaintext
           if (!grammar) {
-            grammar = Prism.languages.plaintext;
+            grammar = Prism.languages['plaintext'];
             targetLanguage = 'plaintext';
           }
+        }
+
+        // 确保 grammar 存在，避免 TypeScript 类型错误
+        if (!grammar) {
+          // 最后的回退，直接显示原始代码
+          setHighlightedCode(code);
+          setIsLoading(false);
+          return;
         }
 
         const highlighted = Prism.highlight(code, grammar, targetLanguage);

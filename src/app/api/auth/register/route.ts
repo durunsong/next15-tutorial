@@ -121,7 +121,11 @@ export async function POST(req: NextRequest) {
   try {
     // 获取客户端IP
     const forwarded = req.headers.get('x-forwarded-for');
-    const ip = forwarded ? forwarded.split(',')[0] : req.headers.get('x-real-ip') || 'unknown';
+    const realIp = req.headers.get('x-real-ip');
+    // 确保 ip 始终为 string 类型，避免 TypeScript 类型错误
+    const ip: string = forwarded
+      ? forwarded.split(',')[0]?.trim() || 'unknown'
+      : realIp || 'unknown';
 
     // 检查限流
     const rateLimit = await checkRateLimit(ip);

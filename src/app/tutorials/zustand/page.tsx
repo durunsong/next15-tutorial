@@ -371,8 +371,8 @@ function ComplexStateDemo() {
               <p className="text-gray-900 dark:text-white">{notification.message}</p>
               <p className="text-xs text-gray-500 dark:text-gray-400">
                 {isClient
-                  ? notification.timestamp.toLocaleTimeString()
-                  : notification.timestamp.toISOString().split('T')[1].slice(0, 8)}
+                  ? notification.timestamp?.toLocaleTimeString() || ''
+                  : notification.timestamp?.toISOString()?.split('T')?.[1]?.slice(0, 8) || ''}
               </p>
             </div>
           ))}

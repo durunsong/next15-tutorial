@@ -48,7 +48,8 @@ export default function UserDetailPage() {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const userId = params?.id as string;
+  // 使用方括号表示法访问 id 属性，避免 TypeScript 类型错误
+  const userId = params?.['id'] as string;
 
   useEffect(() => {
     if (!userId) {

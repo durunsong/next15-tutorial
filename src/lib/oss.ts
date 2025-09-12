@@ -109,7 +109,8 @@ export class OSSManager {
         size: parseInt(headers['content-length'] || '0'),
         contentType: headers['content-type'] || '',
         lastModified: headers['last-modified'] || '',
-        etag: headers.etag || '',
+        // 使用方括号表示法访问 etag 属性，避免 TypeScript 类型错误
+        etag: headers['etag'] || '',
       };
     } catch {
       throw new Error('获取文件信息失败');
