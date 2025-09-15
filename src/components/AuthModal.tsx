@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import { Alert, Button, Checkbox, Form, Input, Modal, Tabs, message } from 'antd';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import PasswordStrengthIndicator from '@/components/PasswordStrengthIndicator';
 import { useAuthStore } from '@/store/authStore';
@@ -40,6 +40,23 @@ export default function AuthModal({
   }>({ canRegister: true });
 
   const { login } = useAuthStore();
+
+  // 当Modal关闭时确保form状态正确重置
+  useEffect(() => {
+    if (!open) {
+      // 延时重置，确保Modal完全关闭后再重置
+      const timer = setTimeout(() => {
+        loginForm.resetFields();
+        registerForm.resetFields();
+        setError('');
+        setPassword('');
+        setActiveTab(defaultTab);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+    // 确保所有代码路径都有返回值
+    return undefined;
+  }, [open, loginForm, registerForm, defaultTab]);
 
   // 登录处理
   const handleLogin = async (values: {
@@ -190,7 +207,7 @@ export default function AuthModal({
       width={400}
       className="auth-modal"
       centered
-      destroyOnHidden
+      destroyOnHidden={false}
     >
       <div className="p-6">
         <div className="text-center mb-6">
