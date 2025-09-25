@@ -50,6 +50,13 @@ interface UserProfile {
 export default function ProfilePage() {
   const [form] = Form.useForm();
   const [avatarForm] = Form.useForm();
+
+  // 确保 form 实例正确创建
+  useEffect(() => {
+    if (!form || !avatarForm) {
+      console.warn('ProfilePage: Form instances not properly created');
+    }
+  }, [form, avatarForm]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [userInfo, setUserInfo] = useState<UserProfile | null>(null);
@@ -354,7 +361,7 @@ export default function ProfilePage() {
           {/* 右侧：个人信息表单 */}
           <Col xs={24} lg={16}>
             <Card title="个人信息" className="mb-6">
-              <Form form={form} layout="vertical" onFinish={handleSubmit}>
+              <Form key="profile-form" form={form} layout="vertical" onFinish={handleSubmit}>
                 <Form.Item
                   label="用户名"
                   name="username"
@@ -447,7 +454,7 @@ export default function ProfilePage() {
           }}
           footer={null}
           width={500}
-          destroyOnHidden={false}
+          destroyOnClose
         >
           <Tabs
             defaultActiveKey="upload"
@@ -490,7 +497,12 @@ export default function ProfilePage() {
                   </span>
                 ),
                 children: (
-                  <Form form={avatarForm} layout="vertical" onFinish={handleAvatarUrlSubmit}>
+                  <Form
+                    key="avatar-form"
+                    form={avatarForm}
+                    layout="vertical"
+                    onFinish={handleAvatarUrlSubmit}
+                  >
                     <Form.Item
                       label="头像URL"
                       name="avatar"

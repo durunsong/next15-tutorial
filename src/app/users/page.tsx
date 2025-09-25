@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import { Avatar, Card, Col, Empty, Input, Pagination, Row, Space, Spin, Typography } from 'antd';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -39,7 +39,8 @@ interface UserListResponse {
   };
 }
 
-export default function UsersPage() {
+// 用户列表内容组件，包含搜索参数逻辑
+function UsersContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -274,5 +275,23 @@ export default function UsersPage() {
         )}
       </div>
     </div>
+  );
+}
+
+// 加载组件
+function UsersPageLoading() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+      <Spin size="large" />
+    </div>
+  );
+}
+
+// 主用户列表页面组件，使用 Suspense 包装
+export default function UsersPage() {
+  return (
+    <Suspense fallback={<UsersPageLoading />}>
+      <UsersContent />
+    </Suspense>
   );
 }

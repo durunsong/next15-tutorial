@@ -100,6 +100,13 @@ export default function DatabasePage() {
   const [form] = Form.useForm();
   const [postForm] = Form.useForm();
 
+  // 确保 form 实例正确创建
+  useEffect(() => {
+    if (!form || !postForm) {
+      console.warn('DatabasePage: Form instances not properly created');
+    }
+  }, [form, postForm]);
+
   const fetchDatabaseInfo = async () => {
     setLoading(true);
     try {
@@ -743,9 +750,15 @@ export default function DatabasePage() {
           form.resetFields();
         }}
         footer={null}
-        destroyOnHidden={false}
+        destroyOnClose
       >
-        <Form form={form} layout="vertical" onFinish={handleCreateUser} preserve={false}>
+        <Form
+          key="user-form"
+          form={form}
+          layout="vertical"
+          onFinish={handleCreateUser}
+          preserve={false}
+        >
           <Form.Item
             label="用户名"
             name="username"
@@ -816,10 +829,16 @@ export default function DatabasePage() {
           postForm.resetFields();
         }}
         footer={null}
-        destroyOnHidden={false}
+        destroyOnClose
         width={800}
       >
-        <Form form={postForm} layout="vertical" onFinish={handleCreatePost} preserve={false}>
+        <Form
+          key="post-form"
+          form={postForm}
+          layout="vertical"
+          onFinish={handleCreatePost}
+          preserve={false}
+        >
           <Form.Item
             label="标题"
             name="title"
