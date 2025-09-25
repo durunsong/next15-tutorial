@@ -160,7 +160,7 @@ const nextConfig: NextConfig = {
               "font-src 'self' fonts.gstatic.com *.tawk.to cdn.jsdelivr.net",
               "img-src 'self' data: blob: https: *.aliyuncs.com *.dicebear.com *.antd.org",
               "media-src 'self' blob:",
-              "connect-src 'self' *.tawk.to wss://*.tawk.to *.upstash.io",
+              "connect-src 'self' *.tawk.to wss://*.tawk.to *.upstash.io cdn.jsdelivr.net unpkg.com",
               "frame-src 'self' *.tawk.to",
               "worker-src 'self' blob:",
               "object-src 'none'",
