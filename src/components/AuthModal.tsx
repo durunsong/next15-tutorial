@@ -41,17 +41,30 @@ export default function AuthModal({
 
   const { login } = useAuthStore();
 
+  // 确保 form 实例正确创建
+  useEffect(() => {
+    // 验证 form 实例是否正确创建
+    if (!loginForm || !registerForm) {
+      console.warn('AuthModal: Form instances not properly created');
+    }
+  }, [loginForm, registerForm]);
+
   // 当Modal关闭时确保form状态正确重置
   useEffect(() => {
     if (!open) {
       // 延时重置，确保Modal完全关闭后再重置
       const timer = setTimeout(() => {
-        loginForm.resetFields();
-        registerForm.resetFields();
+        // 检查 form 实例是否存在且已连接
+        if (loginForm && typeof loginForm.resetFields === 'function') {
+          loginForm.resetFields();
+        }
+        if (registerForm && typeof registerForm.resetFields === 'function') {
+          registerForm.resetFields();
+        }
         setError('');
         setPassword('');
         setActiveTab(defaultTab);
-      }, 100);
+      }, 200); // 增加延时确保 Modal 完全关闭
       return () => clearTimeout(timer);
     }
     // 确保所有代码路径都有返回值
@@ -86,7 +99,10 @@ export default function AuthModal({
 
         onSuccess(data.user);
         onClose();
-        loginForm.resetFields();
+        // 检查 form 实例是否存在且已连接
+        if (loginForm && typeof loginForm.resetFields === 'function') {
+          loginForm.resetFields();
+        }
       } else {
         if (response.status === 429) {
           setError(data.message || '登录尝试过于频繁，请稍后再试');
@@ -136,8 +152,13 @@ export default function AuthModal({
 
         // 切换到登录选项卡并预填登录信息
         setActiveTab('login');
-        loginForm.setFieldsValue({ loginId: values.email });
-        registerForm.resetFields();
+        // 检查 form 实例是否存在且已连接
+        if (loginForm && typeof loginForm.setFieldsValue === 'function') {
+          loginForm.setFieldsValue({ loginId: values.email });
+        }
+        if (registerForm && typeof registerForm.resetFields === 'function') {
+          registerForm.resetFields();
+        }
         setPassword('');
       } else {
         if (response.status === 429) {
@@ -170,8 +191,13 @@ export default function AuthModal({
 
   // 关闭模态框时重置状态
   const handleClose = () => {
-    loginForm.resetFields();
-    registerForm.resetFields();
+    // 检查 form 实例是否存在且已连接
+    if (loginForm && typeof loginForm.resetFields === 'function') {
+      loginForm.resetFields();
+    }
+    if (registerForm && typeof registerForm.resetFields === 'function') {
+      registerForm.resetFields();
+    }
     setError('');
     setPassword('');
     setActiveTab('login');
@@ -207,7 +233,7 @@ export default function AuthModal({
       width={400}
       className="auth-modal"
       centered
-      destroyOnHidden={false}
+      destroyOnClose
     >
       <div className="p-6">
         <div className="text-center mb-6">
@@ -248,6 +274,7 @@ export default function AuthModal({
               label: '登录',
               children: (
                 <Form
+                  key="login-form"
                   form={loginForm}
                   name="login"
                   onFinish={handleLogin}
@@ -300,6 +327,7 @@ export default function AuthModal({
               label: '注册',
               children: (
                 <Form
+                  key="register-form"
                   form={registerForm}
                   name="register"
                   onFinish={handleRegister}
