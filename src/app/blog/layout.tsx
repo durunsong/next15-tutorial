@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 
+import '@/styles/blog-post.css';
+
 export const metadata: Metadata = {
   title: {
     template: '%s | Next.js 15 技术博客',
