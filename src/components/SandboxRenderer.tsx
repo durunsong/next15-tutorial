@@ -30,17 +30,25 @@ export function SandboxRenderer({ code, language }: SandboxRendererProps) {
       // 写入 iframe
       iframe.srcdoc = sandboxHtml;
 
-      // 监听来自 iframe 的错误消息
+      // 监听来自 iframe 的错误消息 - 优化性能
       const handleMessage = (event: MessageEvent) => {
-        if (event.data.type === 'sandbox-error') {
-          setError(event.data.error);
-          setIsLoading(false);
-        } else if (event.data.type === 'sandbox-ready') {
-          setIsLoading(false);
+        // 验证消息来源，提高安全性
+        if (event.source !== iframe.contentWindow) {
+          return;
         }
+
+        // 使用 requestAnimationFrame 来避免强制重排
+        requestAnimationFrame(() => {
+          if (event.data.type === 'sandbox-error') {
+            setError(event.data.error);
+            setIsLoading(false);
+          } else if (event.data.type === 'sandbox-ready') {
+            setIsLoading(false);
+          }
+        });
       };
 
-      window.addEventListener('message', handleMessage);
+      window.addEventListener('message', handleMessage, { passive: true });
 
       return () => {
         window.removeEventListener('message', handleMessage);
@@ -259,42 +267,52 @@ export function SandboxRenderer({ code, language }: SandboxRendererProps) {
     </script>
 
     <script>
-        // 增强的错误处理
+        // 优化的消息发送函数，避免性能问题
+        const sendMessage = (msg, delayMs = 0) => {
+            if (delayMs > 0) {
+                setTimeout(() => parent.postMessage(msg, '*'), delayMs);
+            } else {
+                // 使用 requestAnimationFrame 来避免阻塞渲染
+                requestAnimationFrame(() => parent.postMessage(msg, '*'));
+            }
+        };
+
+        // 增强的错误处理 - 优化版本
         window.addEventListener('error', (event) => {
             const errorMsg = event.error ?
                 (event.error.stack || event.error.message) :
                 event.message;
-            parent.postMessage({
+            sendMessage({
                 type: 'sandbox-error',
                 error: errorMsg,
                 filename: event.filename,
                 lineno: event.lineno
-            }, '*');
+            });
         });
 
         window.addEventListener('unhandledrejection', (event) => {
-            parent.postMessage({
+            sendMessage({
                 type: 'sandbox-error',
                 error: event.reason ? event.reason.toString() : '未处理的 Promise 拒绝'
-            }, '*');
+            });
         });
 
-        // 重写 console 方法，捕获日志
+        // 重写 console 方法，捕获日志 - 优化版本
         const originalLog = console.log;
         const originalError = console.error;
         console.log = (...args) => {
             originalLog.apply(console, args);
-            parent.postMessage({
+            sendMessage({
                 type: 'sandbox-log',
                 message: args.join(' ')
-            }, '*');
+            });
         };
         console.error = (...args) => {
             originalError.apply(console, args);
-            parent.postMessage({
+            sendMessage({
                 type: 'sandbox-error',
                 error: args.join(' ')
-            }, '*');
+            });
         };
 
         try {
@@ -325,14 +343,14 @@ export function SandboxRenderer({ code, language }: SandboxRendererProps) {
             `
             }
 
-            // 通知父窗口渲染完成
-            parent.postMessage({ type: 'sandbox-ready' }, '*');
+            // 通知父窗口渲染完成 - 延迟以优化性能
+            sendMessage({ type: 'sandbox-ready' }, 100);
         } catch (error) {
             console.error('执行错误:', error);
-            parent.postMessage({
+            sendMessage({
                 type: 'sandbox-error',
                 error: error.message + (error.stack ? '\\n' + error.stack : '')
-            }, '*');
+            });
         }
     </script>
 </body>
@@ -369,7 +387,7 @@ export function SandboxRenderer({ code, language }: SandboxRendererProps) {
             ref={iframeRef}
             className="w-full h-full border-0"
             style={{ minHeight: '200px' }}
-            sandbox="allow-scripts allow-same-origin"
+            sandbox="allow-scripts allow-forms allow-popups allow-modals"
             title="代码预览"
           />
         )}
