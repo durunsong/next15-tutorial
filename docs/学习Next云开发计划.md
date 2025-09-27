@@ -961,7 +961,7 @@
   ### 📁 项目结构
 
   ```typescript
-  next-neon-base/
+  next15-tutorial/
   ├── prisma/
   │   └── schema.prisma          # Prisma数据库模型定义
   ├── src/
@@ -1126,7 +1126,7 @@
   import '@ant-design/v5-patch-for-react-19';
   ```
 
-  遇到index.js:640 Uncaught Error: ENOENT: no such file or directory, open 'E:\个人成长蜕变\next-neon-base\.next\server\vendor-chunks\antd@5.26.1_react-dom@19.1.0_react@19.1.0__react@19.1.0.js' 这样的错误
+  遇到index.js:640 Uncaught Error: ENOENT: no such file or directory, open 'E:\个人成长蜕变\next15-tutorial\.next\server\vendor-chunks\antd@5.26.1_react-dom@19.1.0_react@19.1.0__react@19.1.0.js' 这样的错误
 
   ```
   1. 首先清理缓存和重新构建
@@ -1238,9 +1238,10 @@
   - `DELETE /api/comments/:id` 删除评论（仅作者可删）
 
 - 评论 API 示例代码结构：
-      ```ts
-      // app/api/comments/route.ts
-      export async function POST(req: Request) { /* 创建评论 */ }
+
+  ````ts
+  // app/api/comments/route.ts
+  export async function POST(req: Request) { /_ 创建评论 _/ }
 
       // app/api/comments/[id]/route.ts
       export async function DELETE(req: Request, { params }) { /* 删除评论 */ }
@@ -1256,7 +1257,9 @@
   - 编写项目 README
 
   - 推送 GitHub 仓库并发布分享
+
   ### 模板项目结构建议（GitHub Repo）
+
   ```bash
   my-app/
   ├── app/
@@ -1281,8 +1284,10 @@
   ├── .env
   ├── README.md
   └── package.json
-  ```
+  ````
+
   ### 接口设计方案文档示例
+
   ```md
   ## POST /api/comments
 
@@ -1316,7 +1321,9 @@
 
   - 返回：204 No Content 或 403 Forbidden
   ```
+
   ***
+
   ## 总结资源
   - [Next.js 官方教程](https://nextjs.org/learn)
   - [Prisma 官方文档](https://www.prisma.io/docs)
