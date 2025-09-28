@@ -209,7 +209,7 @@ graph TD
     style F2 fill:#ccffcc
 ```
 
-####  **SSR 相比 CSR，少了什么**
+#### **SSR 相比 CSR，少了什么**
 
 - ❌ **CSR 需要客户端执行 React 组件逻辑 → SSR 不需要**
   - 组件渲染逻辑在服务端完成，客户端直接拿 HTML。
@@ -217,6 +217,12 @@ graph TD
   - 用户第一眼就能看到页面，而不是空白页。
 - ❌ **CSR 完全依赖客户端拿数据 → SSR 不需要**
   - SSR 可以直接在服务端获取数据并注入到 HTML。
+
+### 总结
+
+**CSR**：首屏全靠浏览器算 → 空白时间长
+
+**SSR**：首屏由服务器算 → 用户直接看到内容，省掉了“客户端渲染首屏”的步骤
 
 #### ⚡ SSR性能优势详解
 
@@ -1702,14 +1708,6 @@ import { UploadOutlined } from '@ant-design/icons';
 import { Button, Upload, message } from 'antd';
 
 import { useState } from 'react';
-
-// components/FileUpload.tsx
-
-// components/FileUpload.tsx
-
-// components/FileUpload.tsx
-
-// components/FileUpload.tsx
 
 // components/FileUpload.tsx
 

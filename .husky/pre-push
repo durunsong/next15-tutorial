@@ -18,15 +18,22 @@ for branch in $protected_branches; do
     fi
 done
 
-# 只进行构建检查，其他检查已在 pre-commit 中完成
-echo "🔧 Running build verification..."
-pnpm build
-
-if [ $? -ne 0 ]; then
-    echo "❌ Build failed!"
-    echo "💡 Fix build errors before pushing"
+# 检查是否需要构建验证（可通过环境变量控制）
+if [ "$SKIP_BUILD_CHECK" != "false" ]; then
+    echo "⚡ Skipping build verification for faster push..."
+    echo "💡 Build verification can be done manually with 'pnpm build'"
+    echo "💡 To enable build check, set SKIP_BUILD_CHECK=false"
     echo "💡 Code quality checks were already done in pre-commit"
-    exit 1
+else
+    echo "🔧 Running build verification..."
+    pnpm build
+    
+    if [ $? -ne 0 ]; then
+        echo "❌ Build failed!"
+        echo "💡 Fix build errors before pushing"
+        echo "💡 Code quality checks were already done in pre-commit"
+        exit 1
+    fi
 fi
 
 # 对于保护分支，运行额外验证
