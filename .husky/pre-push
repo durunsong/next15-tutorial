@@ -27,7 +27,7 @@ if [ "$SKIP_BUILD_CHECK" != "false" ]; then
 else
     echo "🔧 Running build verification..."
     pnpm build
-    
+
     if [ $? -ne 0 ]; then
         echo "❌ Build failed!"
         echo "💡 Fix build errors before pushing"

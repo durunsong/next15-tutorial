@@ -312,7 +312,7 @@ sequenceDiagram
 
 只能在client component中使用，如：useState....
 
-案例：useParams
+案例：usePathname
 
 ### ⚡ App Router + Server Components
 
@@ -1708,6 +1708,8 @@ import { UploadOutlined } from '@ant-design/icons';
 import { Button, Upload, message } from 'antd';
 
 import { useState } from 'react';
+
+// components/FileUpload.tsx
 
 // components/FileUpload.tsx
 
