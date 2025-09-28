@@ -209,6 +209,15 @@ graph TD
     style F2 fill:#ccffcc
 ```
 
+####  **SSR 相比 CSR，少了什么**
+
+- ❌ **CSR 需要客户端执行 React 组件逻辑 → SSR 不需要**
+  - 组件渲染逻辑在服务端完成，客户端直接拿 HTML。
+- ❌ **CSR 首屏需要等 JS 加载和执行 → SSR 不需要**
+  - 用户第一眼就能看到页面，而不是空白页。
+- ❌ **CSR 完全依赖客户端拿数据 → SSR 不需要**
+  - SSR 可以直接在服务端获取数据并注入到 HTML。
+
 #### ⚡ SSR性能优势详解
 
 ```mermaid
@@ -273,41 +282,6 @@ sequenceDiagram
 | **Bundle大小** | 一次性下载全部JS        | 按需分割加载        | **减少60%**       |
 | **缓存策略**   | 客户端缓存              | 服务器+CDN缓存      | **命中率提升80%** |
 
-#### 🎯 构建前后的关键变化
-
-**构建前 (开发环境)**:
-
-- 实时编译：每次请求都重新编译组件
-- 无优化：代码未压缩，包含开发工具
-- 热更新：支持代码修改后立即生效
-
-**构建后 (生产环境)**:
-
-- 预编译：所有页面在构建时就已编译优化
-- 代码分割：自动拆分为小的chunk，按需加载
-- 静态优化：静态页面直接返回HTML，无需服务器渲染
-- 压缩优化：JS/CSS文件经过压缩和混淆
-
-#### 🚀 实际性能数据对比
-
-```typescript
-// 性能指标实测数据 (基于我们的项目)
-const performanceMetrics = {
-  'CSR React应用': {
-    firstContentfulPaint: '1.8s',
-    largestContentfulPaint: '3.2s',
-    timeToInteractive: '4.1s',
-    bundleSize: '2.1MB',
-  },
-  'Next.js SSR应用': {
-    firstContentfulPaint: '0.4s', // ⬇️ 提升78%
-    largestContentfulPaint: '0.8s', // ⬇️ 提升75%
-    timeToInteractive: '1.2s', // ⬇️ 提升71%
-    bundleSize: '0.8MB', // ⬇️ 减少62%
-  },
-};
-```
-
 #### 📝 渲染模式对比
 
 | 特性           | Server Component | Client Component |
@@ -319,6 +293,14 @@ const performanceMetrics = {
 | 服务器资源访问 | ✅               | ❌               |
 | Bundle大小     | 0                | 计入bundle       |
 | 首屏速度       | 快               | 相对慢           |
+
+### 对比起来，**Server Component 跳过了**：
+
+- ❌ **无需在客户端下载 JS（逻辑不会下发）**
+- ❌ **无需在客户端解析 & 执行 JS**
+- ❌ **无需在客户端生成虚拟 DOM**
+- ❌ **无需在客户端做 Diff (Reconciliation)**
+- ✅ 只保留 **最终 UI 结果**，传给客户端
 
 ### hooks
 
