@@ -23,7 +23,7 @@
 - 🔗 **GitHub**: [durunsong/next15-tutorial](https://github.com/durunsong/next15-tutorial)
 - 🌐 **在线预览**: [next15-tutorial-green.vercel.app](https://next15-tutorial-green.vercel.app/)
 
-### 🏗️ 整体架构设计
+### 🏗️ 整体架构设计(demo)
 
 ```
 next15-tutorial/
@@ -50,7 +50,7 @@ next15-tutorial/
 
 ### 🛠️ 技术栈详解
 
-#### **前端技术栈 (9个)**
+#### 前端技术栈
 
 | 技术             | 版本    | 核心价值                                 |
 | ---------------- | ------- | ---------------------------------------- |
@@ -60,7 +60,7 @@ next15-tutorial/
 | **Tailwind CSS** | v4.x    | 实用优先CSS框架，快速构建界面            |
 | **Ant Design**   | v5.26.1 | 企业级UI组件库，丰富组件生态             |
 
-#### **后端与数据 (5个)**
+#### 后端与数据
 
 | 技术              | 版本    | 核心价值                       |
 | ----------------- | ------- | ------------------------------ |
@@ -70,7 +70,7 @@ next15-tutorial/
 | **bcryptjs**      | v3.0.2  | 密码哈希加密，安全防护         |
 | **阿里云 OSS**    | v6.23.0 | 对象存储，文件CDN加速          |
 
-#### **开发工具 (3个)**
+#### 开发工具
 
 | 技术           | 版本    | 核心价值                 |
 | -------------- | ------- | ------------------------ |
@@ -78,19 +78,19 @@ next15-tutorial/
 | **Serverless** | v3.38.x | 无服务器计算，按需扩展   |
 | **Turbopack**  | 内置    | 高性能构建工具，开发体验 |
 
-### 💡 技术选型理由
+### 💡技术选型与业务价值对比
 
-| 选型维度     | 技术决策                        | 实际收益                      |
-| ------------ | ------------------------------- | ----------------------------- |
-| **开发效率** | Next.js + TypeScript + Tailwind | 开发效率提升60%，代码质量提升 |
-| **用户体验** | SSR + Image优化 + 动画          | 首屏加载提升70%，交互体验佳   |
-| **运维成本** | Neon + Upstash + Vercel         | 运维成本降低80%，自动扩缩容   |
-| **团队协作** | TypeScript + 统一工具链         | Bug减少90%，协作效率提升      |
-| **性能优化** | Redis缓存 + CDN + 代码分割      | 响应速度提升75%，用户留存     |
+| 场景         | 传统方案Vue/React | Next.js 15 方案         | 业务价值              | 技术选型维度 | 实际收益                              |
+| ------------ | ----------------- | ----------------------- | --------------------- | ------------ | ------------------------------------- |
+| 商品详情页   | CSR + Loading     | SSR                     | SEO收录 + 转化率提升  | 用户体验     | 首屏加载提升70%，交互更顺畅           |
+| 文档中心     | SPA路由           | SSG                     | 加载速度 + 用户体验   | 开发效率     | Next.js + TS + Tailwind → 效率+60%    |
+| 个人中心     | CSR               | CSR                     | 高度交互体验          | 团队协作     | TS + 统一工具链 → Bug减少90%          |
+| 新闻列表     | CSR               | ISR                     | 内容新鲜度 + 性能优化 | 性能优化     | Redis缓存 + CDN + 代码分割 → 响应+75% |
+| **全局层面** | —                 | Neon + Upstash + Vercel | 运维自动化 + 成本降低 | 运维成本     | 成本降低80%，支持自动扩缩容           |
 
 ### 开始 gogogo~
 
-##### 创建Nextjs项目
+#### 创建Nextjs项目
 
 ```typescript
 node  -v
@@ -105,10 +105,6 @@ npx create-next-app@latest xxxxx --typescript --tailwind --eslint --app --src-di
 // 注释代码
 layout.tsx -- geistSans/geistMono  相关的代码
 注释代码原因：因为如果我们网络在国内，这些字体来自于google，我们在国内的网络环境访问google将会受限，所有注释
-
-// pnpm start 与 pnpm dev
-pnpm start 需要在build之后运行    ---- 修改代码页面不变
-pnpm dev  ---- 修改代码页面变
 ```
 
 ### 📦 package.json 关键依赖分析
@@ -138,12 +134,20 @@ pnpm dev              # 启动开发服务器 (Turbopack)
 pnpm build            # 生产构建
 pnpm code-quality     # 代码质量检查
 
+// pnpm start 与 pnpm dev
+pnpm start 构建测试  --需要在build之后运行    ---- 修改代码页面不变
+pnpm dev  ---- 修改代码页面变
+
 # 数据库相关
 pnpm db:generate      # 生成Prisma客户端
-pnpm db:push          # 同步schema到数据库
+pnpm db:push          # 快速同步 schema 到数据库
 pnpm db:studio        # 打开数据库可视化
 
-# 代码质量 ci/cd 流水线
+# 生产环境操作流程
+npx prisma migrate dev --name add_task_priority  # 创建迁移文件
+npx prisma migrate deploy                        # 部署到生产环境
+
+# 代码质量流水线
 pnpm commit-ready     # 提交前检查
 pnpm push-ready       # 推送前检查
 ```
@@ -174,6 +178,24 @@ pnpm push-ready       # 推送前检查
 - 在浏览器中渲染和交互
 - 可以使用React Hooks (useState, useEffect等)
 - 可以访问浏览器API (window, document等)
+
+### SSR&SSG 情景demo
+
+1. **SSR 场景**
+
+   ```
+   "你是一个电商网站的开发者，用户搜索'iPhone 15'，
+   你希望搜索引擎能够抓取到最新的商品信息和价格，
+   这时候你需要 SSR"
+   ```
+
+2. **SSG 场景**
+
+   ```
+   "你在写技术博客，文章内容几乎不变，
+   但是访问量很大，你希望加载速度极快，
+   这时候你需要 SSG"
+   ```
 
 #### 📝 渲染模式对比
 
@@ -436,6 +458,20 @@ export default nextConfig;
 ---
 
 ## 3. Prisma + Neon 数据层设计
+
+### 👉Serverless
+
+**开发者只关注业务逻辑代码，不需要关心服务器的运维管理（比如买机器、装系统、扩容、监控等）。**
+服务器依然存在，只是被云厂商（AWS、阿里云、腾讯云、Vercel 等）屏蔽和托管了
+
+#### 📌 Next.js + Serverless 的常见玩法
+
+1. **API Routes 部署到 Serverless Functions**
+   - 例如部署到 **Vercel**，每个 API 路由就是一个 Serverless Function。
+2. **Serverless 数据库**
+   - 比如 Neon（Postgres）、PlanetScale（MySQL）、DynamoDB。
+3. **无服务器任务**
+   - 上传文件用云存储（S3、OSS、COS），处理任务交给 Serverless Function。
 
 - **Upstash Redis - Serverless Redis**
 
@@ -1580,6 +1616,8 @@ import { useState } from 'react';
 
 // components/FileUpload.tsx
 
+// components/FileUpload.tsx
+
 interface FileUploadProps {
   onSuccess?: (fileInfo: { url: string; key: string }) => void;
   maxSize?: number; // MB
@@ -2034,12 +2072,3 @@ export default function RootLayout({
 - **官方文档**: [Next.js](https://nextjs.org) | [Prisma](https://prisma.io) | [Neon](https://neon.tech)
 - **项目仓库**: [GitHub - durunsong/next15-tutorial](https://github.com/durunsong/next15-tutorial)
 - **在线演示**: [next15-tutorial-green.vercel.app](https://next15-tutorial-green.vercel.app/)
-
----
-
-**感谢大家的关注！欢迎技术交流和项目合作。** 🚀
-
-> 📂 **项目资源**  
-> 🔗 GitHub仓库: [durunsong/next15-tutorial](https://github.com/durunsong/next15-tutorial)  
-> 🌐 在线演示: [next15-tutorial-green.vercel.app](https://next15-tutorial-green.vercel.app/)  
-> 💡 技术栈展示: 17个现代Web开发技术的完整整合
