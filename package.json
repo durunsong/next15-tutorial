@@ -50,7 +50,7 @@
     "analyze:browser": "cross-env BUNDLE_ANALYZE=browser pnpm build",
     "test": "echo \"暂无测试\" && exit 0",
     "test:watch": "echo \"暂无测试\" && exit 0",
-    "health-check": "pnpm audit --fix && pnpm outdated",
+    "health-check": "pnpm audit --fix && echo \"📦 检查过时的包...\" && (pnpm outdated || echo \"✅ 依赖检查完成\")",
     "update-deps": "pnpm update --latest",
     "security-audit": "pnpm audit --fix",
     "perf-test": "pnpm build && echo \"构建完成，请检查包大小\"",

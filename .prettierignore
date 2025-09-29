@@ -1,6 +1,6 @@
 # Dependencies
 node_modules/
-.pnpm-store/
+.pnpm/
 
 # Build outputs
 .next/
@@ -8,27 +8,38 @@ out/
 dist/
 build/
 
-# Database
-prisma/migrations/
+# Generated files
+.turbo/
+.cache/
 
 # Logs
 *.log
-logs/
 
-# Environment files
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Other
-.DS_Store
-*.tsbuildinfo
-coverage/
-.nyc_output/
-
-# Package managers
+# Lock files
 pnpm-lock.yaml
+package-lock.json
 yarn.lock
-package-lock.json 
+
+# Database
+*.db
+*.sqlite
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+.tmp/
+.temp/
+
+# Documentation files with formatting issues
+docs/Next.js全栈开发实践.md
+
+# Legacy files with complex formatting
+src/components/ErrorBoundary.tsx

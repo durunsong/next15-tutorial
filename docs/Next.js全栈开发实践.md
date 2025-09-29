@@ -1709,16 +1709,6 @@ import { Button, Upload, message } from 'antd';
 
 import { useState } from 'react';
 
-// components/FileUpload.tsx
-
-// components/FileUpload.tsx
-
-// components/FileUpload.tsx
-
-// components/FileUpload.tsx
-
-// components/FileUpload.tsx
-
 interface FileUploadProps {
   onSuccess?: (fileInfo: { url: string; key: string }) => void;
   maxSize?: number; // MB
